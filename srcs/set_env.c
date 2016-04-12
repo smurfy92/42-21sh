@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minish.h"
+#include "../includes/21.h"
 
 t_env		*ft_parse_env(char **env)
 {
@@ -65,6 +65,7 @@ t_term		*ft_set_term(char **env, t_env *lst)
 	t_term		*term;
 
 	term = (t_term*)malloc(sizeof(t_term));
+	term->buf = (char*)malloc(sizeof(char) * BUFFSIZE);
 	term->u = NULL;
 	term->i = 0;
 	term->env = env;

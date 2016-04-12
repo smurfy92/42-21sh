@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minish.h"
+#include "../includes/21.h"
 
 void		ft_check_u(t_term *term, int i)
 {

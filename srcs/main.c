@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minish.h"
+#include "../includes/21.h"
 
 int			ft_outchar(int c)
 {
@@ -134,7 +134,14 @@ int			ft_check_builtin(t_term **term)
 	return (1);
 }
 
-
+void	ft_process(t_term **term)
+{
+	if (!(*term)->cmdactual && (*term)->buf[0] != 10)
+		(*term)->cmdactual = ft_strdup((*term)->buf);
+	else if ((*term)->buf[0] != 10)
+		(*term)->cmdactual = ft_strjoin((*term)->cmdactual, (*term)->buf);
+	return ;
+}
 
 int			main(int argc, char **argv, char **env)
 {
@@ -153,13 +160,16 @@ int			main(int argc, char **argv, char **env)
 	{
 		argc = -1;
 		write(1, "$> ", 3);
-		get_next_line(0, &buf);
-		term->cmdsplit = ft_strsplit(buf, ';');
+		while (term->buf[0] != 10 && (read(0, term->buf, BUFFSIZE)))
+			ft_process(&term);
+		term->cmdsplit = ft_strsplit(term->cmdactual, ';');
 		while (term->cmdsplit[++argc])
 		{
 			term->cmds = ft_strsplit(term->cmdsplit[argc], ' ');
 			(!ft_check_builtin(&term)) ? ft_check_in_path(term) : 0;
 		}
+		ft_bzero(term->cmdactual, ft_strlen(term->cmdactual));
+		ft_bzero(term->buf, ft_strlen(term->buf));
 	}
 	return (0);
 }

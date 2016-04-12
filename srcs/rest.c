@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minish.h"
+#include "../includes/21.h"
 
 void		ft_env_i(t_term *term)
 {

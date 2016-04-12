@@ -1,20 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minish.h                                           :+:      :+:    :+:   */
+/*   21.h                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jtranchi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/02/28 21:29:28 by jtranchi          #+#    #+#             */
-/*   Updated: 2016/02/28 21:29:55 by jtranchi         ###   ########.fr       */
+/*   Created: 2016/04/12 17:02:13 by jtranchi          #+#    #+#             */
+/*   Updated: 2016/04/12 17:02:15 by jtranchi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISH_H
-# define MINISH_H
+#ifndef VINETUNSH_H
+# define VINETUNSH_H
+# define BUFFSIZE 3
 # include "../libft/includes/libft.h"
 # include <signal.h>
-//# include <stdio.h>
 # include <termios.h>
 # include <curses.h>
 # include <term.h>
@@ -27,6 +27,8 @@ typedef	struct			s_term
 	int					i;
 	char				*u;
 	char				**env;
+	char				*buf;
+	char 				*cmdactual;
 	char				**cmds;
 	char				**cmdsplit;
 }						t_term;
