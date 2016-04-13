@@ -68,6 +68,8 @@ t_term		*ft_set_term(char **env, t_env *lst)
 	term->buf = (char*)malloc(sizeof(char) * BUFFSIZE);
 	term->u = NULL;
 	term->i = 0;
+	term->cursorpos = 0;
+	term->cmdlength = 0;
 	term->env = env;
 	term->lst = lst;
 	return (term);

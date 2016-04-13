@@ -136,19 +136,33 @@ int			ft_check_builtin(t_term **term)
 
 void	ft_process(t_term **term)
 {
-	if ((*term)->buf[0] == 27 && (*term)->buf[2] == 68)
-		tputs(tgetstr("le", NULL), 1, ft_outchar);
-	if ((*term)->buf[0] == 27 && (*term)->buf[2] == 67)
-		tputs(tgetstr("ri", NULL), 0, ft_outchar);
-	if ((*term)->buf[0] == 27 && (*term)->buf[2] == 65)
-		ft_putendl("up arrow");
-	if ((*term)->buf[0] == 27 && (*term)->buf[2] == 66)
-		ft_putendl("down arrow");
-	if (!(*term)->cmdactual && (*term)->buf[0] != 10)
-		(*term)->cmdactual = ft_strdup((*term)->buf);
-	else if ((*term)->buf[0] != 10)
-		(*term)->cmdactual = ft_strjoin((*term)->cmdactual, (*term)->buf);
-	if ((*term)->buf[0] == 10)
+	if (!(*term)->buf[1] && (*term)->buf[0] != 10)
+	{
+		if (!(*term)->cmdactual)
+			(*term)->cmdactual = ft_strdup((*term)->buf);
+		else
+			(*term)->cmdactual = ft_strjoin((*term)->cmdactual, (*term)->buf);
+		ft_putchar((*term)->buf[0]);
+		(*term)->cmdlength++;
+		(*term)->cursorpos++;
+	}
+	else
+	{
+		if ((*term)->buf[0] == 27 && (*term)->buf[2] == 68)
+		{
+			(*term)->cursorpos--;
+			tputs(tgetstr("bc", NULL), 0, ft_outchar);
+		}
+		if ((*term)->buf[0] == 27 && (*term)->buf[2] == 67)
+		{
+			(*term)->cursorpos++;
+			tputs(tgetstr("ri", NULL), 0, ft_outchar);
+		}
+	}
+	// if ((*term)->buf[0] == 27 && (*term)->buf[2] == 65)
+	// 	tputs(tgetstr("do", NULL), 0, ft_outchar);
+	// if ((*term)->buf[0] == 27 && (*term)->buf[2] == 66)
+	// 	tputs(tgetstr("up", NULL), 0, ft_outchar);
 	return ;
 }
 
@@ -164,13 +178,14 @@ int			main(int argc, char **argv, char **env)
 	ft_check_env(&term);
 	signal(SIGINT, ft_prompt);
 	signal(SIGTSTP, ft_prompt);
-	init_shell((~ICANON));
+	init_shell((~ICANON & ~ECHO));
 	while (42)
 	{
 		argc = -1;
 		write(1, "$> ", 3);
 		while (term->buf[0] != 10 && (read(0, term->buf, BUFFSIZE)))
 			ft_process(&term);
+		ft_putchar('\n');
 		term->cmdsplit = ft_strsplit(term->cmdactual, ';');
 		while (term->cmdsplit && term->cmdsplit[++argc])
 		{
@@ -179,6 +194,7 @@ int			main(int argc, char **argv, char **env)
 		}
 		ft_bzero(term->cmdactual, ft_strlen(term->cmdactual));
 		ft_bzero(term->buf, ft_strlen(term->buf));
+		term->cursorpos = 0;
 	}
 	return (0);
 }
