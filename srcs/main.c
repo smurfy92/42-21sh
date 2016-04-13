@@ -136,10 +136,19 @@ int			ft_check_builtin(t_term **term)
 
 void	ft_process(t_term **term)
 {
+	if ((*term)->buf[0] == 27 && (*term)->buf[2] == 68)
+		tputs(tgetstr("le", NULL), 1, ft_outchar);
+	if ((*term)->buf[0] == 27 && (*term)->buf[2] == 67)
+		tputs(tgetstr("ri", NULL), 0, ft_outchar);
+	if ((*term)->buf[0] == 27 && (*term)->buf[2] == 65)
+		ft_putendl("up arrow");
+	if ((*term)->buf[0] == 27 && (*term)->buf[2] == 66)
+		ft_putendl("down arrow");
 	if (!(*term)->cmdactual && (*term)->buf[0] != 10)
 		(*term)->cmdactual = ft_strdup((*term)->buf);
 	else if ((*term)->buf[0] != 10)
 		(*term)->cmdactual = ft_strjoin((*term)->cmdactual, (*term)->buf);
+	if ((*term)->buf[0] == 10)
 	return ;
 }
 
@@ -163,7 +172,7 @@ int			main(int argc, char **argv, char **env)
 		while (term->buf[0] != 10 && (read(0, term->buf, BUFFSIZE)))
 			ft_process(&term);
 		term->cmdsplit = ft_strsplit(term->cmdactual, ';');
-		while (term->cmdsplit[++argc])
+		while (term->cmdsplit && term->cmdsplit[++argc])
 		{
 			term->cmds = ft_strsplit(term->cmdsplit[argc], ' ');
 			(!ft_check_builtin(&term)) ? ft_check_in_path(term) : 0;
