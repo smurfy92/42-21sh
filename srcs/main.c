@@ -154,6 +154,56 @@ int			ft_check_builtin(t_term **term)
 	return (1);
 }
 
+void 		ft_clean_line(t_term **term)
+{
+	while (++(*term)->cursorpos < (*term)->cmdlength)
+		tputs(tgetstr("nd", NULL), 0, ft_outchar);
+	while (--(*term)->cursorpos > 0)
+	{
+		tputs(tgetstr("le", NULL), 0, ft_outchar);
+		tputs(tgetstr("dc", NULL), 0, ft_outchar);
+	}
+	tputs(tgetstr("ve", NULL), 1, ft_outchar);
+	(*term)->cmdactual = NULL;
+}
+
+void	ft_history_prev(t_term **term)
+{
+	int i;
+	int fd;
+	char *line;
+
+	i = 0;
+	fd = open(".21sh_history", O_RDONLY);
+	while (i++ + (*term)->historycurrent < (*term)->historylen)
+		get_next_line(fd, &line);
+	line = ft_strsplit(line, ';')[1];
+	(*term)->historycurrent++;
+	(*term)->cursorpos = ft_strlen(line);
+	(*term)->cmdlength = ft_strlen(line);
+	(*term)->cmdactual = ft_strdup(line);
+	ft_putstr(line);
+}
+
+void	ft_history_next(t_term **term)
+{
+	int i;
+	int fd;
+	char *line;
+
+	i = 0;
+	fd = open(".21sh_history", O_RDONLY);
+	while (i++ + (*term)->historycurrent <= (*term)->historylen)
+		get_next_line(fd, &line);
+	get_next_line(fd, &line);
+	line = ft_strsplit(line, ';')[1];
+	(*term)->historycurrent--;
+	(*term)->cursorpos = ft_strlen(line);
+	(*term)->cmdlength = ft_strlen(line);
+	(*term)->cmdactual = ft_strdup(line);
+	ft_putstr(line);
+}
+
 void	ft_process(t_term **term)
 {
 	// printf("\n0 : %d\n",(*term)->buf[0]);
@@ -175,8 +225,7 @@ void	ft_process(t_term **term)
 			(*term)->cmdactual = ft_strjoin((*term)->cmdactual, (*term)->buf);
 		ft_putchar((*term)->buf[0]);
 		tputs(tgetstr("ei", NULL), 1, ft_outchar);
-		if ((*term)->cursorpos == (*term)->cmdlength)
-			(*term)->cmdlength++;
+		(*term)->cmdlength++;
 		(*term)->cursorpos++;
 	}
 	else if ((*term)->buf[0] != 10)
@@ -201,16 +250,30 @@ void	ft_process(t_term **term)
 			(*term)->cursorpos++;
 			tputs(tgetstr("nd", NULL), 0, ft_outchar);
 		}
-		if ((*term)->buf[0] == 27 && (*term)->buf[2] == 65 && (*term)->cursorpos < (*term)->cmdlength)
+		if ((*term)->buf[0] == 27 && (*term)->buf[2] == 65)
 		{
-			//ft_history_prev();
+			if ((*term)->historycurrent < (*term)->historylen)
+			{
+				ft_clean_line(term);
+				ft_history_prev(term);
+			}
 		}
-		if ((*term)->buf[0] == 27 && (*term)->buf[2] == 66 && (*term)->cursorpos < (*term)->cmdlength)
+		if ((*term)->buf[0] == 27 && (*term)->buf[2] == 66)
 		{
-			//ft_history_next();
+			if ((*term)->historycurrent > 1)
+			{
+				ft_clean_line(term);
+				ft_history_next(term);
+			}
+			else
+			{
+				ft_clean_line(term);
+				(*term)->historycurrent = 0;
+			}
 		}
 	}
 	ft_bzero((*term)->buf, ft_strlen((*term)->buf));
+	tputs(tgetstr("ei", NULL), 1, ft_outchar);
 	tputs(tgetstr("ve", NULL), 1, ft_outchar);
 }
 

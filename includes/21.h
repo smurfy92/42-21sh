@@ -50,6 +50,7 @@ typedef	struct			s_env
 	struct s_env		*next;
 }						t_env;
 
+int						ft_outchar(int c);
 int						ft_check_in_path(t_term *term);
 int						ft_get_val_exists(t_term **term, char *str);
 int						ft_check_in_env(t_term *term, char *cmd);

@@ -45,10 +45,11 @@ void		ft_create_process(t_term *term)
 		i = open(".21sh_history", O_WRONLY|O_APPEND|O_CREAT);
 		tmp = ft_strjoin(";", tmp);
 		tmp = ft_strjoin(ft_itoa(++term->historylen), tmp);
-		ft_putendl(tmp);
 		write(i, tmp, ft_strlen(tmp));
 		write(i, "\n", 1);
 		close(i);
+		tputs(tgetstr("ei", NULL), 1, ft_outchar);
+		tputs(tgetstr("ve", NULL), 1, ft_outchar);
 		execve(term->path, term->cmds, term->env);
 		term->path = NULL;
 	}
