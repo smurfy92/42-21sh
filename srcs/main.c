@@ -145,20 +145,25 @@ void	ft_process(t_term **term)
 		ft_putchar((*term)->buf[0]);
 		(*term)->cmdlength++;
 		(*term)->cursorpos++;
+		ft_bzero((*term)->buf, ft_strlen((*term)->buf));
 	}
-	else
+	else if ((*term)->buf[0] != 10)
 	{
-		if ((*term)->buf[0] == 27 && (*term)->buf[2] == 68)
+		if ((*term)->buf[0] == 27 && (*term)->buf[2] == 68 && (*term)->cursorpos > 0)
 		{
 			(*term)->cursorpos--;
-			tputs(tgetstr("bc", NULL), 0, ft_outchar);
+			tputs(tgetstr("le", NULL), 0, ft_outchar);
+			//tputs(tgoto(tgetstr("bc", NULL), 0, 0), 1, ft_outchar);
 		}
-		if ((*term)->buf[0] == 27 && (*term)->buf[2] == 67)
+		if ((*term)->buf[0] == 27 && (*term)->buf[2] == 67 && (*term)->cursorpos < (*term)->cmdlength)
 		{
 			(*term)->cursorpos++;
-			tputs(tgetstr("ri", NULL), 0, ft_outchar);
+			tputs(tgetstr("nd", NULL), 0, ft_outchar);
 		}
+		ft_bzero((*term)->buf, ft_strlen((*term)->buf));
 	}
+	tputs(tgetstr("me", NULL), 1, ft_outchar);
+	
 	// if ((*term)->buf[0] == 27 && (*term)->buf[2] == 65)
 	// 	tputs(tgetstr("do", NULL), 0, ft_outchar);
 	// if ((*term)->buf[0] == 27 && (*term)->buf[2] == 66)
