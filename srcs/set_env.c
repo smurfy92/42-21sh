@@ -63,13 +63,19 @@ void		ft_check_env(t_term **term)
 t_term		*ft_set_term(char **env, t_env *lst)
 {
 	t_term		*term;
+	char 		*line;
 
 	term = (t_term*)malloc(sizeof(t_term));
 	term->buf = (char*)malloc(sizeof(char) * BUFFSIZE);
 	term->u = NULL;
-	term->i = 0;
 	term->cursorpos = 0;
 	term->cmdlength = 0;
+	term->historylen = 0;
+	term->i = open(".21sh_history", O_RDONLY);
+	while ((get_next_line(term->i, &line)) > 0)
+		term->historylen++;
+	term->historycurrent = 0;
+	term->i = 0;
 	term->env = env;
 	term->lst = lst;
 	return (term);

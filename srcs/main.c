@@ -117,6 +117,10 @@ int			reset_shell(void)
 
 int			ft_check_builtin(t_term **term)
 {
+	int i;
+	char *tmp;
+
+	tmp = NULL;
 	if (ft_strcmp((*term)->cmds[0], "cd") == 0)
 		ft_cd(term);
 	else if (ft_strcmp((*term)->cmds[0], "env") == 0)
@@ -129,6 +133,22 @@ int			ft_check_builtin(t_term **term)
 		reset_shell();
 	else
 		return (0);
+	i = 0;
+	(!(*term)->cmds[1]) ? (tmp = (*term)->cmds[0]) : 0;
+	while ((*term)->cmds[++i])
+	{
+		if (!tmp)
+			tmp = ft_strdup((*term)->cmds[i - 1]);
+		tmp = ft_strjoin(tmp, " ");
+		tmp = ft_strjoin(tmp, (*term)->cmds[i]);
+	}
+
+	i = open(".21sh_history", O_WRONLY|O_APPEND|O_CREAT);
+	tmp = ft_strjoin(";", tmp);
+	tmp = ft_strjoin(ft_itoa(++(*term)->historylen), tmp);
+	write(i, tmp, ft_strlen(tmp));
+	write(i, "\n", 1);
+	close(i);
 	(*term)->i = 0;
 	(*term)->u = NULL;
 	return (1);
@@ -136,45 +156,68 @@ int			ft_check_builtin(t_term **term)
 
 void	ft_process(t_term **term)
 {
-	if (!(*term)->buf[1] && (*term)->buf[0] != 10)
+	// printf("\n0 : %d\n",(*term)->buf[0]);
+	// printf("1 : %d\n",(*term)->buf[1]);
+	// printf("2 : %d\n",(*term)->buf[2]);
+	char  *tmp;
+	if (!(*term)->buf[1] && (*term)->buf[0] != 10 && (*term)->buf[0] != 127)
 	{
-		if (!(*term)->cmdactual)
+		if ((*term)->cursorpos < (*term)->cmdlength)
+		{
+			tputs(tgetstr("im", NULL), 1, ft_outchar);
+			tmp = ft_strjoin(&(*term)->buf[0], ((*term)->cmdactual + (*term)->cursorpos));
+			(*term)->cmdactual[(*term)->cursorpos ] = '\0';
+			(*term)->cmdactual = ft_strjoin((*term)->cmdactual, tmp);
+		}
+		else if (!(*term)->cmdactual)
 			(*term)->cmdactual = ft_strdup((*term)->buf);
 		else
 			(*term)->cmdactual = ft_strjoin((*term)->cmdactual, (*term)->buf);
 		ft_putchar((*term)->buf[0]);
-		(*term)->cmdlength++;
+		tputs(tgetstr("ei", NULL), 1, ft_outchar);
+		if ((*term)->cursorpos == (*term)->cmdlength)
+			(*term)->cmdlength++;
 		(*term)->cursorpos++;
-		ft_bzero((*term)->buf, ft_strlen((*term)->buf));
 	}
 	else if ((*term)->buf[0] != 10)
 	{
+		if ((*term)->buf[0] == 127 && (*term)->cursorpos > 0)
+		{
+			tmp = &(*term)->cmdactual[(*term)->cursorpos];
+			(*term)->cursorpos--;
+			(*term)->cmdlength--;
+			(*term)->cmdactual[(*term)->cursorpos] = '\0';
+			(*term)->cmdactual = ft_strjoin((*term)->cmdactual, tmp);
+			tputs(tgetstr("le", NULL), 0, ft_outchar);
+			tputs(tgetstr("dc", NULL), 0, ft_outchar);
+		}
 		if ((*term)->buf[0] == 27 && (*term)->buf[2] == 68 && (*term)->cursorpos > 0)
 		{
 			(*term)->cursorpos--;
 			tputs(tgetstr("le", NULL), 0, ft_outchar);
-			//tputs(tgoto(tgetstr("bc", NULL), 0, 0), 1, ft_outchar);
 		}
 		if ((*term)->buf[0] == 27 && (*term)->buf[2] == 67 && (*term)->cursorpos < (*term)->cmdlength)
 		{
 			(*term)->cursorpos++;
 			tputs(tgetstr("nd", NULL), 0, ft_outchar);
 		}
-		ft_bzero((*term)->buf, ft_strlen((*term)->buf));
+		if ((*term)->buf[0] == 27 && (*term)->buf[2] == 65 && (*term)->cursorpos < (*term)->cmdlength)
+		{
+			//ft_history_prev();
+		}
+		if ((*term)->buf[0] == 27 && (*term)->buf[2] == 66 && (*term)->cursorpos < (*term)->cmdlength)
+		{
+			//ft_history_next();
+		}
 	}
-	tputs(tgetstr("me", NULL), 1, ft_outchar);
-	
-	// if ((*term)->buf[0] == 27 && (*term)->buf[2] == 65)
-	// 	tputs(tgetstr("do", NULL), 0, ft_outchar);
-	// if ((*term)->buf[0] == 27 && (*term)->buf[2] == 66)
-	// 	tputs(tgetstr("up", NULL), 0, ft_outchar);
-	return ;
+	ft_bzero((*term)->buf, ft_strlen((*term)->buf));
+	tputs(tgetstr("ve", NULL), 1, ft_outchar);
 }
 
 int			main(int argc, char **argv, char **env)
 {
 	char		*buf;
-	t_term		*term;
+	static t_term		*term;
 
 	argc = 0;
 	argv = NULL;
@@ -188,7 +231,9 @@ int			main(int argc, char **argv, char **env)
 	{
 		argc = -1;
 		write(1, "$> ", 3);
-		while (term->buf[0] != 10 && (read(0, term->buf, BUFFSIZE)))
+		term->cursorpos = 0;
+		term->cmdlength = 0;
+		while ((read(0, term->buf, BUFFSIZE)) && term->buf[0] != 10)
 			ft_process(&term);
 		ft_putchar('\n');
 		term->cmdsplit = ft_strsplit(term->cmdactual, ';');

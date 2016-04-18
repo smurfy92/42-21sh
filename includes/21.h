@@ -29,6 +29,8 @@ typedef	struct			s_term
 	char				**env;
 	int					cursorpos;
 	int					cmdlength;
+	int 				historylen;
+	int 				historycurrent;
 	char				*buf;
 	char 				*cmdactual;
 	char				**cmds;

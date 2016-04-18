@@ -14,10 +14,13 @@
 
 void		ft_create_process(t_term *term)
 {
-	int y;
+	int 	y;
+	int 	i;
+	char 	*tmp;
 
 	ft_refresh_env(&term);
 	term->father = fork();
+	tmp = NULL;
 	if (term->father != 0)
 		wait(0);
 	if (term->father == 0)
@@ -29,6 +32,23 @@ void		ft_create_process(t_term *term)
 		while (term->cmds[++y])
 			(ft_strcmp(term->cmds[y], term->path) == 0) ?\
 			term->cmds = &term->cmds[y] : 0;
+		i = 0;
+		(!term->cmds[1]) ? (tmp = term->cmds[0]) : 0;
+		while (term->cmds[++i])
+		{
+			if (!tmp)
+				tmp = ft_strdup(term->cmds[i - 1]);		
+			tmp = ft_strjoin(tmp, " ");
+			tmp = ft_strjoin(tmp, term->cmds[i]);
+
+		}
+		i = open(".21sh_history", O_WRONLY|O_APPEND|O_CREAT);
+		tmp = ft_strjoin(";", tmp);
+		tmp = ft_strjoin(ft_itoa(++term->historylen), tmp);
+		ft_putendl(tmp);
+		write(i, tmp, ft_strlen(tmp));
+		write(i, "\n", 1);
+		close(i);
 		execve(term->path, term->cmds, term->env);
 		term->path = NULL;
 	}
@@ -54,6 +74,7 @@ int			ft_check_in_path(t_term *term)
 	if (term->path)
 	{
 		ft_create_process(term);
+		term->historylen++;
 		return (1);
 	}
 	else
