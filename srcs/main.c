@@ -213,15 +213,12 @@ void	ft_process(t_term **term)
 	char  *tmp;
 	if (!(*term)->buf[1] && (*term)->buf[0] != 10 && (*term)->buf[0] != 127)
 	{
-		if ((*term)->buf[0] == 99)
-		{
-			ft_putendl("c pressed");
-		}
 		if ((*term)->cursorpos < (*term)->cmdlength)
 		{
 			tputs(tgetstr("im", NULL), 1, ft_outchar);
 			tmp = ft_strjoin(&(*term)->buf[0], ((*term)->cmdactual + (*term)->cursorpos));
 			(*term)->cmdactual[(*term)->cursorpos ] = '\0';
+			(*term)->cmdactual = tmp;
 			(*term)->cmdactual = ft_strjoin((*term)->cmdactual, tmp);
 		}
 		else if (!(*term)->cmdactual)
@@ -319,9 +316,11 @@ int			main(int argc, char **argv, char **env)
 			term->cmds = ft_strsplit(term->cmdsplit[argc], ' ');
 			(!ft_check_builtin(&term)) ? ft_check_in_path(term) : 0;
 		}
+		argc = -1;
+		while (term->cmdsplit[++argc])
+			ft_bzero(term->cmdsplit[argc], ft_strlen(term->cmdsplit[argc]));
 		ft_bzero(term->cmdactual, ft_strlen(term->cmdactual));
 		ft_bzero(term->buf, ft_strlen(term->buf));
-		term->cursorpos = 0;
 	}
 	return (0);
 }
