@@ -31,6 +31,7 @@ typedef	struct			s_term
 	int					cmdlength;
 	int 				historylen;
 	int 				historycurrent;
+	int 				parenthese;
 	char				*buf;
 	char 				*cmdactual;
 	char				**cmds;

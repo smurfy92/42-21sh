@@ -37,7 +37,7 @@ void		ft_create_process(t_term *term)
 		while (term->cmds[++i])
 		{
 			if (!tmp)
-				tmp = ft_strdup(term->cmds[i - 1]);		
+				tmp = ft_strdup(term->cmds[i - 1]);
 			tmp = ft_strjoin(tmp, " ");
 			tmp = ft_strjoin(tmp, term->cmds[i]);
 
@@ -75,7 +75,7 @@ int			ft_check_in_path(t_term *term)
 		return (1);
 	}
 	else
-		ft_putendl(ft_strjoin("minish: command not found: ", term->cmds[0]));
+		ft_putendl(ft_strjoin("21sh: command not found: ", term->cmds[0]));
 	return (0);
 }
 

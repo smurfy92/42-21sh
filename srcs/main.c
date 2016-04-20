@@ -24,7 +24,7 @@ void		ft_process_unsetenv(t_term **term, char *s1)
 	lst = (*term)->lst;
 	if (!s1)
 	{
-		ft_putendl("minish: unsetenv: Invalid option");
+		ft_putendl("21sh: unsetenv: Invalid option");
 		ft_putendl("unsetenv NAME");
 	}
 	else
@@ -44,7 +44,7 @@ void		ft_process_setenv(t_term **term, char *s1, char *s2)
 	lst = (*term)->lst;
 	if (!s1 || !s2)
 	{
-		ft_putendl("minish: setenv: Invalid option");
+		ft_putendl("21sh: setenv: Invalid option");
 		ft_putendl("setenv NAME VALUE");
 	}
 	else
@@ -213,6 +213,10 @@ void	ft_process(t_term **term)
 	char  *tmp;
 	if (!(*term)->buf[1] && (*term)->buf[0] != 10 && (*term)->buf[0] != 127)
 	{
+		if ((*term)->buf[0] == 99)
+		{
+			ft_putendl("c pressed");
+		}
 		if ((*term)->cursorpos < (*term)->cmdlength)
 		{
 			tputs(tgetstr("im", NULL), 1, ft_outchar);
@@ -231,6 +235,16 @@ void	ft_process(t_term **term)
 	}
 	else if ((*term)->buf[0] != 10)
 	{
+		if ((*term)->buf[0] == 27 && (*term)->buf[1] == 91 && (*term)->buf[2] == 72)
+		{
+			while ((*term)->cursorpos-- > 0)
+				tputs(tgetstr("le", NULL), 0, ft_outchar);
+		}
+		if ((*term)->buf[0] == 27 && (*term)->buf[1] == 91 && (*term)->buf[2] == 70)
+		{
+			while ((*term)->cursorpos++ < (*term)->cmdlength)
+				tputs(tgetstr("nd", NULL), 0, ft_outchar);
+		}
 		if ((*term)->buf[0] == 127 && (*term)->cursorpos > 0)
 		{
 			tmp = &(*term)->cmdactual[(*term)->cursorpos];

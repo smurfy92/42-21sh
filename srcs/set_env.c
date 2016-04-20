@@ -76,6 +76,7 @@ t_term		*ft_set_term(char **env, t_env *lst)
 		term->historylen++;
 	term->historycurrent = 0;
 	term->i = 0;
+	term->parenthese = 0;
 	term->env = env;
 	term->lst = lst;
 	return (term);
