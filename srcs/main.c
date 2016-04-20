@@ -111,7 +111,7 @@ int			reset_shell(void)
 	term.c_lflag = (ICANON | ECHO);
 	if (tcsetattr(0, 0, &term) == -1)
 		return (-1);
-	exit(0);
+	//exit(0);
 	return (0);
 }
 
@@ -130,7 +130,10 @@ int			ft_check_builtin(t_term **term)
 	else if (ft_strcmp((*term)->cmds[0], "unsetenv") == 0)
 		ft_process_unsetenv(term, (*term)->cmds[1]);
 	else if (ft_strcmp((*term)->cmds[0], "exit") == 0)
+	{
 		reset_shell();
+		exit(0);
+	}
 	else
 		return (0);
 	i = 0;
@@ -177,7 +180,6 @@ void	ft_history_prev(t_term **term)
 	fd = open(".21sh_history", O_RDONLY);
 	while (i++ + (*term)->historycurrent < (*term)->historylen)
 		get_next_line(fd, &line);
-	line = ft_strsplit(line, ';')[1];
 	(*term)->historycurrent++;
 	(*term)->cursorpos = ft_strlen(line);
 	(*term)->cmdlength = ft_strlen(line);
@@ -196,7 +198,6 @@ void	ft_history_next(t_term **term)
 	while (i++ + (*term)->historycurrent <= (*term)->historylen)
 		get_next_line(fd, &line);
 	get_next_line(fd, &line);
-	line = ft_strsplit(line, ';')[1];
 	(*term)->historycurrent--;
 	(*term)->cursorpos = ft_strlen(line);
 	(*term)->cmdlength = ft_strlen(line);
@@ -273,8 +274,6 @@ void	ft_process(t_term **term)
 		}
 	}
 	ft_bzero((*term)->buf, ft_strlen((*term)->buf));
-	tputs(tgetstr("ei", NULL), 1, ft_outchar);
-	tputs(tgetstr("ve", NULL), 1, ft_outchar);
 }
 
 int			main(int argc, char **argv, char **env)
@@ -289,15 +288,16 @@ int			main(int argc, char **argv, char **env)
 	ft_check_env(&term);
 	signal(SIGINT, ft_prompt);
 	signal(SIGTSTP, ft_prompt);
-	init_shell((~ICANON & ~ECHO));
 	while (42)
 	{
 		argc = -1;
+		init_shell((~ICANON & ~ECHO));
 		write(1, "$> ", 3);
 		term->cursorpos = 0;
 		term->cmdlength = 0;
 		while ((read(0, term->buf, BUFFSIZE)) && term->buf[0] != 10)
 			ft_process(&term);
+		reset_shell();
 		ft_putchar('\n');
 		term->cmdsplit = ft_strsplit(term->cmdactual, ';');
 		while (term->cmdsplit && term->cmdsplit[++argc])
