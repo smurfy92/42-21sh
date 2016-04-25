@@ -217,8 +217,7 @@ void	ft_process(t_term **term)
 		{
 			tputs(tgetstr("im", NULL), 1, ft_outchar);
 			tmp = ft_strjoin(&(*term)->buf[0], ((*term)->cmdactual + (*term)->cursorpos));
-			(*term)->cmdactual[(*term)->cursorpos ] = '\0';
-			(*term)->cmdactual = tmp;
+			(*term)->cmdactual[(*term)->cursorpos] = '\0';
 			(*term)->cmdactual = ft_strjoin((*term)->cmdactual, tmp);
 		}
 		else if (!(*term)->cmdactual)
@@ -234,13 +233,21 @@ void	ft_process(t_term **term)
 	{
 		if ((*term)->buf[0] == 27 && (*term)->buf[1] == 91 && (*term)->buf[2] == 72)
 		{
-			while ((*term)->cursorpos-- > 0)
+			if ((*term)->cursorpos > 0)
+			{
+				while (--(*term)->cursorpos > 0)
+					tputs(tgetstr("le", NULL), 0, ft_outchar);
 				tputs(tgetstr("le", NULL), 0, ft_outchar);
+			}
 		}
 		if ((*term)->buf[0] == 27 && (*term)->buf[1] == 91 && (*term)->buf[2] == 70)
 		{
-			while ((*term)->cursorpos++ < (*term)->cmdlength)
+			if ((*term)->cursorpos < (*term)->cmdlength)
+			{
 				tputs(tgetstr("nd", NULL), 0, ft_outchar);
+				while (++(*term)->cursorpos < (*term)->cmdlength)
+					tputs(tgetstr("nd", NULL), 0, ft_outchar);
+			}
 		}
 		if ((*term)->buf[0] == 127 && (*term)->cursorpos > 0)
 		{
@@ -284,6 +291,9 @@ void	ft_process(t_term **term)
 			}
 		}
 	}
+	// printf("\ncursorpos : %d\n",(*term)->cursorpos);
+	// printf("cursorlen : %d\n",(*term)->cmdlength);
+	// printf("cmdactual : %s\n",(*term)->cmdactual);
 	ft_bzero((*term)->buf, ft_strlen((*term)->buf));
 }
 
@@ -306,6 +316,12 @@ int			main(int argc, char **argv, char **env)
 		write(1, "$> ", 3);
 		term->cursorpos = 0;
 		term->cmdlength = 0;
+		term->cmdsplit = NULL;
+		term->path = NULL;
+		term->cmdactual = NULL;
+		argc = -1;
+		ft_bzero(term->cmdactual, ft_strlen(term->cmdactual));
+		ft_bzero(term->buf, ft_strlen(term->buf));
 		while ((read(0, term->buf, BUFFSIZE)) && term->buf[0] != 10)
 			ft_process(&term);
 		reset_shell();
@@ -317,10 +333,6 @@ int			main(int argc, char **argv, char **env)
 			(!ft_check_builtin(&term)) ? ft_check_in_path(term) : 0;
 		}
 		argc = -1;
-		while (term->cmdsplit[++argc])
-			ft_bzero(term->cmdsplit[argc], ft_strlen(term->cmdsplit[argc]));
-		ft_bzero(term->cmdactual, ft_strlen(term->cmdactual));
-		ft_bzero(term->buf, ft_strlen(term->buf));
 	}
 	return (0);
 }
