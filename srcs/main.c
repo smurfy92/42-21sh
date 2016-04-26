@@ -147,8 +147,6 @@ int			ft_check_builtin(t_term **term)
 	}
 
 	i = open(".21sh_history", O_WRONLY|O_APPEND|O_CREAT);
-	tmp = ft_strjoin(";", tmp);
-	tmp = ft_strjoin(ft_itoa(++(*term)->historylen), tmp);
 	write(i, tmp, ft_strlen(tmp));
 	write(i, "\n", 1);
 	close(i);
@@ -211,7 +209,7 @@ void	ft_process(t_term **term)
 	// printf("1 : %d\n",(*term)->buf[1]);
 	// printf("2 : %d\n",(*term)->buf[2]);
 	char  *tmp;
-	if (!(*term)->buf[1] && (*term)->buf[0] != 10 && (*term)->buf[0] != 127)
+	if (!(*term)->buf[1] && (*term)->buf[0] != 10 && (*term)->buf[0] != 27 && (*term)->buf[0] != 127)
 	{
 		if ((*term)->cursorpos < (*term)->cmdlength)
 		{
@@ -290,14 +288,13 @@ void	ft_process(t_term **term)
 				(*term)->historycurrent = 0;
 			}
 		}
-		else if ((*term)->buf[0] != 27)
+		else if ((*term)->buf[0] != 27 && (*term)->buf[0] != 127)
 		{
 			(*term)->cursorpos += ft_strlen((*term)->buf);
 			(*term)->cmdlength += ft_strlen((*term)->buf);
 			ft_putstr((*term)->buf);
 		}
 	}
-
 	// printf("\ncursorpos : %d\n",(*term)->cursorpos);
 	// printf("cursorlen : %d\n",(*term)->cmdlength);
 	// printf("cmdactual : %s\n",(*term)->cmdactual);
