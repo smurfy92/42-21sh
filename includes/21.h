@@ -12,7 +12,7 @@
 
 #ifndef VINETUNSH_H
 # define VINETUNSH_H
-# define BUFFSIZE 3
+# define BUFFSIZE 1000
 # include "../libft/includes/libft.h"
 # include <signal.h>
 # include <termios.h>

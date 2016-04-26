@@ -240,7 +240,7 @@ void	ft_process(t_term **term)
 				tputs(tgetstr("le", NULL), 0, ft_outchar);
 			}
 		}
-		if ((*term)->buf[0] == 27 && (*term)->buf[1] == 91 && (*term)->buf[2] == 70)
+		else if ((*term)->buf[0] == 27 && (*term)->buf[1] == 91 && (*term)->buf[2] == 70)
 		{
 			if ((*term)->cursorpos < (*term)->cmdlength)
 			{
@@ -249,7 +249,7 @@ void	ft_process(t_term **term)
 					tputs(tgetstr("nd", NULL), 0, ft_outchar);
 			}
 		}
-		if ((*term)->buf[0] == 127 && (*term)->cursorpos > 0)
+		else if ((*term)->buf[0] == 127 && (*term)->cursorpos > 0)
 		{
 			tmp = &(*term)->cmdactual[(*term)->cursorpos];
 			(*term)->cursorpos--;
@@ -259,17 +259,17 @@ void	ft_process(t_term **term)
 			tputs(tgetstr("le", NULL), 0, ft_outchar);
 			tputs(tgetstr("dc", NULL), 0, ft_outchar);
 		}
-		if ((*term)->buf[0] == 27 && (*term)->buf[2] == 68 && (*term)->cursorpos > 0)
+		else if ((*term)->buf[0] == 27 && (*term)->buf[2] == 68 && (*term)->cursorpos > 0)
 		{
 			(*term)->cursorpos--;
 			tputs(tgetstr("le", NULL), 0, ft_outchar);
 		}
-		if ((*term)->buf[0] == 27 && (*term)->buf[2] == 67 && (*term)->cursorpos < (*term)->cmdlength)
+		else if ((*term)->buf[0] == 27 && (*term)->buf[2] == 67 && (*term)->cursorpos < (*term)->cmdlength)
 		{
 			(*term)->cursorpos++;
 			tputs(tgetstr("nd", NULL), 0, ft_outchar);
 		}
-		if ((*term)->buf[0] == 27 && (*term)->buf[2] == 65)
+		else if ((*term)->buf[0] == 27 && (*term)->buf[2] == 65)
 		{
 			if ((*term)->historycurrent < (*term)->historylen)
 			{
@@ -277,7 +277,7 @@ void	ft_process(t_term **term)
 				ft_history_prev(term);
 			}
 		}
-		if ((*term)->buf[0] == 27 && (*term)->buf[2] == 66)
+		else if ((*term)->buf[0] == 27 && (*term)->buf[2] == 66)
 		{
 			if ((*term)->historycurrent > 1)
 			{
@@ -290,7 +290,14 @@ void	ft_process(t_term **term)
 				(*term)->historycurrent = 0;
 			}
 		}
+		else if ((*term)->buf[0] != 27)
+		{
+			(*term)->cursorpos += ft_strlen((*term)->buf);
+			(*term)->cmdlength += ft_strlen((*term)->buf);
+			ft_putstr((*term)->buf);
+		}
 	}
+
 	// printf("\ncursorpos : %d\n",(*term)->cursorpos);
 	// printf("cursorlen : %d\n",(*term)->cmdlength);
 	// printf("cmdactual : %s\n",(*term)->cmdactual);
