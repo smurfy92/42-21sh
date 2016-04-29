@@ -172,37 +172,20 @@ void 		ft_clean_line(t_term **term)
 
 void	ft_history_prev(t_term **term)
 {
-	int i;
-	int fd;
-	char *line;
-
-	i = 0;
-	fd = open(".21sh_history", O_RDONLY);
-	while (i++ + (*term)->historycurrent < (*term)->historylen)
-		get_next_line(fd, &line);
-	(*term)->historycurrent++;
-	(*term)->cursorpos = ft_strlen(line);
-	(*term)->cmdlength = ft_strlen(line);
-	(*term)->cmdactual = ft_strdup(line);
-	ft_putstr(line);
+	(*term)->history = (*term)->history->prev;
+	(*term)->cursorpos = ft_strlen((*term)->history->var);
+	(*term)->cmdlength = ft_strlen((*term)->history->var);
+	(*term)->cmdactual = ft_strdup((*term)->history->var);
+	ft_putstr((*term)->history->var);
 }
 
 void	ft_history_next(t_term **term)
 {
-	int i;
-	int fd;
-	char *line;
-
-	i = 0;
-	fd = open(".21sh_history", O_RDONLY);
-	while (i++ + (*term)->historycurrent <= (*term)->historylen)
-		get_next_line(fd, &line);
-	get_next_line(fd, &line);
-	(*term)->historycurrent--;
-	(*term)->cursorpos = ft_strlen(line);
-	(*term)->cmdlength = ft_strlen(line);
-	(*term)->cmdactual = ft_strdup(line);
-	ft_putstr(line);
+	(*term)->history = (*term)->history->next;
+	(*term)->cursorpos = ft_strlen((*term)->history->var);
+	(*term)->cmdlength = ft_strlen((*term)->history->var);
+	(*term)->cmdactual = ft_strdup((*term)->history->var);
+	ft_putstr((*term)->history->var);
 }
 
 void	ft_process(t_term **term)
@@ -249,7 +232,7 @@ void	ft_process(t_term **term)
 	}
 	else if ((*term)->buf[0] == 27 && (*term)->buf[2] == 65)
 	{
-		if ((*term)->historycurrent < (*term)->historylen)
+		if ((*term)->history->prev)
 		{
 			ft_clean_line(term);
 			ft_history_prev(term);
@@ -257,11 +240,11 @@ void	ft_process(t_term **term)
 	}
 	else if ((*term)->buf[0] == 27 && (*term)->buf[2] == 66)
 	{
-		ft_clean_line(term);
-		if ((*term)->historycurrent > 1)
+		if ((*term)->history->next)
+		{
+			ft_clean_line(term);
 			ft_history_next(term);
-		else
-			(*term)->historycurrent = 0;
+		}
 	}
 	else if ((*term)->buf[0] != 27 && (*term)->buf[0] != 127)
 	{
@@ -284,6 +267,37 @@ void	ft_process(t_term **term)
 	ft_bzero((*term)->buf, ft_strlen((*term)->buf));
 }
 
+void		ft_get_history(t_term *term)
+{
+	int fd;
+	t_history *tmp;
+	t_history *tmp2;
+	char *line;
+
+	fd = open(".21sh_history", O_RDONLY);
+	term->history = NULL;
+	term->historylen = 0;
+	term->historycurrent = 0;
+	while ((get_next_line(fd, &line)) > 0)
+	{
+		tmp = (t_history*)malloc(sizeof(t_history));
+		tmp->var = ft_strdup(line);
+		tmp->next = NULL;
+		tmp->prev = NULL;
+		tmp2 = term->history;
+		term->historylen++;
+		if (!term->history)
+			term->history = tmp;
+		else
+		{
+			while (term->history->next)
+				term->history = term->history->next;
+			term->history->next = tmp;
+			tmp->prev = term->history;
+		}
+	}
+}
+
 int			main(int argc, char **argv, char **env)
 {
 	static t_term		*term;
@@ -291,6 +305,7 @@ int			main(int argc, char **argv, char **env)
 	argv = NULL;
 	term = ft_set_term(env, ft_parse_env(env));
 	ft_check_env(&term);
+	ft_get_history(term);
 	while (42)
 	{
 		argc = -1;

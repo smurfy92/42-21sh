@@ -26,6 +26,7 @@ typedef	struct			s_term
 	struct s_env		*lst;
 	int					i;
 	char				*u;
+	struct s_history	*history;
 	char				**env;
 	int					cursorpos;
 	int					cmdlength;
@@ -50,6 +51,13 @@ typedef	struct			s_env
 	char				*val;
 	struct s_env		*next;
 }						t_env;
+
+typedef	struct			s_history
+{
+	char				*var;
+	struct s_history	*next;
+	struct s_history	*prev;
+}						t_history;
 
 int						ft_outchar(int c);
 int						reset_shell(void);
