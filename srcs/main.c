@@ -19,11 +19,11 @@ int			ft_outchar(int c)
 	return (write(1, &c, 1));
 }
 
-void		ft_process_unsetenv(t_term **term, char *s1)
+void		ft_process_unsetenv(t_term *term, char *s1)
 {
 	t_env *lst;
 
-	lst = (*term)->lst;
+	lst = term->lst;
 	if (!s1)
 	{
 		ft_putendl("21sh: unsetenv: Invalid option");
@@ -32,18 +32,18 @@ void		ft_process_unsetenv(t_term **term, char *s1)
 	else
 	{
 		if (ft_strcmp(lst->var, s1) == 0)
-			(*term)->lst = lst->next;
+			term->lst = lst->next;
 		while (lst->next && ft_strcmp((lst->next)->var, s1) != 0)
 			lst = lst->next;
 		(lst->next) ? (lst->next = lst->next->next) : 0;
 	}
 }
 
-void		ft_process_setenv(t_term **term, char *s1, char *s2)
+void		ft_process_setenv(t_term *term, char *s1, char *s2)
 {
 	t_env *lst;
 
-	lst = (*term)->lst;
+	lst = term->lst;
 	if (!s1 || !s2)
 	{
 		ft_putendl("21sh: setenv: Invalid option");
@@ -55,28 +55,28 @@ void		ft_process_setenv(t_term **term, char *s1, char *s2)
 		lst->var = s1;
 		lst->val = s2;
 		lst->next = NULL;
-		(*term)->lst = ft_add_lst(lst, (*term)->lst);
+		term->lst = ft_add_lst(lst, term->lst);
 	}
 }
 
-void		ft_cd(t_term **term)
+void		ft_cd(t_term *term)
 {
 	char *buf;
 
 	buf = NULL;
-	if (ft_strcmp((*term)->cmds[1], "-") == 0)
+	if (ft_strcmp(term->cmds[1], "-") == 0)
 	{
-		chdir(ft_get_env_by_name(*term, "OLDPWD"));
+		chdir(ft_get_env_by_name(term, "OLDPWD"));
 		ft_process_unsetenv(term, "OLDPWD");
-		ft_process_setenv(term, "OLDPWD", ft_get_env_by_name(*term, "PWD"));
+		ft_process_setenv(term, "OLDPWD", ft_get_env_by_name(term, "PWD"));
 	}
 	else
 	{
 		ft_process_unsetenv(term, "OLDPWD");
 		ft_process_setenv(term, "OLDPWD", getwd(buf));
 	}
-	if ((*term)->cmds[1] && ft_strcmp((*term)->cmds[1], "~") != 0)
-		chdir((*term)->cmds[1]);
+	if (term->cmds[1] && ft_strcmp(term->cmds[1], "~") != 0)
+		chdir(term->cmds[1]);
 	else
 		chdir(ft_get_val(term, "HOME"));
 	ft_process_unsetenv(term, "PWD");
@@ -117,21 +117,21 @@ int			reset_shell(void)
 	return (0);
 }
 
-int			ft_check_builtin(t_term **term)
+int			ft_check_builtin(t_term *term)
 {
 	int i;
 	char *tmp;
 
 	tmp = NULL;
-	if (ft_strcmp((*term)->cmds[0], "cd") == 0)
+	if (ft_strcmp(term->cmds[0], "cd") == 0)
 		ft_cd(term);
-	else if (ft_strcmp((*term)->cmds[0], "env") == 0)
-		(!(*term)->cmds[1]) ? ft_display_env(*term) : ft_env_options(term);
-	else if (ft_strcmp((*term)->cmds[0], "setenv") == 0)
-		ft_process_setenv(term, (*term)->cmds[1], (*term)->cmds[2]);
-	else if (ft_strcmp((*term)->cmds[0], "unsetenv") == 0)
-		ft_process_unsetenv(term, (*term)->cmds[1]);
-	else if (ft_strcmp((*term)->cmds[0], "exit") == 0)
+	else if (ft_strcmp(term->cmds[0], "env") == 0)
+		(!term->cmds[1]) ? ft_display_env(term) : ft_env_options(term);
+	else if (ft_strcmp(term->cmds[0], "setenv") == 0)
+		ft_process_setenv(term, term->cmds[1], term->cmds[2]);
+	else if (ft_strcmp(term->cmds[0], "unsetenv") == 0)
+		ft_process_unsetenv(term, term->cmds[1]);
+	else if (ft_strcmp(term->cmds[0], "exit") == 0)
 	{
 		reset_shell();
 		exit(0);
@@ -139,30 +139,30 @@ int			ft_check_builtin(t_term **term)
 	else
 		return (0);
 	i = 0;
-	(!(*term)->cmds[1]) ? (tmp = (*term)->cmds[0]) : 0;
-	while ((*term)->cmds[++i])
+	(!term->cmds[1]) ? (tmp = term->cmds[0]) : 0;
+	while (term->cmds[++i])
 	{
 		if (!tmp)
-			tmp = ft_strdup((*term)->cmds[i - 1]);
+			tmp = ft_strdup(term->cmds[i - 1]);
 		tmp = ft_strjoin(tmp, " ");
-		tmp = ft_strjoin(tmp, (*term)->cmds[i]);
+		tmp = ft_strjoin(tmp, term->cmds[i]);
 	}
-	(*term)->i = 0;
-	(*term)->u = NULL;
+	term->i = 0;
+	term->u = NULL;
 	return (1);
 }
 
-void 		ft_clean_line(t_term **term)
+void 		ft_clean_line(t_term *term)
 {
-	while (++(*term)->cursorpos < (*term)->cmdlength)
+	while (++term->cursorpos < term->cmdlength)
 		tputs(tgetstr("nd", NULL), 0, ft_outchar);
-	while (--(*term)->cursorpos > 0)
+	while (--term->cursorpos > 0)
 	{
 		tputs(tgetstr("le", NULL), 0, ft_outchar);
 		tputs(tgetstr("dc", NULL), 0, ft_outchar);
 	}
 	tputs(tgetstr("ve", NULL), 1, ft_outchar);
-	(*term)->cmdactual = NULL;
+	term->cmdactual = NULL;
 }
 
 void		ft_add_history(t_term *term, char *cmd)
@@ -186,106 +186,105 @@ void		ft_add_history(t_term *term, char *cmd)
 	close(fd);
 }
 
-void	ft_history_prev(t_term **term)
+void	ft_history_prev(t_term *term)
 {
-	if (!(*term)->history->next)
-		ft_add_history(*term, (*term)->history->var);
-	if ((*term)->history->prev)
+	if (!term->history->next)
+		ft_add_history(term, term->history->var);
+	if (term->history->prev)
 	{
 		ft_clean_line(term);
-		(*term)->history = (*term)->history->prev;
-		(*term)->cursorpos = ft_strlen((*term)->history->var);
-		(*term)->cmdlength = ft_strlen((*term)->history->var);
-		(*term)->cmdactual = ft_strdup((*term)->history->var);
-		ft_putstr((*term)->history->var);
+		term->history = term->history->prev;
+		term->cursorpos = ft_strlen(term->history->var);
+		term->cmdlength = ft_strlen(term->history->var);
+		term->cmdactual = ft_strdup(term->history->var);
+		ft_putstr(term->history->var);
 	}
 }
 
-void	ft_history_next(t_term **term)
+void	ft_history_next(t_term *term)
 {
 	ft_clean_line(term);
-	if ((*term)->history->next)
+	if (term->history->next)
 	{
-		(*term)->history = (*term)->history->next;
-		(*term)->cursorpos = ft_strlen((*term)->history->var);
-		(*term)->cmdlength = ft_strlen((*term)->history->var);
-		(*term)->cmdactual = ft_strdup((*term)->history->var);
-		ft_putstr((*term)->history->var);
+		term->history = term->history->next;
+		term->cursorpos = ft_strlen(term->history->var);
+		term->cmdlength = ft_strlen(term->history->var);
+		term->cmdactual = ft_strdup(term->history->var);
+		ft_putstr(term->history->var);
 	}
 }
 
-void	ft_process(t_term **term)
+void	ft_process(t_term *term)
 {
 	char  *tmp;
 
-	if ((*term)->buf[0] == 27 && (*term)->buf[1] == 91 && (*term)->buf[2] == 72)
+	if (term->buf[0] == 27 && term->buf[1] == 91 && term->buf[2] == 72)
 	{
-		if ((*term)->cursorpos > 0)
+		if (term->cursorpos > 0)
 		{
-			while (--(*term)->cursorpos > 0)
+			while (--term->cursorpos > 0)
 				tputs(tgetstr("le", NULL), 0, ft_outchar);
 			tputs(tgetstr("le", NULL), 0, ft_outchar);
 		}
 	}
-	else if ((*term)->buf[0] == 27 && (*term)->buf[1] == 91 && (*term)->buf[2] == 70)
+	else if (term->buf[0] == 27 && term->buf[1] == 91 && term->buf[2] == 70)
 	{
-		if ((*term)->cursorpos < (*term)->cmdlength)
+		if (term->cursorpos < term->cmdlength)
 		{
 			tputs(tgetstr("nd", NULL), 0, ft_outchar);
-			while (++(*term)->cursorpos < (*term)->cmdlength)
+			while (++term->cursorpos < term->cmdlength)
 				tputs(tgetstr("nd", NULL), 0, ft_outchar);
 		}
 	}
-	else if ((*term)->buf[0] == 127 && (*term)->cursorpos > 0)
+	else if (term->buf[0] == 127 && term->cursorpos > 0)
 	{
-		tmp = &(*term)->cmdactual[(*term)->cursorpos];
-		(*term)->cursorpos--;
-		(*term)->cmdlength--;
-		(*term)->cmdactual[(*term)->cursorpos] = '\0';
-		(*term)->cmdactual = ft_strjoin((*term)->cmdactual, tmp);
+		tmp = &term->cmdactual[term->cursorpos];
+		term->cursorpos--;
+		term->cmdlength--;
+		term->cmdactual[term->cursorpos] = '\0';
+		term->cmdactual = ft_strjoin(term->cmdactual, tmp);
 		tputs(tgetstr("le", NULL), 0, ft_outchar);
 		tputs(tgetstr("dc", NULL), 0, ft_outchar);
 	}
-	else if ((*term)->buf[0] == 27 && (*term)->buf[2] == 68 && (*term)->cursorpos > 0)
+	else if (term->buf[0] == 27 && term->buf[2] == 68 && term->cursorpos > 0)
 	{
-		(*term)->cursorpos--;
+		term->cursorpos--;
 		tputs(tgetstr("le", NULL), 0, ft_outchar);
 	}
-	else if ((*term)->buf[0] == 27 && (*term)->buf[2] == 67 && (*term)->cursorpos < (*term)->cmdlength)
+	else if (term->buf[0] == 27 && term->buf[2] == 67 && term->cursorpos < term->cmdlength)
 	{
-		(*term)->cursorpos++;
+		term->cursorpos++;
 		tputs(tgetstr("nd", NULL), 0, ft_outchar);
 	}
-	else if ((*term)->buf[0] == 27 && (*term)->buf[2] == 65)
+	else if (term->buf[0] == 27 && term->buf[2] == 65)
 		ft_history_prev(term);
-	else if ((*term)->buf[0] == 27 && (*term)->buf[2] == 66)
+	else if (term->buf[0] == 27 && term->buf[2] == 66)
 		ft_history_next(term);
-	else if ((*term)->buf[0] != 27 && (*term)->buf[0] != 127)
+	else if (term->buf[0] != 27 && term->buf[0] != 127)
 	{
-		if ((*term)->cursorpos < (*term)->cmdlength)
+		if (term->cursorpos < term->cmdlength)
 		{
 			tputs(tgetstr("im", NULL), 1, ft_outchar);
-			tmp = ft_strjoin((*term)->buf, ((*term)->cmdactual + (*term)->cursorpos));
-			(*term)->cmdactual[(*term)->cursorpos] = '\0';
-			(*term)->cmdactual = ft_strjoin((*term)->cmdactual, tmp);
+			tmp = ft_strjoin(term->buf, (term->cmdactual + term->cursorpos));
+			term->cmdactual[term->cursorpos] = '\0';
+			term->cmdactual = ft_strjoin(term->cmdactual, tmp);
 		}
-		else if (!(*term)->cmdactual)
-			(*term)->cmdactual = ft_strdup((*term)->buf);
+		else if (!term->cmdactual)
+			term->cmdactual = ft_strdup(term->buf);
 		else
-			(*term)->cmdactual = ft_strjoin((*term)->cmdactual, (*term)->buf);
-		(*term)->cursorpos += ft_strlen((*term)->buf);
-		(*term)->cmdlength += ft_strlen((*term)->buf);
-		ft_putstr((*term)->buf);
+			term->cmdactual = ft_strjoin(term->cmdactual, term->buf);
+		term->cursorpos += ft_strlen(term->buf);
+		term->cmdlength += ft_strlen(term->buf);
+		ft_putstr(term->buf);
 		tputs(tgetstr("ei", NULL), 1, ft_outchar);
 	}
-	ft_bzero((*term)->buf, ft_strlen((*term)->buf));
+	ft_bzero(term->buf, ft_strlen(term->buf));
 }
 
 void		ft_get_history(t_term *term)
 {
 	int fd;
 	t_history *tmp;
-	t_history *tmp2;
 	char *line;
 
 	fd = open(".21sh_history", O_RDONLY);
@@ -298,14 +297,11 @@ void		ft_get_history(t_term *term)
 		tmp->var = ft_strdup(line);
 		tmp->next = NULL;
 		tmp->prev = NULL;
-		tmp2 = term->history;
 		term->historylen++;
 		if (!term->history)
 			term->history = tmp;
 		else
 		{
-			while (term->history->next)
-				term->history = term->history->next;
 			term->history->next = tmp;
 			tmp->prev = term->history;
 			term->history = term->history->next;
@@ -319,7 +315,7 @@ int			main(int argc, char **argv, char **env)
 
 	argv = NULL;
 	term = ft_set_term(env, ft_parse_env(env));
-	ft_check_env(&term);
+	ft_check_env(term);
 	ft_get_history(term);
 	while (42)
 	{
@@ -334,7 +330,7 @@ int			main(int argc, char **argv, char **env)
 		ft_bzero(term->cmdactual, ft_strlen(term->cmdactual));
 		ft_bzero(term->buf, ft_strlen(term->buf));
 		while ((read(0, term->buf, BUFFSIZE)) && term->buf[0] != 10)
-			ft_process(&term);
+			ft_process(term);
 		reset_shell();
 		ft_putchar('\n');
 		term->cmdsplit = ft_strsplit(term->cmdactual, ';');
@@ -342,7 +338,7 @@ int			main(int argc, char **argv, char **env)
 		{
 			term->cmds = NULL;
 			term->cmds = ft_strsplit(term->cmdsplit[argc], ' ');
-			(!ft_check_builtin(&term)) ? ft_check_in_path(term) : 0;
+			(!ft_check_builtin(term)) ? ft_check_in_path(term) : 0;
 		}
 	}
 	return (0);

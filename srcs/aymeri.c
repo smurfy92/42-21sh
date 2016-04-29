@@ -18,7 +18,7 @@ void		ft_create_process(t_term *term)
 	int 	i;
 	char 	*tmp;
 
-	ft_refresh_env(&term);
+	ft_refresh_env(term);
 	term->father = fork();
 	tmp = NULL;
 	if (term->father != 0)
@@ -75,16 +75,16 @@ int			ft_check_in_path(t_term *term)
 	return (0);
 }
 
-void		ft_refresh_env(t_term **term)
+void		ft_refresh_env(t_term *term)
 {
 	t_env		*lst;
 	int			i;
 
-	lst = (*term)->lst;
+	lst = term->lst;
 	i = 0;
 	while (lst)
 	{
-		(*term)->env[i++] = ft_strjoin(ft_strjoin(lst->var, "="), lst->val);
+		term->env[i++] = ft_strjoin(ft_strjoin(lst->var, "="), lst->val);
 		lst = lst->next;
 	}
 }

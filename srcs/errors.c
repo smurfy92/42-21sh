@@ -22,33 +22,33 @@ void		ft_permission_denied(char *str)
 	write(2, "\n", 1);
 }
 
-void		ft_env_options(t_term **term)
+void		ft_env_options(t_term *term)
 {
 	int i;
 
 	i = 0;
-	while ((*term)->cmds[++i] && !ft_check_in_env(*term, (*term)->cmds[i]))
+	while (term->cmds[++i] && !ft_check_in_env(term, term->cmds[i]))
 	{
-		(ft_strcmp((*term)->cmds[i], "-i") == 0 ||\
-		ft_strcmp((*term)->cmds[i], "-") == 0) ? ((*term)->i = 1) : 0;
-		if (ft_strcmp((*term)->cmds[i], "-u") == 0)
+		(ft_strcmp(term->cmds[i], "-i") == 0 ||\
+		ft_strcmp(term->cmds[i], "-") == 0) ? (term->i = 1) : 0;
+		if (ft_strcmp(term->cmds[i], "-u") == 0)
 		{
-			if (!(*term)->cmds[++i])
+			if (!term->cmds[++i])
 			{
 				ft_putendl("env: option requires an argument -u");
 				return ;
 			}
 		}
-		else if (!ft_strchr((*term)->cmds[i], '=') &&\
-		ft_strcmp((*term)->cmds[i], "-i") != 0)
+		else if (!ft_strchr(term->cmds[i], '=') &&\
+		ft_strcmp(term->cmds[i], "-i") != 0)
 		{
-			ft_putstr(ft_strjoin("21sh: ", (*term)->cmds[i]));
+			ft_putstr(ft_strjoin("21sh: ", term->cmds[i]));
 			ft_putendl(" No such file or directory");
 			return ;
 		}
 	}
-	if (!(*term)->cmds[i])
-		(!(*term)->i) ? ft_newenv_display(term) : ft_display_i(*term);
+	if (!term->cmds[i])
+		(!term->i) ? ft_newenv_display(term) : ft_display_i(term);
 }
 
 void		ft_display_env(t_term *term)

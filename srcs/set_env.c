@@ -25,11 +25,11 @@ t_env		*ft_parse_env(char **env)
 	return (lst);
 }
 
-int			ft_get_val_exists(t_term **term, char *str)
+int			ft_get_val_exists(t_term *term, char *str)
 {
 	t_env		*lst;
 
-	lst = (*term)->lst;
+	lst = term->lst;
 	if (!lst)
 		return (0);
 	while (lst->next && ft_strcmp(lst->var, str))
@@ -40,7 +40,7 @@ int			ft_get_val_exists(t_term **term, char *str)
 		return (0);
 }
 
-void		ft_check_env(t_term **term)
+void		ft_check_env(t_term *term)
 {
 	char *buf;
 
@@ -82,11 +82,11 @@ t_term		*ft_set_term(char **env, t_env *lst)
 	return (term);
 }
 
-char		*ft_get_val(t_term **term, char *str)
+char		*ft_get_val(t_term *term, char *str)
 {
 	t_env		*lst;
 
-	lst = (*term)->lst;
+	lst = term->lst;
 	while (lst->next && ft_strcmp(lst->var, str))
 		lst = lst->next;
 	if (lst && ft_strcmp(lst->var, str) == 0)

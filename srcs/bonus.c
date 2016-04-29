@@ -80,22 +80,22 @@ int			ft_check_in_env(t_term *term, char *cmd)
 		return (0);
 }
 
-void		ft_newenv_display(t_term **term)
+void		ft_newenv_display(t_term *term)
 {
 	int			i;
 	t_env		*lst;
 
-	lst = (*term)->lst;
+	lst = term->lst;
 	while (lst)
 	{
 		i = -1;
-		while ((*term)->cmds[++i])
+		while (term->cmds[++i])
 		{
-			if (ft_strcmp((*term)->cmds[i], "-u") == 0)
-				if (ft_strcmp((*term)->cmds[i + 1], lst->var) == 0)
+			if (ft_strcmp(term->cmds[i], "-u") == 0)
+				if (ft_strcmp(term->cmds[i + 1], lst->var) == 0)
 					break ;
 		}
-		if (!(*term)->cmds[i])
+		if (!term->cmds[i])
 		{
 			ft_putstr(lst->var);
 			ft_putstr("=");
@@ -104,9 +104,9 @@ void		ft_newenv_display(t_term **term)
 		lst = lst->next;
 	}
 	i = 0;
-	while ((*term)->cmds[++i])
-		(ft_strcmp((*term)->cmds[i], "-u") == 0) ? i++ :\
-		ft_putendl((*term)->cmds[i]);
+	while (term->cmds[++i])
+		(ft_strcmp(term->cmds[i], "-u") == 0) ? i++ :\
+		ft_putendl(term->cmds[i]);
 }
 
 void		ft_display_i(t_term *term)
