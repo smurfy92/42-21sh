@@ -42,10 +42,6 @@ void		ft_create_process(t_term *term)
 			tmp = ft_strjoin(tmp, term->cmds[i]);
 
 		}
-		i = open(".21sh_history", O_WRONLY|O_APPEND|O_CREAT);
-		write(i, tmp, ft_strlen(tmp));
-		write(i, "\n", 1);
-		close(i);
 		execve(term->path, term->cmds, term->env);
 		term->path = NULL;
 	}

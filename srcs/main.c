@@ -147,11 +147,6 @@ int			ft_check_builtin(t_term **term)
 		tmp = ft_strjoin(tmp, " ");
 		tmp = ft_strjoin(tmp, (*term)->cmds[i]);
 	}
-
-	i = open(".21sh_history", O_WRONLY|O_APPEND|O_CREAT);
-	write(i, tmp, ft_strlen(tmp));
-	write(i, "\n", 1);
-	close(i);
 	(*term)->i = 0;
 	(*term)->u = NULL;
 	return (1);
@@ -170,8 +165,31 @@ void 		ft_clean_line(t_term **term)
 	(*term)->cmdactual = NULL;
 }
 
+void		ft_add_history(t_term *term, char *cmd)
+{
+	int fd;
+	t_history *tmp;
+	t_history *tmp2;
+
+	fd = open(".21sh_history", O_WRONLY|O_APPEND|O_CREAT);
+	write(fd, cmd, ft_strlen(cmd));
+	tmp2 = term->history;
+	tmp = (t_history*)malloc(sizeof(t_history));
+	tmp->var = cmd;
+	tmp->next = NULL;
+	while (term->history->next)
+		term->history = term->history->next;
+	term->history->next = tmp;
+	tmp->prev = term->history;
+	term->history = term->history->next;
+	write(fd, "\n", 1);
+	close(fd);
+}
+
 void	ft_history_prev(t_term **term)
 {
+	if (!(*term)->history->next)
+		ft_add_history(*term, (*term)->history->var);
 	if ((*term)->history->prev)
 	{
 		ft_clean_line(term);
@@ -185,9 +203,9 @@ void	ft_history_prev(t_term **term)
 
 void	ft_history_next(t_term **term)
 {
+	ft_clean_line(term);
 	if ((*term)->history->next)
 	{
-		ft_clean_line(term);
 		(*term)->history = (*term)->history->next;
 		(*term)->cursorpos = ft_strlen((*term)->history->var);
 		(*term)->cmdlength = ft_strlen((*term)->history->var);
@@ -239,9 +257,9 @@ void	ft_process(t_term **term)
 		tputs(tgetstr("nd", NULL), 0, ft_outchar);
 	}
 	else if ((*term)->buf[0] == 27 && (*term)->buf[2] == 65)
-			ft_history_prev(term);
+		ft_history_prev(term);
 	else if ((*term)->buf[0] == 27 && (*term)->buf[2] == 66)
-			ft_history_next(term);
+		ft_history_next(term);
 	else if ((*term)->buf[0] != 27 && (*term)->buf[0] != 127)
 	{
 		if ((*term)->cursorpos < (*term)->cmdlength)
@@ -290,6 +308,7 @@ void		ft_get_history(t_term *term)
 				term->history = term->history->next;
 			term->history->next = tmp;
 			tmp->prev = term->history;
+			term->history = term->history->next;
 		}
 	}
 }
