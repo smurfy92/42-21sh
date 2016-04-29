@@ -172,20 +172,28 @@ void 		ft_clean_line(t_term **term)
 
 void	ft_history_prev(t_term **term)
 {
-	(*term)->history = (*term)->history->prev;
-	(*term)->cursorpos = ft_strlen((*term)->history->var);
-	(*term)->cmdlength = ft_strlen((*term)->history->var);
-	(*term)->cmdactual = ft_strdup((*term)->history->var);
-	ft_putstr((*term)->history->var);
+	if ((*term)->history->prev)
+	{
+		ft_clean_line(term);
+		(*term)->history = (*term)->history->prev;
+		(*term)->cursorpos = ft_strlen((*term)->history->var);
+		(*term)->cmdlength = ft_strlen((*term)->history->var);
+		(*term)->cmdactual = ft_strdup((*term)->history->var);
+		ft_putstr((*term)->history->var);
+	}
 }
 
 void	ft_history_next(t_term **term)
 {
-	(*term)->history = (*term)->history->next;
-	(*term)->cursorpos = ft_strlen((*term)->history->var);
-	(*term)->cmdlength = ft_strlen((*term)->history->var);
-	(*term)->cmdactual = ft_strdup((*term)->history->var);
-	ft_putstr((*term)->history->var);
+	if ((*term)->history->next)
+	{
+		ft_clean_line(term);
+		(*term)->history = (*term)->history->next;
+		(*term)->cursorpos = ft_strlen((*term)->history->var);
+		(*term)->cmdlength = ft_strlen((*term)->history->var);
+		(*term)->cmdactual = ft_strdup((*term)->history->var);
+		ft_putstr((*term)->history->var);
+	}
 }
 
 void	ft_process(t_term **term)
@@ -231,21 +239,9 @@ void	ft_process(t_term **term)
 		tputs(tgetstr("nd", NULL), 0, ft_outchar);
 	}
 	else if ((*term)->buf[0] == 27 && (*term)->buf[2] == 65)
-	{
-		if ((*term)->history->prev)
-		{
-			ft_clean_line(term);
 			ft_history_prev(term);
-		}
-	}
 	else if ((*term)->buf[0] == 27 && (*term)->buf[2] == 66)
-	{
-		if ((*term)->history->next)
-		{
-			ft_clean_line(term);
 			ft_history_next(term);
-		}
-	}
 	else if ((*term)->buf[0] != 27 && (*term)->buf[0] != 127)
 	{
 		if ((*term)->cursorpos < (*term)->cmdlength)
