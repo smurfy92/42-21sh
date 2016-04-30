@@ -17,11 +17,9 @@ void		ft_create_process(t_term *term)
 	int 	y;
 	char 	*tmp;
 
+	(tmp = NULL) ? (term->father = fork()) : 0;
 	ft_refresh_env(term);
-	term->father = fork();
-	tmp = NULL;
-	if (term->father != 0)
-		wait(0);
+	(term->father != 0) ? wait(0) : 0;
 	if (term->father == 0)
 	{
 		(y = -1) ? ft_check_cmds(term) : 0;
