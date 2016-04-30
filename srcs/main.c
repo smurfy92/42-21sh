@@ -218,6 +218,7 @@ void	ft_process(t_term *term)
 {
 	char  *tmp;
 
+	//ft_putnbr(ft_strlen(term->buf));
 	if (term->buf[0] == 27 && term->buf[1] == 91 && term->buf[2] == 72)
 	{
 		if (term->cursorpos > 0)
@@ -260,7 +261,7 @@ void	ft_process(t_term *term)
 		ft_history_prev(term);
 	else if (term->buf[0] == 27 && term->buf[2] == 66)
 		ft_history_next(term);
-	else if (term->buf[0] != 27 && term->buf[0] != 127)
+	else if (term->buf[0] != 27 && term->buf[0] != 127 && ft_isprint(term->buf[0]))
 	{
 		if (term->cursorpos < term->cmdlength)
 		{
