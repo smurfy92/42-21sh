@@ -36,8 +36,7 @@ void		ft_create_process(t_term *term)
 			(!tmp) ? (tmp = ft_strdup(term->cmds[y - 1])) : 0;
 			tmp = ft_strjoin(ft_strjoin(tmp, " "), term->cmds[y]);
 		}
-		execve(term->path, term->cmds, term->env);
-		term->path = NULL;
+		(execve(term->path, term->cmds, term->env)) ? (term->path = NULL) : 0;
 	}
 }
 
