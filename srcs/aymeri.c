@@ -17,9 +17,11 @@ void		ft_create_process(t_term *term)
 	int 	y;
 	char 	*tmp;
 
-	(tmp = NULL) ? (term->father = fork()) : 0;
+	tmp = NULL;
+	term->father = fork();
 	ft_refresh_env(term);
-	(term->father != 0) ? wait(0) : 0;
+	if (term->father != 0)
+		wait(0);
 	if (term->father == 0)
 	{
 		(y = -1) ? ft_check_cmds(term) : 0;
@@ -34,7 +36,8 @@ void		ft_create_process(t_term *term)
 			(!tmp) ? (tmp = ft_strdup(term->cmds[y - 1])) : 0;
 			tmp = ft_strjoin(ft_strjoin(tmp, " "), term->cmds[y]);
 		}
-		(execve(term->path, term->cmds, term->env)) ? (term->path = NULL) : 0;
+		execve(term->path, term->cmds, term->env);
+		term->path = NULL;
 	}
 }
 
