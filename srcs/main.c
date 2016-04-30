@@ -113,7 +113,6 @@ int			reset_shell(void)
 	term.c_lflag = (ICANON | ECHO);
 	if (tcsetattr(0, 0, &term) == -1)
 		return (-1);
-	//exit(0);
 	return (0);
 }
 
@@ -218,7 +217,6 @@ void	ft_process(t_term *term)
 {
 	char  *tmp;
 
-	//ft_putnbr(ft_strlen(term->buf));
 	if (term->buf[0] == 27 && term->buf[1] == 91 && term->buf[2] == 72)
 	{
 		if (term->cursorpos > 0)
@@ -332,6 +330,7 @@ int			main(int argc, char **argv, char **env)
 		ft_bzero(term->buf, ft_strlen(term->buf));
 		while ((read(0, term->buf, BUFFSIZE)) && term->buf[0] != 10)
 			ft_process(term);
+		(ft_strlen(term->cmdactual) > 0) ? ft_add_history(term, term->cmdactual) : 0;
 		reset_shell();
 		ft_putchar('\n');
 		term->cmdsplit = ft_strsplit(term->cmdactual, ';');
