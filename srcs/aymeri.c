@@ -15,7 +15,6 @@
 void		ft_create_process(t_term *term)
 {
 	int 	y;
-	int 	i;
 	char 	*tmp;
 
 	ft_refresh_env(term);
@@ -25,22 +24,17 @@ void		ft_create_process(t_term *term)
 		wait(0);
 	if (term->father == 0)
 	{
-		ft_check_cmds(term);
-		if (term->i)
-			ft_env_i(term);
-		y = -1;
+		(y = -1) ? ft_check_cmds(term) : 0;
+		(term->i) ? ft_env_i(term) : 0;
 		while (term->cmds[++y])
 			(ft_strcmp(term->cmds[y], term->path) == 0) ?\
 			term->cmds = &term->cmds[y] : 0;
-		i = 0;
+		y = 0;
 		(!term->cmds[1]) ? (tmp = term->cmds[0]) : 0;
-		while (term->cmds[++i])
+		while (term->cmds[++y])
 		{
-			if (!tmp)
-				tmp = ft_strdup(term->cmds[i - 1]);
-			tmp = ft_strjoin(tmp, " ");
-			tmp = ft_strjoin(tmp, term->cmds[i]);
-
+			(!tmp) ? (tmp = ft_strdup(term->cmds[y - 1])) : 0;
+			tmp = ft_strjoin(ft_strjoin(tmp, " "), term->cmds[y]);
 		}
 		execve(term->path, term->cmds, term->env);
 		term->path = NULL;

@@ -34,17 +34,16 @@ void		ft_check_cmds(t_term *term)
 	int y;
 
 	i = -1;
+	y = -1;
 	while (term->cmds[++i])
 	{
-		y = 0;
 		if (ft_strcmp(term->cmds[i], "-u") == 0)
 			ft_check_u(term, i++);
 		else
 		{
 			if (ft_strchr(term->cmds[i], '='))
 			{
-				while (term->env[y])
-					y++;
+				while (term->env[++y]);
 				term->env[y] = ft_strdup(term->cmds[i]);
 			}
 		}
