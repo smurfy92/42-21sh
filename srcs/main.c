@@ -153,15 +153,40 @@ int			ft_check_builtin(t_term *term)
 
 void 		ft_clean_line(t_term *term)
 {
-	while (++term->cursorpos < term->cmdlength)
-		tputs(tgetstr("nd", NULL), 0, ft_outchar);
-	while (--term->cursorpos > 0)
+	int i;
+
+	tputs(tgetstr("cb", NULL), 0, ft_outchar);
+	if (term->cursorpos < term->cmdlength)
+		tputs(tgetstr("sc", NULL), 0, ft_outchar);
+	i = term->cursorpos;
+	if (i > 0)
 	{
-		tputs(tgetstr("le", NULL), 0, ft_outchar);
-		tputs(tgetstr("dc", NULL), 0, ft_outchar);
+		while (--i > -3)
+		{
+			tputs(tgetstr("le", NULL), 0, ft_outchar);
+			//tputs(tgetstr("dc", NULL), 0, ft_outchar);
+		}
 	}
-	tputs(tgetstr("ve", NULL), 1, ft_outchar);
-	term->cmdactual = NULL;
+	// tputs(tgetstr("ce", NULL), 0, ft_outchar);
+	// ft_putchar('\n');
+	// ft_putnbr(term->cursorpos);
+	// ft_putchar('\n');
+	// ft_putnbr(term->cmdlength);
+	// ft_putchar('\n');
+	//tputs(tgetstr("nd", NULL), 0, ft_outchar);
+
+	//tputs(tgetstr("ve", NULL), 1, ft_outchar);
+	term->cmdactual = term->cmdactual;
+	//tputs(tgetstr("nd", NULL), 0, ft_outchar);
+	// ft_putchar('\n');
+	// ft_putnbr(term->cursorpos);
+	// ft_putchar('\n');
+	// ft_putnbr(term->cmdlength);
+	// ft_putchar('\n');
+	//tputs(tgetstr("nd", NULL), 0, ft_outchar);
+
+	//tputs(tgetstr("ve", NULL), 1, ft_outchar);
+	//term->cmdactual = NULL;
 }
 
 void		ft_add_history(t_term *term, char *cmd)
@@ -176,13 +201,18 @@ void		ft_add_history(t_term *term, char *cmd)
 	tmp = (t_history*)malloc(sizeof(t_history));
 	tmp->var = cmd;
 	tmp->next = NULL;
+	write(fd, "\n", 1);
+	close(fd);
+	if (!term->history)
+	{
+		term->history = tmp;
+		return ;
+	}
 	while (term->history->next)
 		term->history = term->history->next;
 	term->history->next = tmp;
 	tmp->prev = term->history;
 	term->history = term->history->next;
-	write(fd, "\n", 1);
-	close(fd);
 }
 
 void	ft_history_prev(t_term *term)
@@ -237,13 +267,24 @@ void	ft_process(t_term *term)
 	}
 	else if (term->buf[0] == 127 && term->cursorpos > 0)
 	{
+		if (term->cursorpos == 1)
+		{
+			tputs(tgetstr("le", NULL), 0, ft_outchar);
+			tputs(tgetstr("dc", NULL), 0, ft_outchar);
+			tputs(tgetstr("le", NULL), 0, ft_outchar);
+			tputs(tgetstr("dc", NULL), 0, ft_outchar);
+		}
 		tmp = &term->cmdactual[term->cursorpos];
 		term->cursorpos--;
 		term->cmdlength--;
 		term->cmdactual[term->cursorpos] = '\0';
 		term->cmdactual = ft_strjoin(term->cmdactual, tmp);
+		ft_clean_line(term);
 		tputs(tgetstr("le", NULL), 0, ft_outchar);
 		tputs(tgetstr("dc", NULL), 0, ft_outchar);
+		tputs(tgetstr("le", NULL), 0, ft_outchar);
+		tputs(tgetstr("dc", NULL), 0, ft_outchar);
+		ft_putstr(ft_strjoin("$> ", term->cmdactual));
 	}
 	else if (term->buf[0] == 27 && term->buf[2] == 68 && term->cursorpos > 0)
 	{
@@ -263,7 +304,6 @@ void	ft_process(t_term *term)
 	{
 		if (term->cursorpos < term->cmdlength)
 		{
-			tputs(tgetstr("im", NULL), 1, ft_outchar);
 			tmp = ft_strjoin(term->buf, (term->cmdactual + term->cursorpos));
 			term->cmdactual[term->cursorpos] = '\0';
 			term->cmdactual = ft_strjoin(term->cmdactual, tmp);
@@ -273,9 +313,15 @@ void	ft_process(t_term *term)
 		else
 			term->cmdactual = ft_strjoin(term->cmdactual, term->buf);
 		term->cursorpos += ft_strlen(term->buf);
-		term->cmdlength += ft_strlen(term->buf);
-		ft_putstr(term->buf);
-		tputs(tgetstr("ei", NULL), 1, ft_outchar);
+		term->cmdlength = ft_strlen(term->cmdactual);
+
+		ft_clean_line(term);
+		ft_putstr(ft_strjoin("$> ", term->cmdactual));
+		if (term->cursorpos < term->cmdlength)
+		{
+			tputs(tgetstr("rc", NULL), 0, ft_outchar);
+			tputs(tgetstr("nd", NULL), 0, ft_outchar);
+		}
 	}
 	ft_bzero(term->buf, ft_strlen(term->buf));
 }
@@ -320,7 +366,6 @@ int			main(int argc, char **argv, char **env)
 	{
 		argc = -1;
 		init_shell((~ICANON & ~ECHO));
-		write(1, "$> ", 3);
 		term->cursorpos = 0;
 		term->cmdlength = 0;
 		term->cmdsplit = NULL;
@@ -328,6 +373,7 @@ int			main(int argc, char **argv, char **env)
 		term->cmdactual = NULL;
 		ft_bzero(term->cmdactual, ft_strlen(term->cmdactual));
 		ft_bzero(term->buf, ft_strlen(term->buf));
+		write(1, "$> ", 3);
 		while ((read(0, term->buf, BUFFSIZE)) && term->buf[0] != 10)
 			ft_process(term);
 		(ft_strlen(term->cmdactual) > 0) ? ft_add_history(term, term->cmdactual) : 0;
