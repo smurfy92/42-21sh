@@ -167,26 +167,7 @@ void 		ft_clean_line(t_term *term)
 			//tputs(tgetstr("dc", NULL), 0, ft_outchar);
 		}
 	}
-	// tputs(tgetstr("ce", NULL), 0, ft_outchar);
-	// ft_putchar('\n');
-	// ft_putnbr(term->cursorpos);
-	// ft_putchar('\n');
-	// ft_putnbr(term->cmdlength);
-	// ft_putchar('\n');
-	//tputs(tgetstr("nd", NULL), 0, ft_outchar);
-
-	//tputs(tgetstr("ve", NULL), 1, ft_outchar);
 	term->cmdactual = term->cmdactual;
-	//tputs(tgetstr("nd", NULL), 0, ft_outchar);
-	// ft_putchar('\n');
-	// ft_putnbr(term->cursorpos);
-	// ft_putchar('\n');
-	// ft_putnbr(term->cmdlength);
-	// ft_putchar('\n');
-	//tputs(tgetstr("nd", NULL), 0, ft_outchar);
-
-	//tputs(tgetstr("ve", NULL), 1, ft_outchar);
-	//term->cmdactual = NULL;
 }
 
 void		ft_add_history(t_term *term, char *cmd)
@@ -267,24 +248,13 @@ void	ft_process(t_term *term)
 	}
 	else if (term->buf[0] == 127 && term->cursorpos > 0)
 	{
-		if (term->cursorpos == 1)
-		{
-			tputs(tgetstr("le", NULL), 0, ft_outchar);
-			tputs(tgetstr("dc", NULL), 0, ft_outchar);
-			tputs(tgetstr("le", NULL), 0, ft_outchar);
-			tputs(tgetstr("dc", NULL), 0, ft_outchar);
-		}
 		tmp = &term->cmdactual[term->cursorpos];
 		term->cursorpos--;
 		term->cmdlength--;
 		term->cmdactual[term->cursorpos] = '\0';
 		term->cmdactual = ft_strjoin(term->cmdactual, tmp);
-		ft_clean_line(term);
 		tputs(tgetstr("le", NULL), 0, ft_outchar);
 		tputs(tgetstr("dc", NULL), 0, ft_outchar);
-		tputs(tgetstr("le", NULL), 0, ft_outchar);
-		tputs(tgetstr("dc", NULL), 0, ft_outchar);
-		ft_putstr(ft_strjoin("$> ", term->cmdactual));
 	}
 	else if (term->buf[0] == 27 && term->buf[2] == 68 && term->cursorpos > 0)
 	{
@@ -304,6 +274,7 @@ void	ft_process(t_term *term)
 	{
 		if (term->cursorpos < term->cmdlength)
 		{
+			tputs(tgetstr("im", NULL), 0, ft_outchar);
 			tmp = ft_strjoin(term->buf, (term->cmdactual + term->cursorpos));
 			term->cmdactual[term->cursorpos] = '\0';
 			term->cmdactual = ft_strjoin(term->cmdactual, tmp);
@@ -314,14 +285,8 @@ void	ft_process(t_term *term)
 			term->cmdactual = ft_strjoin(term->cmdactual, term->buf);
 		term->cursorpos += ft_strlen(term->buf);
 		term->cmdlength = ft_strlen(term->cmdactual);
-
-		ft_clean_line(term);
-		ft_putstr(ft_strjoin("$> ", term->cmdactual));
-		if (term->cursorpos < term->cmdlength)
-		{
-			tputs(tgetstr("rc", NULL), 0, ft_outchar);
-			tputs(tgetstr("nd", NULL), 0, ft_outchar);
-		}
+		ft_putstr(term->buf);
+		tputs(tgetstr("ei", NULL), 0, ft_outchar);
 	}
 	ft_bzero(term->buf, ft_strlen(term->buf));
 }
