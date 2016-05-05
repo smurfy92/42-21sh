@@ -17,6 +17,7 @@
 # include <signal.h>
 # include <termios.h>
 # include <curses.h>
+# include <sys/ioctl.h>
 # include <term.h>
 
 typedef	struct			s_term
@@ -27,10 +28,12 @@ typedef	struct			s_term
 	int					i;
 	char				*u;
 	struct s_history	*history;
+	struct s_window		*window;
 	char				**env;
 	int					cursorpos;
 	int					cmdlength;
 	int 				historylen;
+	int 				inhistory;
 	int 				historycurrent;
 	int 				parenthese;
 	char				*buf;
@@ -58,6 +61,12 @@ typedef	struct			s_history
 	struct s_history	*next;
 	struct s_history	*prev;
 }						t_history;
+
+typedef	struct			s_window
+{
+	int					width;
+	int					heigth;
+}						t_window;
 
 int						ft_outchar(int c);
 int						reset_shell(void);

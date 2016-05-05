@@ -71,6 +71,7 @@ t_term		*ft_set_term(char **env, t_env *lst)
 	term->cursorpos = 0;
 	term->cmdlength = 0;
 	term->historylen = 0;
+	term->inhistory = 0;
 	term->i = open(".21sh_history", O_RDONLY);
 	while ((get_next_line(term->i, &line)) > 0)
 		term->historylen++;

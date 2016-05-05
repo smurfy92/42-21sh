@@ -155,19 +155,22 @@ void 		ft_clean_line(t_term *term)
 {
 	int i;
 
-	tputs(tgetstr("cb", NULL), 0, ft_outchar);
 	if (term->cursorpos < term->cmdlength)
 		tputs(tgetstr("sc", NULL), 0, ft_outchar);
 	i = term->cursorpos;
 	if (i > 0)
 	{
-		while (--i > -3)
+		while (--i > 0)
 		{
 			tputs(tgetstr("le", NULL), 0, ft_outchar);
-			//tputs(tgetstr("dc", NULL), 0, ft_outchar);
+			tputs(tgetstr("dc", NULL), 0, ft_outchar);
 		}
+		tputs(tgetstr("le", NULL), 0, ft_outchar);
+		tputs(tgetstr("dc", NULL), 0, ft_outchar);
 	}
-	term->cmdactual = term->cmdactual;
+	term->cursorpos = 0;
+	term->cmdlength = 0;
+	term->cmdactual = NULL;
 }
 
 void		ft_add_history(t_term *term, char *cmd)
@@ -198,11 +201,11 @@ void		ft_add_history(t_term *term, char *cmd)
 
 void	ft_history_prev(t_term *term)
 {
-	if (!term->history->next)
-		ft_add_history(term, term->history->var);
+	if (!term->history->next && term->cmdactual && !term->inhistory)
+		ft_add_history(term, term->cmdactual);
+	ft_clean_line(term);
 	if (term->history->prev)
 	{
-		ft_clean_line(term);
 		term->history = term->history->prev;
 		term->cursorpos = ft_strlen(term->history->var);
 		term->cmdlength = ft_strlen(term->history->var);
@@ -222,6 +225,8 @@ void	ft_history_next(t_term *term)
 		term->cmdactual = ft_strdup(term->history->var);
 		ft_putstr(term->history->var);
 	}
+	else
+		term->inhistory = 0;
 }
 
 void	ft_process(t_term *term)
@@ -255,11 +260,24 @@ void	ft_process(t_term *term)
 		term->cmdactual = ft_strjoin(term->cmdactual, tmp);
 		tputs(tgetstr("le", NULL), 0, ft_outchar);
 		tputs(tgetstr("dc", NULL), 0, ft_outchar);
+		tputs(tgetstr("cd", NULL), 0, ft_outchar);
+		tputs(tgetstr("sc", NULL), 0, ft_outchar);
+		ft_putstr(&term->cmdactual[term->cursorpos]);
+		tputs(tgetstr("rc", NULL), 0, ft_outchar);
 	}
 	else if (term->buf[0] == 27 && term->buf[2] == 68 && term->cursorpos > 0)
 	{
+		if (((term->cursorpos + 3) % term->window->width) == 0)
+		{
+			int i;
+			i = 0;
+			tputs(tgetstr("up", NULL), 0, ft_outchar);
+			while (++i < term->window->width)
+				tputs(tgetstr("nd", NULL), 0, ft_outchar);
+		}
+		else
+			tputs(tgetstr("le", NULL), 0, ft_outchar);
 		term->cursorpos--;
-		tputs(tgetstr("le", NULL), 0, ft_outchar);
 	}
 	else if (term->buf[0] == 27 && term->buf[2] == 67 && term->cursorpos < term->cmdlength)
 	{
@@ -274,7 +292,6 @@ void	ft_process(t_term *term)
 	{
 		if (term->cursorpos < term->cmdlength)
 		{
-			tputs(tgetstr("im", NULL), 0, ft_outchar);
 			tmp = ft_strjoin(term->buf, (term->cmdactual + term->cursorpos));
 			term->cmdactual[term->cursorpos] = '\0';
 			term->cmdactual = ft_strjoin(term->cmdactual, tmp);
@@ -286,8 +303,17 @@ void	ft_process(t_term *term)
 		term->cursorpos += ft_strlen(term->buf);
 		term->cmdlength = ft_strlen(term->cmdactual);
 		ft_putstr(term->buf);
-		tputs(tgetstr("ei", NULL), 0, ft_outchar);
+		if (((term->cursorpos + 3) % term->window->width) == 0)
+			tputs(tgetstr("do", NULL), 0, ft_outchar);
+		if (term->cursorpos < term->cmdlength)
+		{
+			tputs(tgetstr("sc", NUL
+			ft_putstr(&term->cmdactual[term->cursorpos]);
+			tputs(tgetstr("rc", NULL), 0, ft_outchar);
+		}
 	}
+	// ft_putchar('\n');
+	// ft_putnbr(term->cursorpos);
 	ft_bzero(term->buf, ft_strlen(term->buf));
 }
 
@@ -319,6 +345,17 @@ void		ft_get_history(t_term *term)
 	}
 }
 
+void		ft_get_window(t_term *term)
+{
+	struct winsize	w;
+
+	ioctl(0, TIOCGWINSZ, &w);
+	if (!term->window)
+		term->window = (t_window*)malloc(sizeof(t_window));
+	term->window->width = w.ws_col;
+	term->window->heigth = w.ws_row;
+}
+
 int			main(int argc, char **argv, char **env)
 {
 	static t_term		*term;
@@ -339,6 +376,7 @@ int			main(int argc, char **argv, char **env)
 		ft_bzero(term->cmdactual, ft_strlen(term->cmdactual));
 		ft_bzero(term->buf, ft_strlen(term->buf));
 		write(1, "$> ", 3);
+		ft_get_window(term);
 		while ((read(0, term->buf, BUFFSIZE)) && term->buf[0] != 10)
 			ft_process(term);
 		(ft_strlen(term->cmdactual) > 0) ? ft_add_history(term, term->cmdactual) : 0;
