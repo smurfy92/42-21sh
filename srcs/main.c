@@ -304,12 +304,21 @@ void	ft_process(t_term *term)
 		term->cmdlength = ft_strlen(term->cmdactual);
 		ft_putstr(term->buf);
 		if (((term->cursorpos + 3) % term->window->width) == 0)
+		{
 			tputs(tgetstr("do", NULL), 0, ft_outchar);
+		}
 		if (term->cursorpos < term->cmdlength)
 		{
-			tputs(tgetstr("sc", NUL
+			tputs(tgetstr("sc", NULL), 0, ft_outchar);
 			ft_putstr(&term->cmdactual[term->cursorpos]);
+			int i;
+			//i = ((term->cursorpos + 3 + ft_strlen(&term->cmdactual[term->cursorpos])) / term->window->width) - ((term->cursorpos + 3) / term->window->width);
 			tputs(tgetstr("rc", NULL), 0, ft_outchar);
+			i = 0;
+			while (i++ < (int)ft_strlen(&term->cmdactual[term->cursorpos]))
+			{
+				tputs(tgetstr("le", NULL), 0, ft_outchar);
+			}
 		}
 	}
 	// ft_putchar('\n');
