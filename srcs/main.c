@@ -173,65 +173,10 @@ void 		ft_clean_line(t_term *term)
 	term->cmdactual = NULL;
 }
 
-void		ft_add_history(t_term *term, char *cmd)
-{
-	int fd;
-	t_history *tmp;
-	t_history *tmp2;
-
-	fd = open(".21sh_history", O_WRONLY|O_APPEND|O_CREAT);
-	write(fd, cmd, ft_strlen(cmd));
-	tmp2 = term->history;
-	tmp = (t_history*)malloc(sizeof(t_history));
-	tmp->var = cmd;
-	tmp->next = NULL;
-	write(fd, "\n", 1);
-	close(fd);
-	if (!term->history)
-	{
-		term->history = tmp;
-		return ;
-	}
-	while (term->history->next)
-		term->history = term->history->next;
-	term->history->next = tmp;
-	tmp->prev = term->history;
-	term->history = term->history->next;
-}
-
-void	ft_history_prev(t_term *term)
-{
-	if (!term->history->next && term->cmdactual && !term->inhistory)
-		ft_add_history(term, term->cmdactual);
-	ft_clean_line(term);
-	if (term->history->prev)
-	{
-		term->history = term->history->prev;
-		term->cursorpos = ft_strlen(term->history->var);
-		term->cmdlength = ft_strlen(term->history->var);
-		term->cmdactual = ft_strdup(term->history->var);
-		ft_putstr(term->history->var);
-	}
-}
-
-void	ft_history_next(t_term *term)
-{
-	ft_clean_line(term);
-	if (term->history->next)
-	{
-		term->history = term->history->next;
-		term->cursorpos = ft_strlen(term->history->var);
-		term->cmdlength = ft_strlen(term->history->var);
-		term->cmdactual = ft_strdup(term->history->var);
-		ft_putstr(term->history->var);
-	}
-	else
-		term->inhistory = 0;
-}
-
 void	ft_process(t_term *term)
 {
 	char  *tmp;
+	int i;
 
 	if (term->buf[0] == 27 && term->buf[1] == 91 && term->buf[2] == 72)
 	{
@@ -269,7 +214,6 @@ void	ft_process(t_term *term)
 	{
 		if (((term->cursorpos + 3) % term->window->width) == 0)
 		{
-			int i;
 			i = 0;
 			tputs(tgetstr("up", NULL), 0, ft_outchar);
 			while (++i < term->window->width)
@@ -282,7 +226,10 @@ void	ft_process(t_term *term)
 	else if (term->buf[0] == 27 && term->buf[2] == 67 && term->cursorpos < term->cmdlength)
 	{
 		term->cursorpos++;
-		tputs(tgetstr("nd", NULL), 0, ft_outchar);
+		if (((term->cursorpos + 3) % term->window->width) == 0)
+			tputs(tgetstr("do", NULL), 0, ft_outchar);
+		else
+			tputs(tgetstr("nd", NULL), 0, ft_outchar);
 	}
 	else if (term->buf[0] == 27 && term->buf[2] == 65)
 		ft_history_prev(term);
@@ -303,26 +250,29 @@ void	ft_process(t_term *term)
 		term->cursorpos += ft_strlen(term->buf);
 		term->cmdlength = ft_strlen(term->cmdactual);
 		ft_putstr(term->buf);
-		if (((term->cursorpos + 3) % term->window->width) == 0)
-		{
-			tputs(tgetstr("do", NULL), 0, ft_outchar);
-		}
 		if (term->cursorpos < term->cmdlength)
 		{
-			tputs(tgetstr("sc", NULL), 0, ft_outchar);
-			ft_putstr(&term->cmdactual[term->cursorpos]);
-			int i;
-			//i = ((term->cursorpos + 3 + ft_strlen(&term->cmdactual[term->cursorpos])) / term->window->width) - ((term->cursorpos + 3) / term->window->width);
-			tputs(tgetstr("rc", NULL), 0, ft_outchar);
-			i = 0;
-			while (i++ < (int)ft_strlen(&term->cmdactual[term->cursorpos]))
+			//ft_putstr(&term->cmdactual[term->cursorpos]);
+			i = term->cursorpos - 1;
+			while (term->cmdactual[++i])
 			{
-				tputs(tgetstr("le", NULL), 0, ft_outchar);
+				if (((i + 4) % term->window->width) == 0)
+					tputs(tgetstr("do", NULL), 0, ft_outchar);
+				ft_putchar(term->cmdactual[i]);
+			}
+			i = 0;
+			while (i < (int)ft_strlen(&term->cmdactual[term->cursorpos]))
+			{
+				if (((term->cursorpos + 3 + (int)ft_strlen(&term->cmdactual[term->cursorpos]) - i++) % term->window->width) == 0)
+				{
+					tputs(tgetstr("le", NULL), 0, ft_outchar);
+				 	tputs(tgetstr("up", NULL), 1, ft_outchar);
+				}
+				else
+					tputs(tgetstr("le", NULL), 0, ft_outchar);
 			}
 		}
 	}
-	// ft_putchar('\n');
-	// ft_putnbr(term->cursorpos);
 	ft_bzero(term->buf, ft_strlen(term->buf));
 }
 

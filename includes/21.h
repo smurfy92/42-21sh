@@ -12,7 +12,7 @@
 
 #ifndef VINETUNSH_H
 # define VINETUNSH_H
-# define BUFFSIZE 1000
+# define BUFFSIZE 4
 # include "../libft/includes/libft.h"
 # include <signal.h>
 # include <termios.h>
@@ -73,6 +73,10 @@ int						reset_shell(void);
 int						ft_check_in_path(t_term *term);
 int						ft_get_val_exists(t_term *term, char *str);
 int						ft_check_in_env(t_term *term, char *cmd);
+void 					ft_clean_line(t_term *term);
+void					ft_add_history(t_term *term, char *cmd);
+void					ft_history_prev(t_term *term);
+void					ft_history_next(t_term *term);
 void					ft_display_i(t_term *term);
 void					ft_newenv_display(t_term *term);
 void					ft_display_env(t_term *term);
