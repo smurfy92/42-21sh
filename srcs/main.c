@@ -250,29 +250,25 @@ void	ft_process(t_term *term)
 		term->cursorpos += ft_strlen(term->buf);
 		term->cmdlength = ft_strlen(term->cmdactual);
 		ft_putstr(term->buf);
-		if (((term->cursorpos + 3) % term->window->width) == 0)
-				tputs(tgetstr("do", NULL), 0, ft_outchar);
 		if (term->cursorpos < term->cmdlength)
 		{
 			i = term->cursorpos - 1;
 			while (term->cmdactual[++i])
 			{
-				if (((i + 4) % term->window->width) == 1)
-					tputs(tgetstr("do", NULL), 0, ft_outchar);
 				ft_putchar(term->cmdactual[i]);
 			}
-			if (ft_strlen(term->cmdactual) / term->window->width > 0)
-				i = -1;
-			else
-				i = 0;
-			while (i < (int)ft_strlen(&term->cmdactual[term->cursorpos]))
+			if (((i + 3) % term->window->width) == 0)
+				  	tputs(tgetstr("do", NULL), 0, ft_outchar);
+			i = -1;
+			while (++i < (int)ft_strlen(&term->cmdactual[term->cursorpos]))
 			{
-				if (((term->cursorpos + 3 + (int)ft_strlen(&term->cmdactual[term->cursorpos]) - i++) % term->window->width) == 1)
+				if (((term->cursorpos + 3 + (int)ft_strlen(&term->cmdactual[term->cursorpos]) - i) % term->window->width) == 0)
 				{
 				 	tputs(tgetstr("up", NULL), 1, ft_outchar);
-				 	i = 0;
-				 	while (++i < term->cursorpos + 3 % term->window->width)
-				 		tputs(tgetstr("nd", NULL), 0, ft_outchar);
+				 	int y;
+				 	y = -2;
+				 	while (y++ < term->cursorpos + 3 % term->window->width)
+			 	 		tputs(tgetstr("nd", NULL), 0, ft_outchar);
 				}
 				else
 					tputs(tgetstr("le", NULL), 0, ft_outchar);
