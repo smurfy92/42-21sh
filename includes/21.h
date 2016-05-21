@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef VINETUNSH_H
-# define VINETUNSH_H
+#ifndef VINETUN_H
+# define VINETUN_H
 # define BUFFSIZE 4
 # include "../libft/includes/libft.h"
 # include <signal.h>
@@ -32,12 +32,12 @@ typedef	struct			s_term
 	char				**env;
 	int					cursorpos;
 	int					cmdlength;
-	int 				historylen;
-	int 				inhistory;
-	int 				historycurrent;
-	int 				parenthese;
+	int					historylen;
+	int					inhistory;
+	int					historycurrent;
+	int					parenthese;
 	char				*buf;
-	char 				*cmdactual;
+	char				*cmdactual;
 	char				**cmds;
 	char				**cmdsplit;
 }						t_term;
@@ -73,7 +73,13 @@ int						reset_shell(void);
 int						ft_check_in_path(t_term *term);
 int						ft_get_val_exists(t_term *term, char *str);
 int						ft_check_in_env(t_term *term, char *cmd);
-void 					ft_clean_line(t_term *term);
+void					ft_go_home(t_term *term);
+void					ft_go_end(t_term *term);
+void					ft_backspace(t_term *term);
+void					ft_left_arrow(t_term *term);
+void					ft_right_arrow(t_term *term);
+void					ft_process(t_term *term);
+void					ft_clean_line(t_term *term);
 void					ft_add_history(t_term *term, char *cmd);
 void					ft_history_prev(t_term *term);
 void					ft_history_next(t_term *term);

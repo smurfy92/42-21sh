@@ -14,11 +14,11 @@
 
 void		ft_add_history(t_term *term, char *cmd)
 {
-	int fd;
-	t_history *tmp;
-	t_history *tmp2;
+	int			fd;
+	t_history	*tmp;
+	t_history	*tmp2;
 
-	fd = open(".21sh_history", O_WRONLY|O_APPEND|O_CREAT);
+	fd = open(".21sh_history", O_WRONLY | O_APPEND | O_CREAT);
 	write(fd, cmd, ft_strlen(cmd));
 	tmp2 = term->history;
 	tmp = (t_history*)malloc(sizeof(t_history));
@@ -38,7 +38,7 @@ void		ft_add_history(t_term *term, char *cmd)
 	term->history = term->history->next;
 }
 
-void	ft_history_prev(t_term *term)
+void		ft_history_prev(t_term *term)
 {
 	if (!term->history->next && term->cmdactual && !term->inhistory)
 	{
@@ -64,7 +64,7 @@ void	ft_history_prev(t_term *term)
 	}
 }
 
-void	ft_history_next(t_term *term)
+void		ft_history_next(t_term *term)
 {
 	ft_clean_line(term);
 	if (term->history->next)

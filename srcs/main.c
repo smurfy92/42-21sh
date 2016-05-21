@@ -85,7 +85,7 @@ void		ft_cd(t_term *term)
 
 int			init_shell(int lflag)
 {
-	char	*name;
+	char			*name;
 	struct termios	term;
 
 	if ((name = getenv("TERM")) == NULL)
@@ -118,8 +118,8 @@ int			reset_shell(void)
 
 int			ft_check_builtin(t_term *term)
 {
-	int i;
-	char *tmp;
+	int		i;
+	char	*tmp;
 
 	tmp = NULL;
 	if (ft_strcmp(term->cmds[0], "cd") == 0)
@@ -151,7 +151,7 @@ int			ft_check_builtin(t_term *term)
 	return (1);
 }
 
-void 		ft_clean_line(t_term *term)
+void		ft_clean_line(t_term *term)
 {
 	int i;
 
@@ -173,116 +173,11 @@ void 		ft_clean_line(t_term *term)
 	term->cmdactual = NULL;
 }
 
-void	ft_process(t_term *term)
-{
-	char  *tmp;
-	int i;
-
-	if (term->buf[0] == 27 && term->buf[1] == 91 && term->buf[2] == 72)
-	{
-		if (term->cursorpos > 0)
-		{
-			while (--term->cursorpos > 0)
-				tputs(tgetstr("le", NULL), 0, ft_outchar);
-			tputs(tgetstr("le", NULL), 0, ft_outchar);
-		}
-	}
-	else if (term->buf[0] == 27 && term->buf[1] == 91 && term->buf[2] == 70)
-	{
-		if (term->cursorpos < term->cmdlength)
-		{
-			tputs(tgetstr("nd", NULL), 0, ft_outchar);
-			while (++term->cursorpos < term->cmdlength)
-				tputs(tgetstr("nd", NULL), 0, ft_outchar);
-		}
-	}
-	else if (term->buf[0] == 127 && term->cursorpos > 0)
-	{
-		tmp = &term->cmdactual[term->cursorpos];
-		term->cursorpos--;
-		term->cmdlength--;
-		term->cmdactual[term->cursorpos] = '\0';
-		term->cmdactual = ft_strjoin(term->cmdactual, tmp);
-		tputs(tgetstr("le", NULL), 0, ft_outchar);
-		tputs(tgetstr("dc", NULL), 0, ft_outchar);
-		tputs(tgetstr("cd", NULL), 0, ft_outchar);
-		tputs(tgetstr("sc", NULL), 0, ft_outchar);
-		ft_putstr(&term->cmdactual[term->cursorpos]);
-		tputs(tgetstr("rc", NULL), 0, ft_outchar);
-	}
-	else if (term->buf[0] == 27 && term->buf[2] == 68 && term->cursorpos > 0)
-	{
-		if (((term->cursorpos + 3) % term->window->width) == 0)
-		{
-			i = 0;
-			tputs(tgetstr("up", NULL), 0, ft_outchar);
-			while (++i < term->window->width)
-				tputs(tgetstr("nd", NULL), 0, ft_outchar);
-		}
-		else
-			tputs(tgetstr("le", NULL), 0, ft_outchar);
-		term->cursorpos--;
-	}
-	else if (term->buf[0] == 27 && term->buf[2] == 67 && term->cursorpos < term->cmdlength)
-	{
-		term->cursorpos++;
-		if (((term->cursorpos + 3) % term->window->width) == 0)
-			tputs(tgetstr("do", NULL), 0, ft_outchar);
-		else
-			tputs(tgetstr("nd", NULL), 0, ft_outchar);
-	}
-	else if (term->buf[0] == 27 && term->buf[2] == 65)
-		ft_history_prev(term);
-	else if (term->buf[0] == 27 && term->buf[2] == 66)
-		ft_history_next(term);
-	else if (term->buf[0] != 27 && term->buf[0] != 127 && ft_isprint(term->buf[0]))
-	{
-		if (term->cursorpos < term->cmdlength)
-		{
-			tmp = ft_strjoin(term->buf, (term->cmdactual + term->cursorpos));
-			term->cmdactual[term->cursorpos] = '\0';
-			term->cmdactual = ft_strjoin(term->cmdactual, tmp);
-		}
-		else if (!term->cmdactual)
-			term->cmdactual = ft_strdup(term->buf);
-		else
-			term->cmdactual = ft_strjoin(term->cmdactual, term->buf);
-		term->cursorpos += ft_strlen(term->buf);
-		term->cmdlength = ft_strlen(term->cmdactual);
-		ft_putstr(term->buf);
-		if (term->cursorpos < term->cmdlength)
-		{
-			i = term->cursorpos - 1;
-			while (term->cmdactual[++i])
-			{
-				ft_putchar(term->cmdactual[i]);
-			}
-			if (((i + 3) % term->window->width) == 0)
-				  	tputs(tgetstr("do", NULL), 0, ft_outchar);
-			i = -1;
-			while (++i < (int)ft_strlen(&term->cmdactual[term->cursorpos]))
-			{
-				if (((term->cursorpos + 3 + (int)ft_strlen(&term->cmdactual[term->cursorpos]) - i) % term->window->width) == 0)
-				{
-				 	tputs(tgetstr("up", NULL), 1, ft_outchar);
-				 	int y;
-				 	y = -2;
-				 	while (y++ < term->cursorpos + 3 % term->window->width)
-			 	 		tputs(tgetstr("nd", NULL), 0, ft_outchar);
-				}
-				else
-					tputs(tgetstr("le", NULL), 0, ft_outchar);
-			}
-		}
-	}
-	ft_bzero(term->buf, ft_strlen(term->buf));
-}
-
 void		ft_get_history(t_term *term)
 {
-	int fd;
-	t_history *tmp;
-	char *line;
+	int			fd;
+	t_history 	*tmp;
+	char		*line;
 
 	fd = open(".21sh_history", O_RDONLY);
 	term->history = NULL;

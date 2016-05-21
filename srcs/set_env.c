@@ -56,14 +56,14 @@ void		ft_check_env(t_term *term)
 	if (!ft_get_val_exists(term, "OLDPWD"))
 		ft_process_setenv(term, "OLDPWD", getwd(buf));
 	if (!ft_get_val_exists(term, "PATH"))
-		ft_process_setenv(term, "PATH", "/usr/bin:/bin:/usr/sbin:/sbin:/usr\
-/local/bin:/usr/local/munki");
+		ft_process_setenv(term, "PATH",
+		"/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/local/munki");
 }
 
 t_term		*ft_set_term(char **env, t_env *lst)
 {
 	t_term		*term;
-	char 		*line;
+	char		*line;
 
 	term = (t_term*)malloc(sizeof(t_term));
 	term->buf = (char*)malloc(sizeof(char) * BUFFSIZE);

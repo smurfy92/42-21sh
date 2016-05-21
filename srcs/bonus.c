@@ -43,7 +43,8 @@ void		ft_check_cmds(t_term *term)
 		{
 			if (ft_strchr(term->cmds[i], '='))
 			{
-				while (term->env[++y]);
+				while (term->env[y])
+					y++;
 				term->env[y] = ft_strdup(term->cmds[i]);
 			}
 		}

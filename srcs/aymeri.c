@@ -14,8 +14,8 @@
 
 void		ft_create_process(t_term *term)
 {
-	int 	y;
-	char 	*tmp;
+	int		y;
+	char	*tmp;
 
 	tmp = NULL;
 	term->father = fork();
