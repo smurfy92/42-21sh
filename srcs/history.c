@@ -10,7 +10,12 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/21.h"
+#include "../includes/vingtetun.h"
+
+int			ft_outchar(int c)
+{
+	return (write(1, &c, 1));
+}
 
 void		ft_add_history(t_term *term, char *cmd)
 {
@@ -77,4 +82,32 @@ void		ft_history_next(t_term *term)
 	}
 	else
 		term->inhistory = 0;
+}
+
+void		ft_get_history(t_term *term)
+{
+	int			fd;
+	t_history	*tmp;
+	char		*line;
+
+	fd = open(".21sh_history", O_RDONLY);
+	term->history = NULL;
+	term->historylen = 0;
+	term->historycurrent = 0;
+	while ((get_next_line(fd, &line)) > 0)
+	{
+		tmp = (t_history*)malloc(sizeof(t_history));
+		tmp->var = ft_strdup(line);
+		tmp->next = NULL;
+		tmp->prev = NULL;
+		term->historylen++;
+		if (!term->history)
+			term->history = tmp;
+		else
+		{
+			term->history->next = tmp;
+			tmp->prev = term->history;
+			term->history = term->history->next;
+		}
+	}
 }

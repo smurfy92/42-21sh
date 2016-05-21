@@ -10,196 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/21.h"
-
-int			ft_outchar(int c)
-{
-	signal(SIGINT, ft_prompt);
-	signal(SIGTSTP, ft_prompt);
-	return (write(1, &c, 1));
-}
-
-void		ft_process_unsetenv(t_term *term, char *s1)
-{
-	t_env *lst;
-
-	lst = term->lst;
-	if (!s1)
-	{
-		ft_putendl("21sh: unsetenv: Invalid option");
-		ft_putendl("unsetenv NAME");
-	}
-	else
-	{
-		if (ft_strcmp(lst->var, s1) == 0)
-			term->lst = lst->next;
-		while (lst->next && ft_strcmp((lst->next)->var, s1) != 0)
-			lst = lst->next;
-		(lst->next) ? (lst->next = lst->next->next) : 0;
-	}
-}
-
-void		ft_process_setenv(t_term *term, char *s1, char *s2)
-{
-	t_env *lst;
-
-	lst = term->lst;
-	if (!s1 || !s2)
-	{
-		ft_putendl("21sh: setenv: Invalid option");
-		ft_putendl("setenv NAME VALUE");
-	}
-	else
-	{
-		lst = (t_env*)malloc(sizeof(t_env));
-		lst->var = s1;
-		lst->val = s2;
-		lst->next = NULL;
-		term->lst = ft_add_lst(lst, term->lst);
-	}
-}
-
-void		ft_cd(t_term *term)
-{
-	char *buf;
-
-	buf = NULL;
-	if (ft_strcmp(term->cmds[1], "-") == 0)
-	{
-		chdir(ft_get_env_by_name(term, "OLDPWD"));
-		ft_process_unsetenv(term, "OLDPWD");
-		ft_process_setenv(term, "OLDPWD", ft_get_env_by_name(term, "PWD"));
-	}
-	else
-	{
-		ft_process_unsetenv(term, "OLDPWD");
-		ft_process_setenv(term, "OLDPWD", getwd(buf));
-	}
-	if (term->cmds[1] && ft_strcmp(term->cmds[1], "~") != 0)
-		chdir(term->cmds[1]);
-	else
-		chdir(ft_get_val(term, "HOME"));
-	ft_process_unsetenv(term, "PWD");
-	ft_process_setenv(term, "PWD", getwd(buf));
-}
-
-int			init_shell(int lflag)
-{
-	char			*name;
-	struct termios	term;
-
-	if ((name = getenv("TERM")) == NULL)
-		name = "xterm-256color";
-	if (tgetent(NULL, name) == ERR)
-		return (-1);
-	if (tcgetattr(0, &term) == -1)
-		return (-1);
-	term.c_lflag = term.c_lflag & lflag;
-	term.c_cc[VMIN] = 1;
-	term.c_cc[VTIME] = 0;
-	if (tcsetattr(0, 0, &term))
-		return (-1);
-	return (1);
-}
-
-int			reset_shell(void)
-{
-	struct termios term;
-
-	tputs(tgetstr("me", NULL), 1, ft_outchar);
-	tputs(tgetstr("ve", NULL), 1, ft_outchar);
-	if (tcgetattr(0, &term) == -1)
-		return (-1);
-	term.c_lflag = (ICANON | ECHO);
-	if (tcsetattr(0, 0, &term) == -1)
-		return (-1);
-	return (0);
-}
-
-int			ft_check_builtin(t_term *term)
-{
-	int		i;
-	char	*tmp;
-
-	tmp = NULL;
-	if (ft_strcmp(term->cmds[0], "cd") == 0)
-		ft_cd(term);
-	else if (ft_strcmp(term->cmds[0], "env") == 0)
-		(!term->cmds[1]) ? ft_display_env(term) : ft_env_options(term);
-	else if (ft_strcmp(term->cmds[0], "setenv") == 0)
-		ft_process_setenv(term, term->cmds[1], term->cmds[2]);
-	else if (ft_strcmp(term->cmds[0], "unsetenv") == 0)
-		ft_process_unsetenv(term, term->cmds[1]);
-	else if (ft_strcmp(term->cmds[0], "exit") == 0)
-	{
-		reset_shell();
-		exit(0);
-	}
-	else
-		return (0);
-	i = 0;
-	(!term->cmds[1]) ? (tmp = term->cmds[0]) : 0;
-	while (term->cmds[++i])
-	{
-		if (!tmp)
-			tmp = ft_strdup(term->cmds[i - 1]);
-		tmp = ft_strjoin(tmp, " ");
-		tmp = ft_strjoin(tmp, term->cmds[i]);
-	}
-	term->i = 0;
-	term->u = NULL;
-	return (1);
-}
-
-void		ft_clean_line(t_term *term)
-{
-	int i;
-
-	if (term->cursorpos < term->cmdlength)
-		tputs(tgetstr("sc", NULL), 0, ft_outchar);
-	i = term->cursorpos;
-	if (i > 0)
-	{
-		while (--i > 0)
-		{
-			tputs(tgetstr("le", NULL), 0, ft_outchar);
-			tputs(tgetstr("dc", NULL), 0, ft_outchar);
-		}
-		tputs(tgetstr("le", NULL), 0, ft_outchar);
-		tputs(tgetstr("dc", NULL), 0, ft_outchar);
-	}
-	term->cursorpos = 0;
-	term->cmdlength = 0;
-	term->cmdactual = NULL;
-}
-
-void		ft_get_history(t_term *term)
-{
-	int			fd;
-	t_history 	*tmp;
-	char		*line;
-
-	fd = open(".21sh_history", O_RDONLY);
-	term->history = NULL;
-	term->historylen = 0;
-	term->historycurrent = 0;
-	while ((get_next_line(fd, &line)) > 0)
-	{
-		tmp = (t_history*)malloc(sizeof(t_history));
-		tmp->var = ft_strdup(line);
-		tmp->next = NULL;
-		tmp->prev = NULL;
-		term->historylen++;
-		if (!term->history)
-			term->history = tmp;
-		else
-		{
-			term->history->next = tmp;
-			tmp->prev = term->history;
-			term->history = term->history->next;
-		}
-	}
-}
+#include "../includes/vingtetun.h"
 
 void		ft_get_window(t_term *term)
 {
@@ -210,6 +21,20 @@ void		ft_get_window(t_term *term)
 		term->window = (t_window*)malloc(sizeof(t_window));
 	term->window->width = w.ws_col;
 	term->window->heigth = w.ws_row;
+}
+
+void		ft_reset_term(t_term *term)
+{
+	init_shell((~ICANON & ~ECHO));
+	term->cursorpos = 0;
+	term->cmdlength = 0;
+	term->cmdsplit = NULL;
+	term->path = NULL;
+	term->cmdactual = NULL;
+	ft_bzero(term->cmdactual, ft_strlen(term->cmdactual));
+	ft_bzero(term->buf, ft_strlen(term->buf));
+	write(1, "$> ", 3);
+	ft_get_window(term);
 }
 
 int			main(int argc, char **argv, char **env)
@@ -223,19 +48,11 @@ int			main(int argc, char **argv, char **env)
 	while (42)
 	{
 		argc = -1;
-		init_shell((~ICANON & ~ECHO));
-		term->cursorpos = 0;
-		term->cmdlength = 0;
-		term->cmdsplit = NULL;
-		term->path = NULL;
-		term->cmdactual = NULL;
-		ft_bzero(term->cmdactual, ft_strlen(term->cmdactual));
-		ft_bzero(term->buf, ft_strlen(term->buf));
-		write(1, "$> ", 3);
-		ft_get_window(term);
+		ft_reset_term(term);
 		while ((read(0, term->buf, BUFFSIZE)) && term->buf[0] != 10)
 			ft_process(term);
-		(ft_strlen(term->cmdactual) > 0) ? ft_add_history(term, term->cmdactual) : 0;
+		(ft_strlen(term->cmdactual) > 0) ?
+		ft_add_history(term, term->cmdactual) : 0;
 		reset_shell();
 		ft_putchar('\n');
 		term->cmdsplit = ft_strsplit(term->cmdactual, ';');

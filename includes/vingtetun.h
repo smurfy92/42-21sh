@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   21.h                                               :+:      :+:    :+:   */
+/*   vingtetun.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jtranchi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/04/12 17:02:13 by jtranchi          #+#    #+#             */
-/*   Updated: 2016/04/12 17:02:15 by jtranchi         ###   ########.fr       */
+/*   Created: 2016/05/21 15:01:48 by jtranchi          #+#    #+#             */
+/*   Updated: 2016/05/21 15:02:08 by jtranchi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef VINETUN_H
-# define VINETUN_H
+#ifndef VINGTETUN_H
+# define VINGTETUN_H
 # define BUFFSIZE 4
 # include "../libft/includes/libft.h"
 # include <signal.h>
@@ -73,6 +73,11 @@ int						reset_shell(void);
 int						ft_check_in_path(t_term *term);
 int						ft_get_val_exists(t_term *term, char *str);
 int						ft_check_in_env(t_term *term, char *cmd);
+int						init_shell(int lflag);
+int						ft_check_builtin(t_term *term);
+void					ft_add_history(t_term *term, char *cmd);
+void					ft_get_history(t_term *term);
+void					ft_get_cmd(t_term *term);
 void					ft_go_home(t_term *term);
 void					ft_go_end(t_term *term);
 void					ft_backspace(t_term *term);

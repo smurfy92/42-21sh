@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/21.h"
+#include "../includes/vingtetun.h"
 
 void		ft_go_home(t_term *term)
 {
