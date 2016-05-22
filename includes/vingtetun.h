@@ -12,7 +12,7 @@
 
 #ifndef VINGTETUN_H
 # define VINGTETUN_H
-# define BUFFSIZE 4
+# define BUFFSIZE 6
 # include "../libft/includes/libft.h"
 # include <signal.h>
 # include <termios.h>
@@ -38,6 +38,7 @@ typedef	struct			s_term
 	int					parenthese;
 	char				*buf;
 	char				*cmdactual;
+	char				*copy;
 	char				**cmds;
 	char				**cmdsplit;
 }						t_term;
@@ -77,7 +78,7 @@ int						init_shell(int lflag);
 int						ft_check_builtin(t_term *term);
 void					ft_add_history(t_term *term, char *cmd);
 void					ft_get_history(t_term *term);
-void					ft_get_cmd(t_term *term);
+void					ft_get_cmd(t_term *term, char *str);
 void					ft_go_home(t_term *term);
 void					ft_go_end(t_term *term);
 void					ft_backspace(t_term *term);

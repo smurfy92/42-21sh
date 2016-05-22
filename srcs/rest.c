@@ -33,23 +33,23 @@ void		ft_env_i(t_term *term)
 	}
 }
 
-void		ft_get_cmd(t_term *term)
+void		ft_get_cmd(t_term *term, char *str)
 {
 	char	*tmp;
 
 	if (term->cursorpos < term->cmdlength)
 	{
-		tmp = ft_strjoin(term->buf, (term->cmdactual + term->cursorpos));
+		tmp = ft_strjoin(str, (term->cmdactual + term->cursorpos));
 		term->cmdactual[term->cursorpos] = '\0';
 		term->cmdactual = ft_strjoin(term->cmdactual, tmp);
 	}
 	else if (!term->cmdactual)
-		term->cmdactual = ft_strdup(term->buf);
+		term->cmdactual = ft_strdup(str);
 	else
-		term->cmdactual = ft_strjoin(term->cmdactual, term->buf);
-	term->cursorpos += ft_strlen(term->buf);
+		term->cmdactual = ft_strjoin(term->cmdactual, str);
+	term->cursorpos += ft_strlen(str);
 	term->cmdlength = ft_strlen(term->cmdactual);
-	ft_putstr(term->buf);
+	ft_putstr(str);
 }
 
 int			init_shell(int lflag)

@@ -69,11 +69,11 @@ void		ft_replace_cursor(t_term *term)
 	}
 }
 
-void		ft_print_buf(t_term *term)
+void		ft_print_buf(t_term *term, char *str)
 {
 	int i;
 
-	ft_get_cmd(term);
+	ft_get_cmd(term, str);
 	if (term->cursorpos < term->cmdlength)
 	{
 		i = term->cursorpos - 1;
@@ -83,6 +83,12 @@ void		ft_print_buf(t_term *term)
 			tputs(tgetstr("do", NULL), 0, ft_outchar);
 		ft_replace_cursor(term);
 	}
+}
+
+void		ft_shift_left(t_term *term)
+{
+	term->copy = ft_strdup(term->cmdactual);
+	term->copy[term->cursorpos] = '\0';
 }
 
 void		ft_process(t_term *term)
@@ -104,9 +110,17 @@ void		ft_process(t_term *term)
 		ft_history_next(term);
 	else if (term->buf[0] != 27 && term->buf[0] != 127
 	&& ft_isprint(term->buf[0]))
-		ft_print_buf(term);
+		ft_print_buf(term, term->buf);
 	else if (term->buf[0] == 27 && term->buf[1] == 91 && term->buf[2] == 53)
 		ft_go_up(term);
+	else if(term->buf[0] == 27 && term->buf[2] == 49 && term->buf[5] == 65)
+		term->copy = ft_strdup(term->cmdactual);
+	else if(term->buf[0] == 27 && term->buf[2] == 49 && term->buf[5] == 66)
+		ft_print_buf(term, term->copy);
+	else if(term->buf[0] == 27 && term->buf[2] == 49 && term->buf[5] == 67)
+		term->copy = ft_strdup(&term->cmdactual[term->cursorpos]);
+	else if(term->buf[0] == 27 && term->buf[2] == 49 && term->buf[5] == 68)
+		ft_shift_left(term);
 	else if (term->buf[0] == 27 && term->buf[1] == 91 && term->buf[2] == 54)
 		ft_go_down(term);
 	ft_bzero(term->buf, ft_strlen(term->buf));
