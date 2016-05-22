@@ -21,6 +21,7 @@ SRC =	srcs/main.c \
 		srcs/history.c \
 		srcs/termcaps.c \
 		srcs/termcaps2.c \
+		srcs/termcaps3.c \
 		srcs/builtin.c
 OBJ = $(SRC:.c=.o)
 FLAG = -Wall -Werror -Wextra

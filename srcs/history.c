@@ -23,7 +23,8 @@ void		ft_add_history(t_term *term, char *cmd)
 	t_history	*tmp;
 	t_history	*tmp2;
 
-	fd = open(".21sh_history", O_WRONLY | O_APPEND | O_CREAT);
+	fd = open(".21sh_history", O_WRONLY | O_APPEND | O_CREAT,
+	S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
 	write(fd, cmd, ft_strlen(cmd));
 	tmp2 = term->history;
 	tmp = (t_history*)malloc(sizeof(t_history));

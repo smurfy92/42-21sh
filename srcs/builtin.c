@@ -100,3 +100,19 @@ int			ft_check_builtin(t_term *term)
 	term->u = NULL;
 	return (1);
 }
+
+void		ft_print_buf(t_term *term, char *str)
+{
+	int i;
+
+	ft_get_cmd(term, str);
+	if (term->cursorpos < term->cmdlength)
+	{
+		i = term->cursorpos - 1;
+		while (term->cmdactual[++i])
+			ft_putchar(term->cmdactual[i]);
+		if (((i + 3) % term->window->width) == 0)
+			tputs(tgetstr("do", NULL), 0, ft_outchar);
+		ft_replace_cursor(term);
+	}
+}
