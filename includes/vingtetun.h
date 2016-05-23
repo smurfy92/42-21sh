@@ -22,25 +22,25 @@
 
 typedef	struct			s_term
 {
-	char				*path;
-	pid_t				father;
 	struct s_env		*lst;
-	int					i;
-	char				*u;
 	struct s_history	*history;
 	struct s_window		*window;
+	pid_t				father;
+	char				*path;
+	char				*u;
 	char				**env;
+	char				*buf;
+	char				*cmdactual;
+	char				*copy;
+	char				**cmds;
+	char				**cmdsplit;
+	int					i;
 	int					cursorpos;
 	int					cmdlength;
 	int					historylen;
 	int					inhistory;
 	int					historycurrent;
 	int					parenthese;
-	char				*buf;
-	char				*cmdactual;
-	char				*copy;
-	char				**cmds;
-	char				**cmdsplit;
 }						t_term;
 
 typedef	struct			s_u
@@ -68,6 +68,14 @@ typedef	struct			s_window
 	int					width;
 	int					heigth;
 }						t_window;
+
+typedef	struct			s_parse
+{
+	char				*cmd;
+	int					fdin;
+	int					fdout;
+	int					operato;
+}						t_parse;
 
 int						ft_outchar(int c);
 int						reset_shell(void);
