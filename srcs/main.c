@@ -18,8 +18,18 @@ void		ft_parse(char *cmd)
 
 	i = -1;
 	while (cmd[++i])
+	{
 		if (cmd[i] == '>' || cmd[i] ==  '<')
-			ft_putendl("redirection found");
+		{
+			if (!cmd[i + 1])
+			{
+				ft_putendl("21sh: parse error near `\\n'");
+				exit(0);
+			}
+			// else
+				// create maillon
+		}
+	}
 }
 
 void		ft_get_window(t_term *term)
