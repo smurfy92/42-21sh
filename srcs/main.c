@@ -12,25 +12,98 @@
 
 #include "../includes/vingtetun.h"
 
-void		ft_parse(char *cmd)
+void		ft_create_parse(t_term *term, char *cmd, int redirection)
 {
-	int i;
+	t_parse		*tmp;
+	t_parse		*tmp2;
+
+	tmp = (t_parse*)malloc(sizeof(t_parse));
+	while ((cmd[0] == '\t' || cmd[0] == ' ') && cmd[1])
+		cmd = &cmd[1];
+	tmp->cmd = ft_strdup(cmd);
+	tmp->fdin = 0;
+	tmp->fdout = 0;
+	tmp->redirection = redirection;
+	tmp->next = NULL;
+	if (!term->parselst)
+		term->parselst = tmp;
+	else
+	{
+		tmp2 = term->parselst;
+		while (tmp2->next)
+			tmp2 = tmp2->next;
+		tmp2->next = tmp;
+	}
+}
+
+void		ft_parse(t_term *term, char *cmd)
+{
+	int		i;
+	char	*tmp;
 
 	i = -1;
 	while (cmd[++i])
 	{
-		if (cmd[i] == '>' || cmd[i] ==  '<')
+		if (cmd[i] == '>' || cmd[i] == '<' || cmd[i] == '|')
 		{
 			if (!cmd[i + 1])
 			{
 				ft_putendl("21sh: parse error near `\\n'");
-				exit(0);
 			}
-			// else
-				// create maillon
+			tmp = ft_strdup(cmd);
+			tmp[i] = '\0';
+			if (cmd[i] == '>' && cmd[i + 1] && cmd[i + 1] == '>')
+			{
+				ft_create_parse(term, tmp, 4);
+				if (!cmd[i + 2])
+					break ;
+				cmd = &cmd[i + 2];
+			}
+			else if (cmd[i] == '<' && cmd[i + 1] && cmd[i + 1] == '<')
+			{
+				ft_create_parse(term, tmp, 5);
+				if (!cmd[i + 2])
+					break ;
+				cmd = &cmd[i + 2];
+			}
+			else if (cmd[i] == '>')
+			{
+				ft_create_parse(term, tmp, 1);
+				cmd = &cmd[i + 1];
+			}
+			else if (cmd[i] == '<')
+			{
+				ft_create_parse(term, tmp, 2);
+				cmd = &cmd[i + 1];
+			}
+			else if (cmd[i] == '|')
+			{
+				ft_create_parse(term, tmp, 3);
+				cmd = &cmd[i + 1];
+			}
+			i = -1;
 		}
 	}
+	ft_create_parse(term, cmd, 0);
+	while (term->parselst)
+	{
+		ft_putendl(term->parselst->cmd);
+		ft_putnbr(term->parselst->redirection);
+		ft_putchar('\n');
+		term->parselst = term->parselst->next;
+	}
+	exit(0);
 }
+
+t_term		*ft_get_term(void)
+{
+	static t_term *term;
+
+	if (!term)
+		term = (t_term*)malloc(sizeof(t_term));
+	return (term);
+}
+
 
 void		ft_get_window(t_term *term)
 {
@@ -41,6 +114,20 @@ void		ft_get_window(t_term *term)
 		term->window = (t_window*)malloc(sizeof(t_window));
 	term->window->width = w.ws_col;
 	term->window->heigth = w.ws_row;
+}
+
+void		ft_get_window_sig()
+{
+	struct winsize	w;
+	t_term			*term;
+
+	ioctl(0, TIOCGWINSZ, &w);
+	term = ft_get_term();
+	ft_putstr("ici");
+	ft_putnbr(term->window->width);
+	ft_clean_line(term);
+	ft_get_window(term);
+	//ft_putstr(term->cmdactual);
 }
 
 void		ft_reset_term(t_term *term)
@@ -65,6 +152,7 @@ int			main(int argc, char **argv, char **env)
 	term = ft_set_term(env, ft_parse_env(env));
 	ft_check_env(term);
 	ft_get_history(term);
+	signal(SIGWINCH, ft_get_window_sig);
 	while (42)
 	{
 		argc = -1;
@@ -79,7 +167,7 @@ int			main(int argc, char **argv, char **env)
 		while (term->cmdsplit && term->cmdsplit[++argc])
 		{
 			term->cmds = NULL;
-			ft_parse(term->cmdsplit[argc]);
+			ft_parse(term, term->cmdsplit[argc]);
 			term->cmds = ft_strsplit(term->cmdsplit[argc], ' ');
 			(!ft_check_builtin(term)) ? ft_check_in_path(term) : 0;
 		}

@@ -88,21 +88,27 @@ int			reset_shell(void)
 void		ft_clean_line(t_term *term)
 {
 	int i;
+	int tmp;
+	int y;
 
-	if (term->cursorpos < term->cmdlength)
-		tputs(tgetstr("sc", NULL), 0, ft_outchar);
-	i = term->cursorpos;
-	if (i > 0)
+	i = -1;
+	tmp = term->cursorpos;
+	ft_go_end(term);
+	while (term->cursorpos-- > 0)
 	{
-		while (--i > 0)
+		if (((term->cursorpos + 3 + (int)ft_strlen(&term->cmdactual
+		[term->cursorpos]) - i) % term->window->width) == 0)
+		{
+			tputs(tgetstr("up", NULL), 1, ft_outchar);
+			y = 0;
+			while (y++ < term->window->width)
+				tputs(tgetstr("nd", NULL), 0, ft_outchar);
+		}
+		else
 		{
 			tputs(tgetstr("le", NULL), 0, ft_outchar);
 			tputs(tgetstr("dc", NULL), 0, ft_outchar);
 		}
-		tputs(tgetstr("le", NULL), 0, ft_outchar);
-		tputs(tgetstr("dc", NULL), 0, ft_outchar);
 	}
-	term->cursorpos = 0;
-	term->cmdlength = 0;
-	term->cmdactual = NULL;
+	term->cursorpos = tmp;
 }

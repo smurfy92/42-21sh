@@ -25,6 +25,7 @@ typedef	struct			s_term
 	struct s_env		*lst;
 	struct s_history	*history;
 	struct s_window		*window;
+	struct s_parse		*parselst;
 	pid_t				father;
 	char				*path;
 	char				*u;
@@ -74,7 +75,9 @@ typedef	struct			s_parse
 	char				*cmd;
 	int					fdin;
 	int					fdout;
+	int					redirection;
 	int					operato;
+	struct s_parse		*next;
 }						t_parse;
 
 int						ft_outchar(int c);
