@@ -16,6 +16,7 @@
 # include "../libft/includes/libft.h"
 # include <signal.h>
 # include <termios.h>
+# include <sys/stat.h>
 # include <curses.h>
 # include <sys/ioctl.h>
 # include <term.h>

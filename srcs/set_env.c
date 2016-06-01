@@ -47,17 +47,15 @@ void		ft_check_env(t_term *term)
 	buf = NULL;
 	if (!ft_get_val_exists(term, "HOME"))
 		ft_process_setenv(term, "HOME", "/nfs/2015/j/jtranchi");
-	if (!ft_get_val_exists(term, "LOGNAME"))
-		ft_process_setenv(term, "LOGNAME", "jtranchi");
 	if (!ft_get_val_exists(term, "SHLVL"))
-		ft_process_setenv(term, "SHLVL", "2");
+		ft_process_setenv(term, "SHLVL", "1");
 	if (!ft_get_val_exists(term, "PWD"))
 		ft_process_setenv(term, "PWD", getwd(buf));
 	if (!ft_get_val_exists(term, "OLDPWD"))
 		ft_process_setenv(term, "OLDPWD", getwd(buf));
 	if (!ft_get_val_exists(term, "PATH"))
 		ft_process_setenv(term, "PATH",
-		"/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/local/munki");
+"/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/opt/X11/bin:/usr/local/munki");
 }
 
 t_term		*ft_set_term(char **env, t_env *lst)

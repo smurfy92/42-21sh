@@ -127,7 +127,6 @@ void		ft_get_window_sig()
 	ft_putnbr(term->window->width);
 	ft_clean_line(term);
 	ft_get_window(term);
-	//ft_putstr(term->cmdactual);
 }
 
 void		ft_reset_term(t_term *term)

@@ -22,7 +22,8 @@ SRC =	srcs/main.c \
 		srcs/termcaps.c \
 		srcs/termcaps2.c \
 		srcs/termcaps3.c \
-		srcs/builtin.c
+		srcs/builtin.c \
+		srcs/cd.c
 OBJ = $(SRC:.c=.o)
 FLAG = -Wall -Werror -Wextra
 CG = \033[92m
