@@ -49,9 +49,9 @@ void		ft_prev_word(t_term *term)
 		ft_left_cursor(term);
 	while (term->cursorpos > 0)
 	{
-		ft_left_cursor(term);
 		if (term->cursorpos > 0 && term->cmdactual[term->cursorpos - 1] == ' ')
 			break ;
+		ft_left_cursor(term);
 	}
 }
 

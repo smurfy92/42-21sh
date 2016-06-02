@@ -85,25 +85,15 @@ void		ft_parse(t_term *term, char *cmd)
 		}
 	}
 	ft_create_parse(term, cmd, 0);
-	while (term->parselst)
-	{
-		ft_putendl(term->parselst->cmd);
-		ft_putnbr(term->parselst->redirection);
-		ft_putchar('\n');
-		term->parselst = term->parselst->next;
-	}
-	exit(0);
+	// while (term->parselst)
+	// {
+	// 	ft_putendl(term->parselst->cmd);
+	// 	ft_putnbr(term->parselst->redirection);
+	// 	ft_putchar('\n');
+	// 	term->parselst = term->parselst->next;
+	// }
+	// exit(0);
 }
-
-t_term		*ft_get_term(void)
-{
-	static t_term *term;
-
-	if (!term)
-		term = (t_term*)malloc(sizeof(t_term));
-	return (term);
-}
-
 
 void		ft_get_window(t_term *term)
 {
@@ -116,6 +106,16 @@ void		ft_get_window(t_term *term)
 	term->window->heigth = w.ws_row;
 }
 
+t_term		*ft_get_term(void)
+{
+	static t_term *term;
+
+	if (!term)
+		term = (t_term*)malloc(sizeof(t_term));
+	ft_get_window(term);
+	return (term);
+}
+
 void		ft_get_window_sig()
 {
 	struct winsize	w;
@@ -123,10 +123,7 @@ void		ft_get_window_sig()
 
 	ioctl(0, TIOCGWINSZ, &w);
 	term = ft_get_term();
-	ft_putstr("ici");
-	ft_putnbr(term->window->width);
 	ft_clean_line(term);
-	ft_get_window(term);
 }
 
 void		ft_reset_term(t_term *term)
@@ -145,9 +142,10 @@ void		ft_reset_term(t_term *term)
 
 int			main(int argc, char **argv, char **env)
 {
-	static t_term		*term;
+	t_term		*term;
 
 	argv = NULL;
+	term = ft_get_term();
 	term = ft_set_term(env, ft_parse_env(env));
 	ft_check_env(term);
 	ft_get_history(term);
