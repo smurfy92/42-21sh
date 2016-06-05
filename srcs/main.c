@@ -85,14 +85,6 @@ void		ft_parse(t_term *term, char *cmd)
 		}
 	}
 	ft_create_parse(term, cmd, 0);
-	// while (term->parselst)
-	// {
-	// 	ft_putendl(term->parselst->cmd);
-	// 	ft_putnbr(term->parselst->redirection);
-	// 	ft_putchar('\n');
-	// 	term->parselst = term->parselst->next;
-	// }
-	// exit(0);
 }
 
 void		ft_get_window(t_term *term)

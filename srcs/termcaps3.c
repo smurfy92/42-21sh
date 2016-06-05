@@ -14,6 +14,8 @@
 
 void		ft_shift_left(t_term *term)
 {
+	if (term->cursorpos == 0)
+		return ;
 	term->copy = ft_strdup(term->cmdactual);
 	term->copy[term->cursorpos] = '\0';
 }

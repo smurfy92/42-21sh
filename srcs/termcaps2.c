@@ -73,6 +73,8 @@ void		ft_left_arrow(t_term *term)
 {
 	int i;
 
+	if (term->cursorpos == 0)
+		return ;
 	if (((term->cursorpos + 3) % term->window->width) == 0)
 	{
 		i = 0;
@@ -87,6 +89,8 @@ void		ft_left_arrow(t_term *term)
 
 void		ft_right_arrow(t_term *term)
 {
+	if (term->cursorpos == term->cmdlength)
+		return ;
 	term->cursorpos++;
 	if (((term->cursorpos + 3) % term->window->width) == 0)
 		tputs(tgetstr("do", NULL), 0, ft_outchar);

@@ -81,6 +81,20 @@ typedef	struct			s_parse
 	struct s_parse		*next;
 }						t_parse;
 
+int						ft_is_page_up(t_term *term);
+int						ft_is_page_down(t_term *term);
+int						ft_is_down_arrow(t_term *term);
+int						ft_is_up_arrow(t_term *term);
+int						ft_is_left_arrow(t_term *term);
+int						ft_is_right_arrow(t_term *term);
+int						ft_is_end(t_term *term);
+int						ft_is_home(t_term *term);
+int						ft_is_shift_end(t_term *term);
+int						ft_is_shift_home(t_term *term);
+int						ft_is_shift_left(t_term *term);
+int						ft_is_shift_right(t_term *term);
+int						ft_is_shift_up(t_term *term);
+int						ft_is_shift_down(t_term *term);
 int						ft_outchar(int c);
 int						reset_shell(void);
 int						ft_check_in_path(t_term *term);

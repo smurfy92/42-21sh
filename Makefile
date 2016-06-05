@@ -22,6 +22,9 @@ SRC =	srcs/main.c \
 		srcs/termcaps.c \
 		srcs/termcaps2.c \
 		srcs/termcaps3.c \
+		srcs/termcaps4.c \
+		srcs/termcaps5.c \
+		srcs/termcaps6.c \
 		srcs/builtin.c \
 		srcs/cd.c
 OBJ = $(SRC:.c=.o)

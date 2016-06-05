@@ -65,44 +65,63 @@ void		ft_replace_cursor(t_term *term)
 
 void		ft_process2(t_term *term)
 {
-	if (term->buf[0] == 27 && term->buf[1] == 91 && term->buf[2] == 53)
+	if (ft_is_page_up(term))
 		ft_go_up(term);
-	else if (term->buf[0] == 27 && term->buf[2] == 49 && term->buf[5] == 65)
-		term->copy = ft_strdup(term->cmdactual);
-	else if (term->buf[0] == 27 && term->buf[2] == 49 && term->buf[5] == 66)
-		ft_print_buf(term, term->copy);
-	else if (term->buf[0] == 27 && term->buf[2] == 49 && term->buf[5] == 67)
-		term->copy = ft_strdup(&term->cmdactual[term->cursorpos]);
-	else if (term->buf[0] == 27 && term->buf[2] == 49 && term->buf[5] == 68)
-		ft_shift_left(term);
-	else if (term->buf[0] == 27 && term->buf[1] == 91 && term->buf[2] == 54)
+	else if (ft_is_page_down(term))
 		ft_go_down(term);
-	else if (term->buf[0] == 45)
-		ft_prev_word(term);
-	else if (term->buf[0] == 43)
-		ft_next_word(term);
+	else if (term->buf[0] == 127)
+		(term->cursorpos > 0) ? ft_backspace(term) : 0;
+	else if (ft_is_left_arrow(term))
+		ft_left_arrow(term);
+	else if (ft_is_right_arrow(term))
+		ft_right_arrow(term);
+	else if (ft_is_up_arrow(term))
+		ft_history_prev(term);
+	else if (ft_is_down_arrow(term))
+		ft_history_next(term);
+	else if (ft_is_left_arrow(term))
+		ft_left_arrow(term);
+	else if (ft_is_right_arrow(term))
+		ft_right_arrow(term);
+	else
+		ft_print_buf(term, term->buf);
 }
 
 void		ft_process(t_term *term)
 {
-	if (term->buf[0] == 27 && term->buf[1] == 91 && term->buf[2] == 72)
+	// ft_putnbr(term->buf[0]);
+	// ft_putchar('\n');
+	// ft_putnbr(term->buf[1]);
+	// ft_putchar('\n');
+	// ft_putnbr(term->buf[2]);
+	// ft_putchar('\n');
+	// ft_putnbr(term->buf[3]);
+	// ft_putchar('\n');
+	// ft_putnbr(term->buf[4]);
+	// ft_putchar('\n');
+	// ft_putnbr(term->buf[5]);
+	// ft_putchar('\n');
+
+	if (ft_is_shift_up(term))
+		(term->cmdlength > 0) ? (term->copy = ft_strdup(term->cmdactual)) : 0;
+	else if (ft_is_shift_right(term))
+	 	(term->cursorpos < term->cmdlength) ? (term->copy = ft_strdup(&term->cmdactual[term->cursorpos])) : 0;
+	else if (ft_is_shift_left(term))
+	 	ft_shift_left(term);
+	else if (ft_is_shift_home(term))
+		ft_prev_word(term);
+	else if (ft_is_shift_end(term))
+		ft_next_word(term);
+	else if (ft_is_home(term))
 		ft_go_home(term);
-	else if (term->buf[0] == 27 && term->buf[1] == 91 && term->buf[2] == 70)
+	else if (ft_is_end(term))
 		ft_go_end(term);
-	else if (term->buf[0] == 127 && term->cursorpos > 0)
-		ft_backspace(term);
-	else if (term->buf[0] == 27 && term->buf[2] == 68 && term->cursorpos > 0)
-		ft_left_arrow(term);
-	else if (term->buf[0] == 27 && term->buf[2] == 67
-	&& term->cursorpos < term->cmdlength)
-		ft_right_arrow(term);
-	else if (term->buf[0] == 27 && term->buf[2] == 65)
+	else if (term->buf[0] == 127)
+		(term->cursorpos > 0) ? ft_backspace(term) : 0;
+	else if (ft_is_up_arrow(term))
 		ft_history_prev(term);
-	else if (term->buf[0] == 27 && term->buf[2] == 66)
+	else if (ft_is_down_arrow(term))
 		ft_history_next(term);
-	else if (term->buf[0] != 27 && term->buf[0] != 127 && term->buf[0] != 43
-	&& term->buf[0] != 45 && ft_isprint(term->buf[0]))
-		ft_print_buf(term, term->buf);
 	else
 		ft_process2(term);
 	ft_bzero(term->buf, ft_strlen(term->buf));
