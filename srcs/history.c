@@ -23,7 +23,7 @@ void		ft_add_history(t_term *term, char *cmd)
 	t_history	*tmp;
 	t_history	*tmp2;
 
-	fd = open(".21sh_history", O_WRONLY | O_APPEND | O_CREAT,
+	fd = open("/tmp/.21sh_history", O_WRONLY | O_APPEND | O_CREAT,
 	S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
 	write(fd, cmd, ft_strlen(cmd));
 	tmp2 = term->history;
@@ -97,7 +97,7 @@ void		ft_get_history(t_term *term)
 	t_history	*tmp;
 	char		*line;
 
-	fd = open(".21sh_history", O_RDONLY);
+	fd = open("/tmp/.21sh_history", O_RDONLY);
 	term->history = NULL;
 	term->historylen = 0;
 	term->historycurrent = 0;
