@@ -12,19 +12,57 @@
 
 #include "../includes/vingtetun.h"
 
-void		ft_create_parse(t_term *term, char *cmd, int redirection)
+int			ft_is_space(char c)
+{
+	if (c == '\t' || c == ' ' || c == '\v' || c == '\f' || c == '\r'
+	|| c == '\n')
+		return (1);
+	else
+
+		return (0);
+}
+
+void		ft_adddoubleredirection(t_parse *parse, int i)
+{
+	if (!parse->cmd[i])
+		return (ft_putendl("zsh : parse error near `\\n'"));
+	while (!ft_isalpha(parse->cmd[i] && parse->cmd[i + 1])
+	{
+		tmp = parse->cmd;
+	}
+
+}
+
+t_parse		*ft_parse_redirections(t_parse *parse)
+{
+	int i;
+
+	i = -1;
+	while (parse->cmd[++i])
+	{
+		if (parse->cmd[i] == '>' && parse->cmd[i + 1] && parse->cmd[i + 1] == '>')
+			ft_adddoubleredirection(parse, i + 2);
+		// else if (parse->cmd[i] == '<' && parse->cmd[i + 1] && parse->cmd[i + 1] == '<')
+
+		// else if (parse->cmd[i] == '<')
+
+		// else if (parse->cmd[i] == '>')
+	}
+	return (parse);
+}
+
+void		ft_create_parse(t_term *term, char *cmd)
 {
 	t_parse		*tmp;
 	t_parse		*tmp2;
 
 	tmp = (t_parse*)malloc(sizeof(t_parse));
-	while ((cmd[0] == '\t' || cmd[0] == ' ') && cmd[1])
+	while (ft_is_space(cmd[0]) && cmd[1])
 		cmd = &cmd[1];
 	tmp->cmd = ft_strdup(cmd);
 	tmp->fdin = 0;
-	tmp->fdout = 0;
-	tmp->redirection = redirection;
 	tmp->next = NULL;
+	tmp = ft_parse_redirections(tmp);
 	if (!term->parselst)
 		term->parselst = tmp;
 	else
@@ -39,52 +77,17 @@ void		ft_create_parse(t_term *term, char *cmd, int redirection)
 void		ft_parse(t_term *term, char *cmd)
 {
 	int		i;
-	char	*tmp;
+	char	**tabl;
 
 	i = -1;
-	while (cmd[++i])
+	tabl = ft_strsplit(cmd, '|');
+	while (tabl[++i])
+		ft_create_parse(term, tabl[i]);
+	while (term->parselst)
 	{
-		if (cmd[i] == '>' || cmd[i] == '<' || cmd[i] == '|')
-		{
-			if (!cmd[i + 1])
-			{
-				ft_putendl("21sh: parse error near `\\n'");
-			}
-			tmp = ft_strdup(cmd);
-			tmp[i] = '\0';
-			if (cmd[i] == '>' && cmd[i + 1] && cmd[i + 1] == '>')
-			{
-				ft_create_parse(term, tmp, 4);
-				if (!cmd[i + 2])
-					break ;
-				cmd = &cmd[i + 2];
-			}
-			else if (cmd[i] == '<' && cmd[i + 1] && cmd[i + 1] == '<')
-			{
-				ft_create_parse(term, tmp, 5);
-				if (!cmd[i + 2])
-					break ;
-				cmd = &cmd[i + 2];
-			}
-			else if (cmd[i] == '>')
-			{
-				ft_create_parse(term, tmp, 1);
-				cmd = &cmd[i + 1];
-			}
-			else if (cmd[i] == '<')
-			{
-				ft_create_parse(term, tmp, 2);
-				cmd = &cmd[i + 1];
-			}
-			else if (cmd[i] == '|')
-			{
-				ft_create_parse(term, tmp, 3);
-				cmd = &cmd[i + 1];
-			}
-			i = -1;
-		}
+		ft_putendl(term->parselst->cmd);
+		term->parselst = term->parselst->next;
 	}
-	ft_create_parse(term, cmd, 0);
 }
 
 void		ft_get_window(t_term *term)
