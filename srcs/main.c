@@ -146,6 +146,7 @@ int			main(int argc, char **argv, char **env)
 	{
 		argc = -1;
 		ft_reset_term(term);
+		ft_get_history(term);
 		while ((read(0, term->buf, BUFFSIZE)) && term->buf[0] != 10)
 			ft_process(term);
 		(ft_strlen(term->cmdactual) > 0) ?

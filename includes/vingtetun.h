@@ -13,6 +13,7 @@
 #ifndef VINGTETUN_H
 # define VINGTETUN_H
 # define BUFFSIZE 6
+# define KEY(a, b, c, d) ((d << 24) + (c << 16) + (b << 8) + a)
 # include "../libft/includes/libft.h"
 # include <signal.h>
 # include <termios.h>
