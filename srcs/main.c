@@ -24,12 +24,13 @@ int			ft_is_space(char c)
 
 void		ft_adddoubleredirection(t_parse *parse, int i)
 {
+	int y;
+
 	if (!parse->cmd[i])
 		return (ft_putendl("zsh : parse error near `\\n'"));
-	while (!ft_isalpha(parse->cmd[i] && parse->cmd[i + 1])
-	{
-		tmp = parse->cmd;
-	}
+	y = i;
+	while (!ft_isalpha(parse->cmd[i]) && parse->cmd[i + 1])
+		i++;
 
 }
 
