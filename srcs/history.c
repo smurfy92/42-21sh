@@ -46,6 +46,8 @@ void		ft_add_history(t_term *term, char *cmd)
 
 void		ft_history_prev(t_term *term)
 {
+	if (!term->history)
+		return ;
 	if (!term->history->next && term->cmdactual && !term->inhistory)
 	{
 		ft_add_history(term, term->cmdactual);
@@ -75,6 +77,8 @@ void		ft_history_prev(t_term *term)
 
 void		ft_history_next(t_term *term)
 {
+	if (!term->history)
+		return ;
 	ft_clean_line(term);
 	term->cursorpos = 0;
 	term->cmdlength = 0;

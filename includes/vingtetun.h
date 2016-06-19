@@ -115,6 +115,7 @@ void					ft_get_cmd(t_term *term, char *str);
 void					ft_go_home(t_term *term);
 void					ft_go_end(t_term *term);
 void					ft_backspace(t_term *term);
+void					ft_left_cursor(t_term *term);
 void					ft_left_arrow(t_term *term);
 void					ft_right_arrow(t_term *term);
 void					ft_process(t_term *term);
