@@ -85,16 +85,45 @@ void		ft_parse(t_term *term, char *cmd)
 {
 	int		i;
 	char	**tabl;
+	int 	child;
+	int 	pdes[2];
 
 	i = -1;
+	term->cmdlength = 0;
 	tabl = ft_strsplit(cmd, '|');
 	while (tabl[++i])
-		ft_create_parse(term, tabl[i]);
-	// while (term->parselst)
-	// {
-	// 	ft_putendl(term->parselst->cmd);
-	// 	term->parselst = term->parselst->next;
-	// }
+	{
+		while (tabl[i][1] && ft_is_space(tabl[i][0]))
+			tabl[i] = &tabl[i][1];
+		ft_putendl(tabl[i]);
+	}
+
+	child = fork();
+	pipe(pdes);
+	if (child == 0)
+	{
+		dup2(pdes[1], 1);
+		close(pdes[0]);
+		wait(NULL);
+		char **args = NULL;
+		args = (char**)malloc(sizeof(char*) * 2);
+		args[0] = ft_strdup("cat");
+		args[1] = ft_strdup("-e");
+		execve("/usr/bin/cat", args, NULL);
+		return ;
+	}
+	if (child != 0)
+	{
+		dup2(pdes[0], 0);
+		close(pdes[1]);
+		char **args = NULL;
+		args = (char**)malloc(sizeof(char*) * 2);
+		args[0] = ft_strdup("ls");
+		args[1] = ft_strdup("-l");
+		execve("/usr/bin/ls", args, NULL);
+	}
+	ft_create_parse(term, tabl[i]);
+
 }
 
 void		ft_get_window(t_term *term)
