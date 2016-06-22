@@ -80,49 +80,67 @@ void		ft_create_parse(t_term *term, char *cmd)
 		tmp2->next = tmp;
 	}
 }
+int			second(int fd)
+{
+	int child2;
+	int		buf2;////
 
+	child2 = fork();
+	if (child2 != 0)
+		waitpid(child2, &buf2, 0);
+	if (child2 == 0)
+	{
+		char **args = NULL;
+		args = (char**)malloc(sizeof(char*) * 3);
+		args[0] = ft_strdup("cat");
+		args[1] = ft_strdup("-e");
+		args[2] = NULL;
+		ft_putendl("ici");
+		dup2(fd, STDIN_FILENO);
+		execve("/bin/cat", args, NULL);
+	}
+}
 void		ft_parse(t_term *term, char *cmd)
 {
 	int		i;
+	int		buf;
+	int		buf2;
 	char	**tabl;
 	int 	child;
 	int 	pdes[2];
+	int		save;
 
 	i = -1;
 	term->cmdlength = 0;
 	tabl = ft_strsplit(cmd, '|');
-	while (tabl[++i])
-	{
-		while (tabl[i][1] && ft_is_space(tabl[i][0]))
-			tabl[i] = &tabl[i][1];
-		ft_putendl(tabl[i]);
-	}
-
+	// while (tabl[++i])
+	// {
+	// 	while (tabl[i][1] && ft_is_space(tabl[i][0]))
+	// 		tabl[i] = &tabl[i][1];
+	// 	ft_putendl(tabl[i]);
+	// }
 	child = fork();
 	pipe(pdes);
 	if (child == 0)
 	{
-		dup2(pdes[1], 1);
-		close(pdes[0]);
-		wait(NULL);
 		char **args = NULL;
-		args = (char**)malloc(sizeof(char*) * 2);
-		args[0] = ft_strdup("cat");
-		args[1] = ft_strdup("-e");
-		execve("/usr/bin/cat", args, NULL);
-		return ;
+		args = (char**)malloc(sizeof(char*) * 3);
+		args[0] = ft_strdup("ls");
+		args[1] = ft_strdup("-l");
+		args[2] = NULL;
+		dup2(pdes[1], STDOUT_FILENO);
+		execve("/bin/ls", args, NULL);
+		//close(pdes[0]);
 	}
 	if (child != 0)
 	{
-		dup2(pdes[0], 0);
 		close(pdes[1]);
-		char **args = NULL;
-		args = (char**)malloc(sizeof(char*) * 2);
-		args[0] = ft_strdup("ls");
-		args[1] = ft_strdup("-l");
-		execve("/usr/bin/ls", args, NULL);
+		waitpid(child, &buf, 0);
+		save = pdes[0];
+		second(save);
+
 	}
-	ft_create_parse(term, tabl[i]);
+	// ft_create_parse(term, tabl[i]);
 
 }
 
@@ -197,8 +215,8 @@ int			main(int argc, char **argv, char **env)
 		{
 			term->cmds = NULL;
 			ft_parse(term, term->cmdsplit[argc]);
-			term->cmds = ft_strsplit(term->cmdsplit[argc], ' ');
-			(!ft_check_builtin(term)) ? ft_check_in_path(term) : 0;
+			// term->cmds = ft_strsplit(term->cmdsplit[argc], ' ');
+			// (!ft_check_builtin(term)) ? ft_check_in_path(term) : 0;
 		}
 	}
 	return (0);
