@@ -15,26 +15,11 @@
 void		ft_go_home(t_term *term)
 {
 	int i;
-	int verif;
 
-	verif = 0;
-	if (term->cursorpos > 0)
-	{
-		while (--term->cursorpos > 0)
-		{
-			if (((term->cursorpos + 3) % term->window->width) == 0)
-			{
-				i = 0;
-				verif = 1;
-				tputs(tgetstr("up", NULL), 0, ft_outchar);
-				while (i++ < term->window->width)
-					tputs(tgetstr("nd", NULL), 0, ft_outchar);
-			}
-			else
-				tputs(tgetstr("le", NULL), 0, ft_outchar);
-		}
-		(!verif) ? (tputs(tgetstr("le", NULL), 0, ft_outchar)) : 0;
-	}
+	i = term->cursorpos;
+	if (i > 0)
+		while (i-- > 0)
+			ft_left_arrow(term);
 }
 
 void		ft_go_end(t_term *term)

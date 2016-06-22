@@ -84,11 +84,11 @@ void		ft_parse(t_term *term, char *cmd)
 	tabl = ft_strsplit(cmd, '|');
 	while (tabl[++i])
 		ft_create_parse(term, tabl[i]);
-	while (term->parselst)
-	{
-		ft_putendl(term->parselst->cmd);
-		term->parselst = term->parselst->next;
-	}
+	// while (term->parselst)
+	// {
+	// 	ft_putendl(term->parselst->cmd);
+	// 	term->parselst = term->parselst->next;
+	// }
 }
 
 void		ft_get_window(t_term *term)
