@@ -24,17 +24,12 @@ void		ft_go_home(t_term *term)
 
 void		ft_go_end(t_term *term)
 {
+	int i;
+
+	i = term->cursorpos;
 	if (term->cursorpos < term->cmdlength)
-	{
-		tputs(tgetstr("nd", NULL), 0, ft_outchar);
-		while (++term->cursorpos < term->cmdlength)
-		{
-			if (((term->cursorpos + 4) % term->window->width) == 0)
-				tputs(tgetstr("do", NULL), 0, ft_outchar);
-			else
-				tputs(tgetstr("nd", NULL), 0, ft_outchar);
-		}
-	}
+		while (i++ < term->cmdlength)
+			ft_right_arrow(term);
 }
 
 void		ft_backspace(t_term *term)
@@ -42,11 +37,10 @@ void		ft_backspace(t_term *term)
 	char *tmp;
 
 	tmp = &term->cmdactual[term->cursorpos];
-	term->cursorpos--;
+	ft_left_arrow(term);
 	term->cmdlength--;
 	term->cmdactual[term->cursorpos] = '\0';
 	term->cmdactual = ft_strjoin(term->cmdactual, tmp);
-	tputs(tgetstr("le", NULL), 0, ft_outchar);
 	tputs(tgetstr("dc", NULL), 0, ft_outchar);
 	tputs(tgetstr("cd", NULL), 0, ft_outchar);
 	tputs(tgetstr("sc", NULL), 0, ft_outchar);

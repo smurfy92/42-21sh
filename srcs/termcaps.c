@@ -92,9 +92,10 @@ void		ft_process(t_term *term)
 	if (ft_is_shift_up(term))
 		(term->cmdlength > 0) ? (term->copy = ft_strdup(term->cmdactual)) : 0;
 	else if (ft_is_shift_right(term))
-	 	(term->cursorpos < term->cmdlength) ? (term->copy = ft_strdup(&term->cmdactual[term->cursorpos])) : 0;
+		(term->cursorpos < term->cmdlength) ? (term->copy = \
+		ft_strdup(&term->cmdactual[term->cursorpos])) : 0;
 	else if (ft_is_shift_left(term))
-	 	ft_shift_left(term);
+		ft_shift_left(term);
 	else if (ft_is_shift_home(term))
 		ft_prev_word(term);
 	else if (ft_is_shift_end(term))

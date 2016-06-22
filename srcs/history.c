@@ -42,11 +42,12 @@ void		ft_add_history(t_term *term, char *cmd)
 	term->history->next = tmp;
 	tmp->prev = term->history;
 	term->history = term->history->next;
+	term->inhistory = 0;
 }
 
 void		ft_history_prev(t_term *term)
 {
-	if (!term->history)
+	if (!term->history || !term->history->prev)
 		return ;
 	if (!term->history->next && term->cmdactual && !term->inhistory)
 	{
@@ -54,25 +55,13 @@ void		ft_history_prev(t_term *term)
 		(term->history->prev) ? (term->history = term->history->prev) : 0;
 	}
 	ft_clean_line(term);
-	term->cursorpos = 0;
-	term->cmdlength = 0;
-	term->cmdactual = NULL;
-	if (term->history->prev && !term->inhistory)
-	{
-		term->cursorpos = ft_strlen(term->history->var);
-		term->cmdlength = ft_strlen(term->history->var);
-		term->cmdactual = ft_strdup(term->history->var);
-		ft_putstr(term->history->var);
-		term->inhistory = 1;
-	}
-	else if (term->history->prev)
-	{
+	if (term->history->prev && term->inhistory)
 		term->history = term->history->prev;
-		term->cursorpos = ft_strlen(term->history->var);
-		term->cmdlength = ft_strlen(term->history->var);
-		term->cmdactual = ft_strdup(term->history->var);
-		ft_putstr(term->history->var);
-	}
+	term->inhistory = 1;
+	term->cursorpos = ft_strlen(term->history->var);
+	term->cmdlength = ft_strlen(term->history->var);
+	term->cmdactual = ft_strdup(term->history->var);
+	ft_putstr(term->history->var);
 }
 
 void		ft_history_next(t_term *term)
@@ -80,9 +69,6 @@ void		ft_history_next(t_term *term)
 	if (!term->history)
 		return ;
 	ft_clean_line(term);
-	term->cursorpos = 0;
-	term->cmdlength = 0;
-	term->cmdactual = NULL;
 	if (term->history->next)
 	{
 		term->history = term->history->next;

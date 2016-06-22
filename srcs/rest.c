@@ -89,28 +89,12 @@ int			reset_shell(void)
 
 void		ft_clean_line(t_term *term)
 {
-	int i;
-	int tmp;
-	int y;
-
-	i = -1;
-	tmp = term->cursorpos;
 	ft_go_end(term);
-	while (term->cursorpos-- > 0)
+	while (term->cmdlength-- > 0)
 	{
-		if (((term->cursorpos + 3 + (int)ft_strlen(&term->cmdactual
-		[term->cursorpos]) - i) % term->window->width) == 0)
-		{
-			tputs(tgetstr("up", NULL), 1, ft_outchar);
-			y = 0;
-			while (y++ < term->window->width)
-				tputs(tgetstr("nd", NULL), 0, ft_outchar);
-		}
-		else
-		{
-			tputs(tgetstr("le", NULL), 0, ft_outchar);
-			tputs(tgetstr("dc", NULL), 0, ft_outchar);
-		}
+		ft_left_arrow(term);
+		tputs(tgetstr("dc", NULL), 0, ft_outchar);
+		tputs(tgetstr("cd", NULL), 0, ft_outchar);
 	}
-	term->cursorpos = tmp;
+	term->cmdactual = NULL;
 }

@@ -51,19 +51,3 @@ void		ft_process_setenv(t_term *term, char *s1, char *s2)
 		term->lst = ft_add_lst(lst, term->lst);
 	}
 }
-
-void		ft_print_buf(t_term *term, char *str)
-{
-	int i;
-
-	ft_get_cmd(term, str);
-	if (term->cursorpos < term->cmdlength)
-	{
-		i = term->cursorpos - 1;
-		while (term->cmdactual[++i])
-			ft_putchar(term->cmdactual[i]);
-		if (((i + 3) % term->window->width) == 0)
-			tputs(tgetstr("do", NULL), 0, ft_outchar);
-		ft_replace_cursor(term);
-	}
-}

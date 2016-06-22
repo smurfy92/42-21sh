@@ -47,3 +47,21 @@ int			ft_is_shift_up(t_term *term)
 	else
 		return (0);
 }
+
+void		ft_print_buf(t_term *term, char *str)
+{
+	int i;
+
+	i = term->cursorpos - 1;
+	ft_get_cmd(term, str);
+	if (term->cursorpos < term->cmdlength)
+	{
+		while (term->cmdactual[++i])
+			ft_putchar(term->cmdactual[i]);
+		if (((i + 3) % term->window->width) == 0)
+			tputs(tgetstr("do", NULL), 0, ft_outchar);
+		ft_replace_cursor(term);
+	}
+	if (((term->cursorpos + 3) % term->window->width) == 0)
+		tputs(tgetstr("do", NULL), 0, ft_outchar);
+}

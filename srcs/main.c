@@ -12,6 +12,12 @@
 
 #include "../includes/vingtetun.h"
 
+void		ft_out(char *str)
+{
+	int fd = open("/dev/ttys001", O_WRONLY|O_NONBLOCK|O_NOCTTY);
+	write(fd, str, ft_strlen(str));
+}
+
 int			ft_is_space(char c)
 {
 	if (c == '\t' || c == ' ' || c == '\v' || c == '\f' || c == '\r'
@@ -119,7 +125,7 @@ void		ft_get_window_sig()
 
 	ioctl(0, TIOCGWINSZ, &w);
 	term = ft_get_term();
-	ft_clean_line(term);
+	//ft_clean_line(term);
 }
 
 void		ft_reset_term(t_term *term)
