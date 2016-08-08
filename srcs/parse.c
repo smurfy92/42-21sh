@@ -48,46 +48,48 @@ void		ft_parse(t_term *term, char *cmd)
 
 void		ft_adddoubleredirection(t_parse *parse, int i)
 {
-	int y;
 	int start;
 	char *tmp;
 
 	if (!parse->cmd[i])
 		return (ft_putendl("zsh : parse error near `\\n'"));
-	parse->cmd[i - 2] = parse->cmd[i];
-	y = i;
 	while (!ft_isalpha(parse->cmd[i]) && parse->cmd[i + 1])
 		i++;
 	start = i;
-	while (parse->cmd[i] && ft_isalpha(parse->cmd[i]))
+	while (parse->cmd[i] && !ft_is_space(parse->cmd[i]))
 		i++;
-	tmp = &parse->cmd[start];
-	tmp[i] = '\0';
+	tmp = ft_strdup(&parse->cmd[start]);
+	tmp[i - start] = '\0';
 	// en cas yen ai plusieurs
 	if (!parse->dbred)
 		parse->dbred = ft_strdup(tmp);
-	parse->cmd[start - 2] = parse->cmd[i];
+	else
+		parse->dbred = ft_strjoin(ft_strjoin(parse->dbred, ";"), tmp);
+	parse->cmd[start] = '\0';
+	tmp = ft_strdup(&parse->cmd[i]);
+	parse->cmd = ft_strjoin(parse->cmd, tmp);
+	parse->cmd[start] = parse->cmd[i];
 }
 
 void		ft_addredirection(t_parse *parse, int i)
 {
-	int y;
 	int start;
 	char *tmp;
 
 	if (!parse->cmd[i])
 		return (ft_putendl("zsh : parse error near `\\n'"));
-	parse->cmd[i - 2] = parse->cmd[i];
-	y = i;
 	while (!ft_isalpha(parse->cmd[i]) && parse->cmd[i + 1])
 		i++;
 	start = i;
-	while (parse->cmd[i] && ft_isalpha(parse->cmd[i]))
+	while (parse->cmd[i] && !ft_is_space(parse->cmd[i]))
 		i++;
-	tmp = &parse->cmd[start];
-	tmp[i] = '\0';
-	parse->sgred = tmp;
-	parse->cmd[start - 2] = parse->cmd[i];
+	tmp = ft_strdup(&parse->cmd[start]);
+	tmp[i - start] = '\0';
+	if (!parse->sgred)
+		parse->sgred = ft_strdup(tmp);
+	else
+		parse->sgred = ft_strjoin(ft_strjoin(parse->sgred, ";"), tmp);
+	parse->cmd[start] = parse->cmd[i];
 }
 
 t_parse		*ft_parse_redirections(t_parse *parse)
@@ -121,6 +123,8 @@ void		ft_create_parse(t_term *term, char *cmd)
 		cmd = &cmd[1];
 	tmp->cmd = ft_strdup(cmd);
 	tmp->next = NULL;
+	tmp->dbred = NULL;
+	tmp->sgred = NULL;
 	tmp = ft_parse_redirections(tmp);
 	if (!term->parselst)
 		term->parselst = tmp;
