@@ -64,6 +64,7 @@ int			main(int argc, char **argv, char **env)
 		{
 			term->cmds = NULL;
 			ft_parse(term, term->cmdsplit[argc]);
+			term->parselst = NULL;
 			term->cmds = ft_strsplit(term->cmdsplit[argc], ' ');
 			(!ft_check_builtin(term)) ? ft_check_in_path(term) : 0;
 		}

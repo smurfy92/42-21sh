@@ -12,10 +12,28 @@
 
 #include "../includes/vingtetun.h"
 
+void			ft_display_parse(t_term *term)
+{
+	t_parse *tmp;
+
+	tmp = term->parselst;
+	while (tmp)
+	{
+		ft_putstr("command :");
+		ft_putendl(tmp->cmd);
+		ft_putstr("sgred :");
+		ft_putendl(tmp->sgred);
+		ft_putstr("dbred :");
+		ft_putendl(tmp->dbred);
+		tmp = tmp->next;
+	}
+}
+
 void		ft_parse(t_term *term, char *cmd)
 {
-	char 	**tabl;
-	int		i;
+	char 		**tabl;
+	int			i;
+	t_parse		*tmp;
 
 	i = -1;
 	tabl = ft_strsplit(cmd, '|');
@@ -23,23 +41,53 @@ void		ft_parse(t_term *term, char *cmd)
 		ft_create_parse(term, tabl[i]);
 	term->cmdlength = 0;
 	cmd = NULL;
-	while (term->parselst)
-	{
-		ft_putendl(term->parselst->cmd);
-		term->parselst = term->parselst->next;
-	}
-	ft_write_in_tmp("ls -l /");
+	tmp = term->parselst;
+	ft_display_parse(term);
+
 }
 
 void		ft_adddoubleredirection(t_parse *parse, int i)
 {
 	int y;
+	int start;
+	char *tmp;
 
 	if (!parse->cmd[i])
 		return (ft_putendl("zsh : parse error near `\\n'"));
+	parse->cmd[i - 2] = parse->cmd[i];
 	y = i;
 	while (!ft_isalpha(parse->cmd[i]) && parse->cmd[i + 1])
 		i++;
+	start = i;
+	while (parse->cmd[i] && ft_isalpha(parse->cmd[i]))
+		i++;
+	tmp = &parse->cmd[start];
+	tmp[i] = '\0';
+	// en cas yen ai plusieurs
+	if (!parse->dbred)
+		parse->dbred = ft_strdup(tmp);
+	parse->cmd[start - 2] = parse->cmd[i];
+}
+
+void		ft_addredirection(t_parse *parse, int i)
+{
+	int y;
+	int start;
+	char *tmp;
+
+	if (!parse->cmd[i])
+		return (ft_putendl("zsh : parse error near `\\n'"));
+	parse->cmd[i - 2] = parse->cmd[i];
+	y = i;
+	while (!ft_isalpha(parse->cmd[i]) && parse->cmd[i + 1])
+		i++;
+	start = i;
+	while (parse->cmd[i] && ft_isalpha(parse->cmd[i]))
+		i++;
+	tmp = &parse->cmd[start];
+	tmp[i] = '\0';
+	parse->sgred = tmp;
+	parse->cmd[start - 2] = parse->cmd[i];
 }
 
 t_parse		*ft_parse_redirections(t_parse *parse)
@@ -49,9 +97,10 @@ t_parse		*ft_parse_redirections(t_parse *parse)
 	i = -1;
 	while (parse->cmd[++i])
 	{
-		if (parse->cmd[i] == '>' && parse->cmd[i + 1]
-		&& parse->cmd[i + 1] == '>')
+		if (parse->cmd[i] == '>' && parse->cmd[i + 1] && parse->cmd[i + 1] == '>')
 			ft_adddoubleredirection(parse, i + 2);
+		else if (parse->cmd[i] == '>')
+			ft_addredirection(parse , i + 1);
 		// else if (parse->cmd[i] == '<' &&
 		// parse->cmd[i + 1] && parse->cmd[i + 1] == '<')
 
@@ -71,7 +120,6 @@ void		ft_create_parse(t_term *term, char *cmd)
 	while (ft_is_space(cmd[0]) && cmd[1])
 		cmd = &cmd[1];
 	tmp->cmd = ft_strdup(cmd);
-	tmp->fdin = 0;
 	tmp->next = NULL;
 	tmp = ft_parse_redirections(tmp);
 	if (!term->parselst)
