@@ -26,7 +26,9 @@ SRC =	srcs/main.c \
 		srcs/termcaps5.c \
 		srcs/termcaps6.c \
 		srcs/builtin.c \
-		srcs/cd.c
+		srcs/cd.c \
+		srcs/init.c \
+		srcs/parse.c
 OBJ = $(SRC:.c=.o)
 FLAG = -Wall -Werror -Wextra
 CG = \033[92m
@@ -39,7 +41,7 @@ all: start $(NAME)
 $(NAME): $(OBJ)
 	@echo "$(CY)[MINISH] :$(CE) $(CG)Creating Library$(CE)";
 	-@make -C libft nohd
-	@echo "$(CY)[MINISH] :$(CE) $(CG)Compiling minishell ...$(CE)";
+	@echo "$(CY)[MINISH] :$(CE) $(CG)Compiling 21sh ...$(CE)";
 	@gcc -g -o $(NAME) $(FLAG) $(SRC) $(LIB) -lncurses
 
 %.o: %.c
@@ -85,13 +87,13 @@ start:
 clean: start
 	@echo "$(CY)[MINISH] :$(CE) $(CG)Cleaning Library ...$(CE)";
 	-@make -C libft nohdclean
-	@echo "$(CY)[MINISH] :$(CE) $(CG)Cleaning minishell objects$(CE)";
+	@echo "$(CY)[MINISH] :$(CE) $(CG)Cleaning 21sh objects$(CE)";
 	@/bin/rm -rf $(OBJ)
 
 fclean: start clean
 	@echo "$(CY)[MINISH] :$(CE) $(CG)FCleaning Library ...$(CE)";
 	-@make -C libft nohdfclean
-	@echo "$(CY)[MINISH] :$(CE) $(CG)Cleaning minishell ...$(CE)";
+	@echo "$(CY)[MINISH] :$(CE) $(CG)Cleaning 21sh ...$(CE)";
 	@/bin/rm -f $(NAME)
 
 re: fclean all

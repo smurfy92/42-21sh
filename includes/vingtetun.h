@@ -103,6 +103,12 @@ int						ft_get_val_exists(t_term *term, char *str);
 int						ft_check_in_env(t_term *term, char *cmd);
 int						init_shell(int lflag);
 int						ft_check_builtin(t_term *term);
+int						ft_is_space(char c);
+void					ft_create_parse(t_term *term, char *cmd);
+void					ft_write_in_tmp(char *cmd);
+void					ft_parse(t_term *term, char *cmd);
+void					ft_reset_term(t_term *term);
+void					ft_get_window_sig();
 void					ft_shift_left(t_term *term);
 void					ft_prev_word(t_term *term);
 void					ft_next_word(t_term *term);
@@ -143,6 +149,7 @@ char					*ft_get_val(t_term *term, char *str);
 t_env					*ft_parse_env(char **env);
 t_env					*ft_add_lst(t_env *tmp, t_env *lst);
 t_env					*ft_create_lst(char *str);
+t_term					*ft_get_term(void);
 t_term					*ft_set_term(char **env, t_env *lst);
 
 #endif
