@@ -22,9 +22,11 @@ void			ft_display_parse(t_term *term)
 		ft_putstr("command :");
 		ft_putendl(tmp->cmd);
 		ft_putstr("sgred :");
-		ft_putendl(tmp->sgred);
+		ft_putstr(tmp->sgred);
+		ft_putendl("|");
 		ft_putstr("dbred :");
-		ft_putendl(tmp->dbred);
+		ft_putstr(tmp->dbred);
+		ft_putendl("|");
 		tmp = tmp->next;
 	}
 }
@@ -53,20 +55,19 @@ void		ft_adddoubleredirection(t_parse *parse, int i)
 
 	if (!parse->cmd[i])
 		return (ft_putendl("zsh : parse error near `\\n'"));
+	start = i - 2;
 	while (!ft_isalpha(parse->cmd[i]) && parse->cmd[i + 1])
 		i++;
-	start = i;
+	tmp = ft_strdup(&parse->cmd[i]);
 	while (parse->cmd[i] && !ft_is_space(parse->cmd[i]))
 		i++;
-	tmp = ft_strdup(&parse->cmd[start]);
-	tmp[i - start] = '\0';
-	// en cas yen ai plusieurs
+	tmp[i - start - 2] = '\0';
 	if (!parse->dbred)
 		parse->dbred = ft_strdup(tmp);
 	else
 		parse->dbred = ft_strjoin(ft_strjoin(parse->dbred, ";"), tmp);
-	parse->cmd[start] = '\0';
 	tmp = ft_strdup(&parse->cmd[i]);
+	parse->cmd[start] = '\0';
 	parse->cmd = ft_strjoin(parse->cmd, tmp);
 	parse->cmd[start] = parse->cmd[i];
 }
@@ -78,17 +79,20 @@ void		ft_addredirection(t_parse *parse, int i)
 
 	if (!parse->cmd[i])
 		return (ft_putendl("zsh : parse error near `\\n'"));
+	start = i - 1;
 	while (!ft_isalpha(parse->cmd[i]) && parse->cmd[i + 1])
 		i++;
-	start = i;
+	tmp = ft_strdup(&parse->cmd[i]);
 	while (parse->cmd[i] && !ft_is_space(parse->cmd[i]))
 		i++;
-	tmp = ft_strdup(&parse->cmd[start]);
-	tmp[i - start] = '\0';
+	tmp[i - start - 1] = '\0';
 	if (!parse->sgred)
 		parse->sgred = ft_strdup(tmp);
 	else
 		parse->sgred = ft_strjoin(ft_strjoin(parse->sgred, ";"), tmp);
+	tmp = ft_strdup(&parse->cmd[i]);
+	parse->cmd[start] = '\0';
+	parse->cmd = ft_strjoin(parse->cmd, tmp);
 	parse->cmd[start] = parse->cmd[i];
 }
 
@@ -99,6 +103,8 @@ t_parse		*ft_parse_redirections(t_parse *parse)
 	i = -1;
 	while (parse->cmd[++i])
 	{
+		ft_putstr("la command -> ");
+		ft_putendl(parse->cmd);
 		if (parse->cmd[i] == '>' && parse->cmd[i + 1] && parse->cmd[i + 1] == '>')
 			ft_adddoubleredirection(parse, i + 2);
 		else if (parse->cmd[i] == '>')
