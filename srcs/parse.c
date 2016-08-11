@@ -52,56 +52,62 @@ void		ft_adddoubleredirection(t_parse *parse, int i)
 {
 	int start;
 	char *tmp;
+	int end;
 
+	tmp = NULL;
 	if (!parse->cmd[i])
 		return (ft_putendl("zsh : parse error near `\\n'"));
-	start = i - 2;
+	start = i - 1;
 	while (!ft_isalpha(parse->cmd[i]) && parse->cmd[i + 1])
 		i++;
-	tmp = ft_strdup(&parse->cmd[i]);
-	while (parse->cmd[i] && !ft_is_space(parse->cmd[i]))
-		i++;
-	tmp[i - start - 2] = '\0';
+	end = i;
+	while (parse->cmd[end] && !ft_is_space(parse->cmd[end]))
+		end++;
+	tmp = ft_strsub(&parse->cmd[i], 0 , end - i);
 	if (!parse->dbred)
 		parse->dbred = ft_strdup(tmp);
 	else
 		parse->dbred = ft_strjoin(ft_strjoin(parse->dbred, ";"), tmp);
-	tmp = ft_strdup(&parse->cmd[i]);
+	while (ft_is_space(parse->cmd[end]) && parse->cmd[end])
+		end++;
+	tmp = ft_strdup(&parse->cmd[end]);
 	parse->cmd[start] = '\0';
 	parse->cmd = ft_strjoin(parse->cmd, tmp);
-	parse->cmd[start] = parse->cmd[i];
 }
 
 void		ft_addredirection(t_parse *parse, int i)
 {
 	int start;
 	char *tmp;
+	int end;
 
+	tmp = NULL;
 	if (!parse->cmd[i])
 		return (ft_putendl("zsh : parse error near `\\n'"));
 	start = i - 1;
 	while (!ft_isalpha(parse->cmd[i]) && parse->cmd[i + 1])
 		i++;
-	tmp = ft_strdup(&parse->cmd[i]);
-	while (parse->cmd[i] && !ft_is_space(parse->cmd[i]))
-		i++;
-	tmp[i - start - 1] = '\0';
+	end = i;
+	while (parse->cmd[end] && !ft_is_space(parse->cmd[end]))
+		end++;
+	tmp = ft_strsub(&parse->cmd[i], 0 , end - i);
 	if (!parse->sgred)
 		parse->sgred = ft_strdup(tmp);
 	else
 		parse->sgred = ft_strjoin(ft_strjoin(parse->sgred, ";"), tmp);
-	tmp = ft_strdup(&parse->cmd[i]);
+	while (ft_is_space(parse->cmd[end]) && parse->cmd[end])
+		end++;
+	tmp = ft_strdup(&parse->cmd[end]);
 	parse->cmd[start] = '\0';
 	parse->cmd = ft_strjoin(parse->cmd, tmp);
-	parse->cmd[start] = parse->cmd[i];
 }
 
 t_parse		*ft_parse_redirections(t_parse *parse)
 {
 	int i;
 
-	i = -1;
-	while (parse->cmd[++i])
+	i = 0;
+	while (parse->cmd[i])
 	{
 		ft_putstr("la command -> ");
 		ft_putendl(parse->cmd);
@@ -109,6 +115,8 @@ t_parse		*ft_parse_redirections(t_parse *parse)
 			ft_adddoubleredirection(parse, i + 2);
 		else if (parse->cmd[i] == '>')
 			ft_addredirection(parse , i + 1);
+		else
+			i++;
 		// else if (parse->cmd[i] == '<' &&
 		// parse->cmd[i + 1] && parse->cmd[i + 1] == '<')
 
