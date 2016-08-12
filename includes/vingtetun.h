@@ -38,6 +38,7 @@ typedef	struct			s_term
 	char				**cmds;
 	char				**cmdsplit;
 	int					i;
+	int					fail;
 	int					exec;
 	int					cursorpos;
 	int					cmdlength;
@@ -104,6 +105,7 @@ int						ft_check_in_env(t_term *term, char *cmd);
 int						init_shell(int lflag);
 int						ft_check_builtin(t_term *term);
 int						ft_is_space(char c);
+void					ft_display_parse(t_parse *parse);
 void					ft_create_parse(t_term *term, char *cmd);
 void					ft_write_in_tmp(char *cmd);
 void					ft_parse(t_term *term, char *cmd);
@@ -151,6 +153,6 @@ t_env					*ft_add_lst(t_env *tmp, t_env *lst);
 t_env					*ft_create_lst(char *str);
 t_term					*ft_get_term(void);
 t_term					*ft_set_term(char **env, t_env *lst);
-t_parse					*ft_parse_redirections(t_parse *parse);
+t_parse					*ft_parse_redirections(t_term *term, t_parse *parse);
 
 #endif
