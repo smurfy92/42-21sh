@@ -61,11 +61,13 @@ int			ft_check_in_path(t_term *term)
 	if (term->path)
 	{
 		ft_create_process(term);
+		term->exec = 1;
 		term->historylen++;
 		return (1);
 	}
 	else
 		ft_putendl(ft_strjoin("21sh: command not found: ", term->cmds[0]));
+	term->exec = 0;
 	return (0);
 }
 
@@ -83,10 +85,13 @@ void		ft_refresh_env(t_term *term)
 	}
 }
 
-void		ft_prompt(int nb)
+void		ft_prompt(t_term *term, int nb)
 {
 	nb = 0;
-	ft_putstr("\n$> ");
+	if (term->exec)
+		ft_putstr("\n$> ");
+	else
+		ft_putstr("\n$> ");
 }
 
 char		*ft_get_env_by_name(t_term *term, char *name)

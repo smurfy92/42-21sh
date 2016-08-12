@@ -38,6 +38,7 @@ typedef	struct			s_term
 	char				**cmds;
 	char				**cmdsplit;
 	int					i;
+	int					exec;
 	int					cursorpos;
 	int					cmdlength;
 	int					historylen;
@@ -137,7 +138,7 @@ void					ft_env_i(t_term *term);
 void					ft_permission_denied(char *str);
 void					ft_env_options(t_term *term);
 void					ft_display_env(t_term *term);
-void					ft_prompt(int nb);
+void					ft_prompt(t_term *term, int nb);
 void					ft_refresh_env(t_term *term);
 void					ft_create_process(t_term *term);
 void					ft_check_env(t_term *term);

@@ -52,6 +52,9 @@ void		ft_reset_term(t_term *term)
 	term->cmdactual = NULL;
 	ft_bzero(term->cmdactual, ft_strlen(term->cmdactual));
 	ft_bzero(term->buf, ft_strlen(term->buf));
-	write(1, "$> ", 3);
+	if (term->exec)
+		write(1, "\033[92m$> \033[0m", 13);
+	else
+		write(1, "\033[91m$> \033[0m", 13);
 	ft_get_window(term);
 }
