@@ -88,6 +88,11 @@ void		ft_addredirection(t_term *term, t_parse *parse, int i)
 	end = i;
 	while (parse->cmd[end] && ft_isalpha(parse->cmd[end]))
 		end++;
+	if (end == i)
+	{
+		term->fail = 1;
+		return (ft_putendl("zsh : parse error near `\\n'"));
+	}
 	tmp = ft_strsub(&parse->cmd[i], 0 , end - i);
 	if (!parse->sgred)
 		parse->sgred = ft_strdup(tmp);
@@ -107,8 +112,8 @@ t_parse		*ft_parse_redirections(t_term *term, t_parse *parse)
 	i = 0;
 	while (parse->cmd[i])
 	{
-		ft_putstr("la commande est ->  ");
-		ft_putendl(parse->cmd);
+		// ft_putstr("la commande est ->  ");
+		// ft_putendl(parse->cmd);
 		if (parse->cmd[i] == '>' && parse->cmd[i + 1] && parse->cmd[i + 1] == '>')
 			ft_adddoubleredirection(term, parse, i + 2);
 		else if (parse->cmd[i] == '>')
@@ -118,7 +123,7 @@ t_parse		*ft_parse_redirections(t_term *term, t_parse *parse)
 		if (term->fail)
 		{
 			term->fail = 0;
-			i++;
+			break ;
 		}
 
 		// else if (parse->cmd[i] == '<' &&

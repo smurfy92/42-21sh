@@ -83,6 +83,12 @@ typedef	struct			s_parse
 	struct s_parse		*next;
 }						t_parse;
 
+//debug
+
+void					ft_out(char *str);
+
+//official
+
 int						ft_is_page_up(t_term *term);
 int						ft_is_page_down(t_term *term);
 int						ft_is_down_arrow(t_term *term);
