@@ -21,22 +21,49 @@ int			ft_is_space(char c)
 		return (0);
 }
 
-void		ft_write_in_tmp(char *cmd)
+void		ft_copy_redirections(t_parse *parse)
+{
+	char	**tablsg;
+	char	**tabldb;
+	char	*line;
+	int		fd;
+	int		fd2;
+	int		i;
+
+	tablsg = ft_strsplit(parse->sgred, ';');
+	tabldb = ft_strsplit(parse->dbred, ';');
+	i = -1;
+	while (tablsg[++i])
+	{
+		fd = open(tablsg[i], O_WRONLY | O_CREAT | O_TRUNC,
+		S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
+		fd2 = open("/tmp.21shtmp", O_WRONLY ,
+		S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
+		while ((get_next_line(fd2, &line)) > 0)
+			write(fd, line, ft_strlen(line));
+	}
+
+
+}
+
+void		ft_write_in_tmp(t_term *term, char *cmd)
 {
 	int		fd;
-	char	**args;
 	int		child;
 
-	args = ft_strsplit(cmd, ' ');
-	fd = open("/tmp/.21shtmp", O_WRONLY | O_APPEND | O_CREAT,
-	S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
-	child = fork();
-	if (child == 0)
+	term->cmds = ft_strsplit(cmd, ' ');
+	if (ft_check_in_path(term))
 	{
-		dup2(fd, STDOUT_FILENO);
-		execve("/bin/ls", args, NULL);
+		fd = open("/tmp/.21shtmp", O_WRONLY | O_CREAT | O_TRUNC,
+		S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
+		child = fork();
+		if (child == 0)
+		{
+			dup2(fd, STDOUT_FILENO);
+			execve(term->path, term->cmds, term->env);
+		}
+		close(fd);
 	}
-	close(fd);
 }
 
 int			main(int argc, char **argv, char **env)
@@ -67,6 +94,12 @@ int			main(int argc, char **argv, char **env)
 			while (term->parselst)
 			{
 				ft_display_parse(term->parselst);
+				if (term->parselst->next)
+				{
+					ft_write_in_tmp(term, term->parselst->cmd);
+					ft_copy_redirections(term->parselst);
+
+				}
 				term->parselst = term->parselst->next;
 			}
 			//term->cmds = ft_strsplit(term->cmdsplit[argc], ' ');

@@ -60,7 +60,6 @@ int			ft_check_in_path(t_term *term)
 		ft_strdup(&term->cmds[0][2]) : ft_permission_denied(term->cmds[0]);
 	if (term->path)
 	{
-		ft_create_process(term);
 		term->exec = 1;
 		term->historylen++;
 		return (1);

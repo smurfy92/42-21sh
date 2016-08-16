@@ -113,7 +113,7 @@ int						ft_check_builtin(t_term *term);
 int						ft_is_space(char c);
 void					ft_display_parse(t_parse *parse);
 void					ft_create_parse(t_term *term, char *cmd);
-void					ft_write_in_tmp(char *cmd);
+void					ft_write_in_tmp(t_term *term, char *cmd);
 void					ft_parse(t_term *term, char *cmd);
 void					ft_reset_term(t_term *term);
 void					ft_get_window_sig();
