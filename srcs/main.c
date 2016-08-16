@@ -21,11 +21,12 @@ int			ft_is_space(char c)
 		return (0);
 }
 
-void		ft_copy_redirections(t_parse *parse)
+void		ft_copy_redirections(t_term *term, t_parse *parse)
 {
 	char	**tablsg;
 	char	**tabldb;
 	char	*line;
+	char 	*tmp;
 	int		fd;
 	int		fd2;
 	int		i;
@@ -35,12 +36,12 @@ void		ft_copy_redirections(t_parse *parse)
 	i = -1;
 	while (tablsg[++i])
 	{
+		tmp = ft_strjoin(ft_strjoin(ft_get_env_by_name(term, "HOME"), "/"), ".21shtmp");
+		fd2 = open(tmp, O_RDONLY);
 		fd = open(tablsg[i], O_WRONLY | O_CREAT | O_TRUNC,
-		S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
-		fd2 = open("/tmp.21shtmp", O_WRONLY ,
-		S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
+		S_IRUSR);
 		while ((get_next_line(fd2, &line)) > 0)
-			write(fd, line, ft_strlen(line));
+			ft_putendl_fd(line, fd);
 	}
 
 
@@ -54,7 +55,7 @@ void		ft_write_in_tmp(t_term *term, char *cmd)
 	term->cmds = ft_strsplit(cmd, ' ');
 	if (ft_check_in_path(term))
 	{
-		fd = open("/tmp/.21shtmp", O_WRONLY | O_CREAT | O_TRUNC,
+		fd = open(ft_strjoin(ft_strjoin(ft_get_env_by_name(term, "HOME"), "/"), ".21shtmp"), O_WRONLY | O_CREAT | O_TRUNC,
 		S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
 		child = fork();
 		if (child == 0)
@@ -62,6 +63,7 @@ void		ft_write_in_tmp(t_term *term, char *cmd)
 			dup2(fd, STDOUT_FILENO);
 			execve(term->path, term->cmds, term->env);
 		}
+		wait(0);
 		close(fd);
 	}
 }
@@ -97,7 +99,7 @@ int			main(int argc, char **argv, char **env)
 				if (term->parselst->next)
 				{
 					ft_write_in_tmp(term, term->parselst->cmd);
-					ft_copy_redirections(term->parselst);
+					ft_copy_redirections(term, term->parselst);
 
 				}
 				term->parselst = term->parselst->next;

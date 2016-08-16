@@ -1,11 +1,11 @@
-total 158
--rwxr-xr-x  1 jtranchi  2015_paris  49132 Aug 16 12:02 21sh
+total 161
+-rwxr-xr-x  1 jtranchi  2015_paris  49252 Aug 16 16:10 21sh
 drwxr-xr-x  3 jtranchi  2015_paris   4096 May 21 13:39 21sh.dSYM
 -rw-r--r--  1 jtranchi  2015_paris   4739 Aug 13 13:42 Makefile
 -rwxr-xr-x  1 jtranchi  2015_paris   8780 Aug  8 09:55 a.out
 -rw-r--r--  1 jtranchi  2015_paris      9 Apr  9 10:24 auteur
--rw-r--r--  1 jtranchi  2015_paris      0 Aug 16 12:03 coucou
+-rw-r-----  1 jtranchi  2015_paris    690 Aug 16 16:09 coucou
 drwxr-xr-x  2 jtranchi  2015_paris   4096 May 21 15:02 includes
-drwxr-xr-x  3 jtranchi  2015_paris   4096 Aug 16 12:02 libft
+drwxr-xr-x  3 jtranchi  2015_paris   4096 Aug 16 16:10 libft
 -rw-r--r--  1 jtranchi  2015_paris    445 Aug  8 09:55 main.c
-drwxr-xr-x  2 jtranchi  2015_paris   4096 Aug 16 12:02 srcs
+drwxr-xr-x  2 jtranchi  2015_paris   4096 Aug 16 16:10 srcs
