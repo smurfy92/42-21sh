@@ -34,17 +34,24 @@ void		ft_copy_redirections(t_term *term, t_parse *parse)
 	tablsg = ft_strsplit(parse->sgred, ';');
 	tabldb = ft_strsplit(parse->dbred, ';');
 	i = -1;
-	while (tablsg[++i])
+	while (tablsg && tablsg[++i])
 	{
 		tmp = ft_strjoin(ft_strjoin(ft_get_env_by_name(term, "HOME"), "/"), ".21shtmp");
 		fd2 = open(tmp, O_RDONLY);
-		fd = open(tablsg[i], O_WRONLY | O_CREAT | O_TRUNC,
+		fd = open(tablsg[i], O_WRONLY, S_IRUSR);
+		while ((get_next_line(fd2, &line)) > 0)
+			ft_putendl_fd(line, fd);
+	}
+	i = -1;
+	while (tabldb && tabldb[++i])
+	{
+		tmp = ft_strjoin(ft_strjoin(ft_get_env_by_name(term, "HOME"), "/"), ".21shtmp");
+		fd2 = open(tmp, O_RDONLY);
+		fd = open(tabldb[i], O_WRONLY | O_APPEND,
 		S_IRUSR);
 		while ((get_next_line(fd2, &line)) > 0)
 			ft_putendl_fd(line, fd);
 	}
-
-
 }
 
 void		ft_write_in_tmp(t_term *term, char *cmd)
@@ -65,6 +72,26 @@ void		ft_write_in_tmp(t_term *term, char *cmd)
 		}
 		wait(0);
 		close(fd);
+	}
+}
+
+void		ft_create_redirections(t_parse *parse)
+{
+	char	**tablsg;
+	char	**tabldb;
+	int		i;
+
+	i = -1;
+	tablsg = ft_strsplit(parse->sgred, ';');
+	tabldb = ft_strsplit(parse->dbred, ';');
+	while (tablsg && tablsg[++i])
+	{
+		close(open(tablsg[i],O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR));
+	}
+	i = -1;
+	while (tabldb && tabldb[++i])
+	{
+		close(open(tabldb[i],O_WRONLY | O_CREAT , S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR));
 	}
 }
 
@@ -98,6 +125,7 @@ int			main(int argc, char **argv, char **env)
 				ft_display_parse(term->parselst);
 				if (term->parselst->next)
 				{
+					ft_create_redirections(term->parselst);
 					ft_write_in_tmp(term, term->parselst->cmd);
 					ft_copy_redirections(term, term->parselst);
 
