@@ -58,12 +58,8 @@ void		ft_check_env(t_term *term)
 "/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/opt/X11/bin:/usr/local/munki");
 }
 
-t_term		*ft_set_term(char **env, t_env *lst)
+t_term		*ft_set_term(t_term *term, char **env, t_env *lst)
 {
-	t_term		*term;
-	char		*line;
-
-	term = (t_term*)malloc(sizeof(t_term));
 	term->buf = (char*)malloc(sizeof(char) * BUFFSIZE);
 	term->u = NULL;
 	term->exec = 0;
@@ -72,12 +68,10 @@ t_term		*ft_set_term(char **env, t_env *lst)
 	term->copy = NULL;
 	term->historylen = 0;
 	term->inhistory = 0;
-	term->i = open("/tmp/.21sh_history", O_RDONLY);
-	while ((get_next_line(term->i, &line)) > 0)
-		term->historylen++;
 	term->historycurrent = 0;
 	term->i = 0;
 	term->parenthese = 0;
+	term->parselst = NULL;
 	term->env = env;
 	term->lst = lst;
 	return (term);

@@ -100,8 +100,7 @@ int			main(int argc, char **argv, char **env)
 	t_term		*term;
 
 	argv = NULL;
-	term = ft_get_term();
-	term = ft_set_term(env, ft_parse_env(env));
+	term = ft_set_term(ft_get_term(), env, ft_parse_env(env));
 	ft_check_env(term);
 	signal(SIGWINCH, ft_get_window_sig);
 	while (42)

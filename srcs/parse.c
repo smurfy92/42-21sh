@@ -154,7 +154,8 @@ void		ft_create_parse(t_term *term, char *cmd)
 	else
 	{
 		tmp2 = term->parselst;
-		while (tmp2->next)
+
+		while (tmp2 && tmp2->next)
 			tmp2 = tmp2->next;
 		tmp2->next = tmp;
 	}
