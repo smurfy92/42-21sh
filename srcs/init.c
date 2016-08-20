@@ -44,6 +44,11 @@ void		ft_get_window_sig(void)
 
 void		ft_reset_term(t_term *term)
 {
+	int fd;
+
+	fd = open(ft_strjoin(ft_strjoin(ft_get_env_by_name(term, "HOME"), "/"),
+	".21shtmp"), O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
+	close(fd);
 	init_shell((~ICANON & ~ECHO));
 	term->cursorpos = 0;
 	term->cmdlength = 0;

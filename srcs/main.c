@@ -60,7 +60,7 @@ void		ft_write_in_tmp(t_term *term, char *cmd)
 	int		child;
 
 	term->cmds = ft_strsplit(cmd, ' ');
-	if (ft_check_in_path(term))
+	if ((!ft_check_builtin(term)) && ft_check_in_path(term))
 	{
 		fd = open(ft_strjoin(ft_strjoin(ft_get_env_by_name(term, "HOME"), "/"), ".21shtmp"), O_WRONLY | O_CREAT | O_TRUNC,
 		S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
@@ -95,6 +95,35 @@ void		ft_create_redirections(t_parse *parse)
 	}
 }
 
+void		ft_execute_tmp(t_term *term)
+{
+	int		fd;
+	int		child;
+	char	*line;
+	int	tabl[2];
+
+	fd = open(ft_strjoin(ft_strjoin(ft_get_env_by_name(term, "HOME"), "/"), ".21shtmp"), O_RDONLY);
+	if (term->parselst->next)
+	{
+		pipe(tabl);
+		child = fork();
+		if (child == 0)
+		{
+			dup2(tabl[1], STDOUT_FILENO);
+			close(tabl[0]);
+			while (get_next_line(fd, &line) > 0)
+				ft_putendl(line);
+		}
+		dup2(tabl[0], STDIN_FILENO);
+		close(tabl[1]);
+		wait(0);
+	}
+	else
+		while (get_next_line(fd, &line) > 0)
+			ft_putendl(line);
+	ft_putendl("ici");
+}
+
 int			main(int argc, char **argv, char **env)
 {
 	t_term		*term;
@@ -122,13 +151,10 @@ int			main(int argc, char **argv, char **env)
 			while (term->parselst)
 			{
 				ft_display_parse(term->parselst);
-				if (term->parselst->next)
-				{
-					ft_create_redirections(term->parselst);
-					ft_write_in_tmp(term, term->parselst->cmd);
-					ft_copy_redirections(term, term->parselst);
-
-				}
+				ft_create_redirections(term->parselst);
+				ft_write_in_tmp(term, term->parselst->cmd);
+				ft_copy_redirections(term, term->parselst);
+				ft_execute_tmp(term);
 				term->parselst = term->parselst->next;
 			}
 			//term->cmds = ft_strsplit(term->cmdsplit[argc], ' ');
