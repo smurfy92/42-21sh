@@ -23,35 +23,25 @@ int			ft_is_space(char c)
 
 void		ft_copy_redirections(t_term *term, t_parse *parse)
 {
-	char	**tablsg;
-	char	**tabldb;
 	char	*line;
 	char 	*tmp;
 	int		fd;
 	int		fd2;
-	int		i;
 
-	tablsg = ft_strsplit(parse->sgred, ';');
-	tabldb = ft_strsplit(parse->dbred, ';');
-	i = -1;
-	while (tablsg && tablsg[++i])
-	{
-		tmp = ft_strjoin(ft_strjoin(ft_get_env_by_name(term, "HOME"), "/"), ".21shtmp");
-		fd2 = open(tmp, O_RDONLY);
-		fd = open(tablsg[i], O_WRONLY, S_IRUSR);
-		while ((get_next_line(fd2, &line)) > 0)
-			ft_putendl_fd(line, fd);
-	}
-	i = -1;
-	while (tabldb && tabldb[++i])
-	{
-		tmp = ft_strjoin(ft_strjoin(ft_get_env_by_name(term, "HOME"), "/"), ".21shtmp");
-		fd2 = open(tmp, O_RDONLY);
-		fd = open(tabldb[i], O_WRONLY | O_APPEND,
-		S_IRUSR);
-		while ((get_next_line(fd2, &line)) > 0)
-			ft_putendl_fd(line, fd);
-	}
+	tmp = ft_strjoin(ft_strjoin(ft_get_env_by_name(term, "HOME"), "/"), ".21shtmp");
+	fd2 = open(tmp, O_RDONLY);
+	fd = open(parse->last, O_WRONLY, S_IRUSR);
+	while ((get_next_line(fd2, &line)) > 0)
+		ft_putendl_fd(line, fd);
+	// while (tabldb && tabldb[++i])
+	// {
+	// 	tmp = ft_strjoin(ft_strjoin(ft_get_env_by_name(term, "HOME"), "/"), ".21shtmp");
+	// 	fd2 = open(tmp, O_RDONLY);
+	// 	fd = open(tabldb[i], O_WRONLY | O_APPEND,
+	// 	S_IRUSR);
+	// 	while ((get_next_line(fd2, &line)) > 0)
+	// 		ft_putendl_fd(line, fd);
+	// }
 }
 
 void		ft_write_in_tmp(t_term *term, char *cmd)
@@ -98,30 +88,31 @@ void		ft_create_redirections(t_parse *parse)
 void		ft_execute_tmp(t_term *term)
 {
 	int		fd;
-	int		child;
+//	int		child;
 	char	*line;
-	int	tabl[2];
+//	int	tabl[2];
 
 	fd = open(ft_strjoin(ft_strjoin(ft_get_env_by_name(term, "HOME"), "/"), ".21shtmp"), O_RDONLY);
 	if (term->parselst->next)
 	{
-		pipe(tabl);
-		child = fork();
-		if (child == 0)
-		{
-			dup2(tabl[1], STDOUT_FILENO);
-			close(tabl[0]);
-			while (get_next_line(fd, &line) > 0)
-				ft_putendl(line);
-		}
-		dup2(tabl[0], STDIN_FILENO);
-		close(tabl[1]);
-		wait(0);
+//		pipe(tabl);
+//		child = fork();
+//		if (child == 0)
+//		{
+//			dup2(tabl[1], STDOUT_FILENO);
+//			close(tabl[0]);
+			dup2(fd, 0);
+//`			term->parselst = term->parselst->next;
+//			ft_create_process(term);
+//			while (get_next_line(fd, &line) > 0)
+//				ft_putendl_fd(line, tabl[1]);
+//		}
+//		dup2(tabl[0], STDIN_FILENO);
+//		close(tabl[1]);
 	}
-	else
-		while (get_next_line(fd, &line) > 0)
-			ft_putendl(line);
-	ft_putendl("ici");
+	 else
+	 	while (get_next_line(fd, &line) > 0)
+	 		ft_putendl(line);
 }
 
 int			main(int argc, char **argv, char **env)
@@ -151,10 +142,12 @@ int			main(int argc, char **argv, char **env)
 			while (term->parselst)
 			{
 				ft_display_parse(term->parselst);
-				ft_create_redirections(term->parselst);
-				ft_write_in_tmp(term, term->parselst->cmd);
-				ft_copy_redirections(term, term->parselst);
-				ft_execute_tmp(term);
+				if (term->parselst->last)
+				{
+					ft_create_redirections(term->parselst);
+					ft_write_in_tmp(term, term->parselst->cmd);
+					ft_copy_redirections(term, term->parselst);
+				}
 				term->parselst = term->parselst->next;
 			}
 			//term->cmds = ft_strsplit(term->cmdsplit[argc], ' ');

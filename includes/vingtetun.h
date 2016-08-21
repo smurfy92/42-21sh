@@ -77,6 +77,7 @@ typedef	struct			s_window
 typedef	struct			s_parse
 {
 	char				*cmd;
+	char				*last;
 	char				*dbred;
 	char				*sgred;
 	int					operato;

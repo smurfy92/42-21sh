@@ -22,6 +22,9 @@ void			ft_display_parse(t_parse *parse)
 	ft_putstr("dbred :");
 	ft_putstr(parse->dbred);
 	ft_putendl("|");
+	ft_putstr("last :");
+	ft_putstr(parse->last);
+	ft_putendl("|");
 }
 
 void		ft_parse(t_term *term, char *cmd)
@@ -63,11 +66,13 @@ void		ft_adddoubleredirection(t_term *term, t_parse *parse, int i)
 		parse->dbred = ft_strdup(tmp);
 	else
 		parse->dbred = ft_strjoin(ft_strjoin(parse->dbred, ";"), tmp);
+	parse->last = tmp;
 	while (ft_is_space(parse->cmd[end]) && parse->cmd[end])
 		end++;
 	tmp = ft_strdup(&parse->cmd[end]);
 	parse->cmd[start] = '\0';
 	parse->cmd = ft_strjoin(parse->cmd, tmp);
+	parse->last = parse->cmd;
 }
 
 void		ft_addredirection(t_term *term, t_parse *parse, int i)
@@ -98,6 +103,7 @@ void		ft_addredirection(t_term *term, t_parse *parse, int i)
 		parse->sgred = ft_strdup(tmp);
 	else
 		parse->sgred = ft_strjoin(ft_strjoin(parse->sgred, ";"), tmp);
+	parse->last = tmp;
 	while (ft_is_space(parse->cmd[end]) && parse->cmd[end])
 		end++;
 	tmp = ft_strdup(&parse->cmd[end]);
