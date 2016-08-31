@@ -16,14 +16,16 @@ void		ft_create_process(t_term *term)
 {
 	int		y;
 	char	*tmp;
+	int 	tabl[2];
 
 	tmp = NULL;
+	pipe(tabl);
 	term->father = fork();
 	ft_refresh_env(term);
-	if (term->father != 0)
-		wait(0);
 	if (term->father == 0)
 	{
+		dup2(tabl[1], STDOUT_FILENO);
+		close(tabl[0]);	
 		(y = -1) ? ft_check_cmds(term) : 0;
 		(term->i) ? ft_env_i(term) : 0;
 		while (term->cmds[++y])
@@ -39,6 +41,9 @@ void		ft_create_process(t_term *term)
 		execve(term->path, term->cmds, term->env);
 		term->path = NULL;
 	}
+	dup2(tabl[0], STDIN_FILENO);
+	close(tabl[1]);
+	wait(0);
 }
 
 int			ft_check_in_path(t_term *term)

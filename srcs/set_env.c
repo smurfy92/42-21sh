@@ -74,6 +74,7 @@ t_term		*ft_set_term(t_term *term, char **env, t_env *lst)
 	term->parselst = NULL;
 	term->env = env;
 	term->lst = lst;
+	ft_check_env(term);
 	return (term);
 }
 

@@ -33,15 +33,6 @@ void		ft_copy_redirections(t_term *term, t_parse *parse)
 	fd = open(parse->last, O_WRONLY, S_IRUSR);
 	while ((get_next_line(fd2, &line)) > 0)
 		ft_putendl_fd(line, fd);
-	// while (tabldb && tabldb[++i])
-	// {
-	// 	tmp = ft_strjoin(ft_strjoin(ft_get_env_by_name(term, "HOME"), "/"), ".21shtmp");
-	// 	fd2 = open(tmp, O_RDONLY);
-	// 	fd = open(tabldb[i], O_WRONLY | O_APPEND,
-	// 	S_IRUSR);
-	// 	while ((get_next_line(fd2, &line)) > 0)
-	// 		ft_putendl_fd(line, fd);
-	// }
 }
 
 void		ft_write_in_tmp(t_term *term, char *cmd)
@@ -85,34 +76,41 @@ void		ft_create_redirections(t_parse *parse)
 	}
 }
 
-void		ft_execute_tmp(t_term *term)
+void		ft_process_exec(t_term *term, char *cmdsplit)
 {
-	int		fd;
-//	int		child;
-	char	*line;
-//	int	tabl[2];
+	int father;
 
-	fd = open(ft_strjoin(ft_strjoin(ft_get_env_by_name(term, "HOME"), "/"), ".21shtmp"), O_RDONLY);
-	if (term->parselst->next)
+	term->cmds = NULL;
+	term->parselst = NULL;
+	ft_parse(term, cmdsplit);
+	father = fork();
+	if (father == 0)
 	{
-//		pipe(tabl);
-//		child = fork();
-//		if (child == 0)
-//		{
-//			dup2(tabl[1], STDOUT_FILENO);
-//			close(tabl[0]);
-			dup2(fd, 0);
-//`			term->parselst = term->parselst->next;
-//			ft_create_process(term);
-//			while (get_next_line(fd, &line) > 0)
-//				ft_putendl_fd(line, tabl[1]);
-//		}
-//		dup2(tabl[0], STDIN_FILENO);
-//		close(tabl[1]);
+		while (term->parselst)
+		{
+			ft_display_parse(term->parselst);
+			term->cmds = ft_strsplit(term->parselst->cmd, ' ');
+			if (!term->parselst->next)
+			{
+				ft_check_in_path(term);
+				execve(term->path, term->cmds, term->env);
+				break ;
+			}
+			if (term->parselst->last)
+			{
+				ft_create_redirections(term->parselst);
+				ft_write_in_tmp(term, term->parselst->cmd);
+				ft_copy_redirections(term, term->parselst);
+			}
+			else
+			{
+				ft_check_in_path(term);
+				ft_create_process(term);
+			}
+			term->parselst = term->parselst->next;
+		}
 	}
-	 else
-	 	while (get_next_line(fd, &line) > 0)
-	 		ft_putendl(line);
+	wait(0);
 }
 
 int			main(int argc, char **argv, char **env)
@@ -121,7 +119,6 @@ int			main(int argc, char **argv, char **env)
 
 	argv = NULL;
 	term = ft_set_term(ft_get_term(), env, ft_parse_env(env));
-	ft_check_env(term);
 	signal(SIGWINCH, ft_get_window_sig);
 	while (42)
 	{
@@ -136,23 +133,7 @@ int			main(int argc, char **argv, char **env)
 		ft_putchar('\n');
 		term->cmdsplit = ft_strsplit(term->cmdactual, ';');
 		while (term->cmdsplit && term->cmdsplit[++argc])
-		{
-			term->cmds = NULL;
-			ft_parse(term, term->cmdsplit[argc]);
-			while (term->parselst)
-			{
-				ft_display_parse(term->parselst);
-				if (term->parselst->last)
-				{
-					ft_create_redirections(term->parselst);
-					ft_write_in_tmp(term, term->parselst->cmd);
-					ft_copy_redirections(term, term->parselst);
-				}
-				term->parselst = term->parselst->next;
-			}
-			//term->cmds = ft_strsplit(term->cmdsplit[argc], ' ');
-			//(!ft_check_builtin(term)) ? ft_check_in_path(term) : 0;
-		}
+			ft_process_exec(term, term->cmdsplit[argc]);
 	}
 	return (0);
 }
