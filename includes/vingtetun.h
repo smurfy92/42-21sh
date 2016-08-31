@@ -90,6 +90,7 @@ void					ft_out(char *str);
 
 //official
 
+void					ft_create_redirections(t_parse *parse);
 int						ft_is_page_up(t_term *term);
 int						ft_is_page_down(t_term *term);
 int						ft_is_down_arrow(t_term *term);

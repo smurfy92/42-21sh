@@ -83,29 +83,34 @@ void		ft_process_exec(t_term *term, char *cmdsplit)
 	term->cmds = NULL;
 	term->parselst = NULL;
 	ft_parse(term, cmdsplit);
+	term->cmds = ft_strsplit(term->parselst->cmd, ' ');
+	if (ft_check_builtin(term))
+		return ;
 	father = fork();
 	if (father == 0)
 	{
 		while (term->parselst)
 		{
-			ft_display_parse(term->parselst);
+			// ft_display_parse(term->parselst);
 			term->cmds = ft_strsplit(term->parselst->cmd, ' ');
-			if (!term->parselst->next)
+			if (!ft_check_builtin(term))
 			{
-				ft_check_in_path(term);
-				execve(term->path, term->cmds, term->env);
-				break ;
-			}
-			if (term->parselst->last)
-			{
-				ft_create_redirections(term->parselst);
-				ft_write_in_tmp(term, term->parselst->cmd);
-				ft_copy_redirections(term, term->parselst);
-			}
-			else
-			{
-				ft_check_in_path(term);
-				ft_create_process(term);
+				if (!term->parselst->next)
+				{
+					ft_check_in_path(term);
+					execve(term->path, term->cmds, term->env);
+					break ;
+				}
+				if (term->parselst->last)
+				{
+					ft_write_in_tmp(term, term->parselst->cmd);
+					ft_copy_redirections(term, term->parselst);
+				}
+				else
+				{
+					ft_check_in_path(term);
+					ft_create_process(term);
+				}
 			}
 			term->parselst = term->parselst->next;
 		}

@@ -131,7 +131,8 @@ t_parse		*ft_parse_redirections(t_term *term, t_parse *parse)
 			term->fail = 0;
 			break ;
 		}
-
+		if (parse->last)
+			ft_create_redirections(parse);
 		// else if (parse->cmd[i] == '<' &&
 		// parse->cmd[i + 1] && parse->cmd[i + 1] == '<')
 
