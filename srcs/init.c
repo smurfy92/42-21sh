@@ -58,8 +58,8 @@ void		ft_reset_term(t_term *term)
 	ft_bzero(term->cmdactual, ft_strlen(term->cmdactual));
 	ft_bzero(term->buf, ft_strlen(term->buf));
 	if (term->exec)
-		write(1, "\033[92m$> \033[0m", 13);
+		write(1, "\033[92mjush> \033[0m", 16);
 	else
-		write(1, "\033[91m$> \033[0m", 13);
+		write(1, "\033[91mjush> \033[0m", 16);
 	ft_get_window(term);
 }

@@ -28,7 +28,8 @@ void		ft_copy_redirections(t_term *term, t_parse *parse)
 	int		fd;
 	int		fd2;
 
-	tmp = ft_strjoin(ft_strjoin(ft_get_env_by_name(term, "HOME"), "/"), ".21shtmp");
+	tmp = ft_strjoin(ft_strjoin(ft_get_env_by_name(term, "HOME"), "/"),
+	".21shtmp");
 	fd2 = open(tmp, O_RDONLY);
 	fd = open(parse->last, O_WRONLY, S_IRUSR);
 	while ((get_next_line(fd2, &line)) > 0)
@@ -43,7 +44,8 @@ void		ft_write_in_tmp(t_term *term, char *cmd)
 	term->cmds = ft_strsplit(cmd, ' ');
 	if ((!ft_check_builtin(term)) && ft_check_in_path(term))
 	{
-		fd = open(ft_strjoin(ft_strjoin(ft_get_env_by_name(term, "HOME"), "/"), ".21shtmp"), O_WRONLY | O_CREAT | O_TRUNC,
+		fd = open(ft_strjoin(ft_strjoin(ft_get_env_by_name(term, "HOME"),
+		"/"), ".21shtmp"), O_WRONLY | O_CREAT | O_TRUNC,
 		S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
 		child = fork();
 		if (child == 0)
@@ -86,18 +88,18 @@ void		ft_process_exec(t_term *term, char *cmdsplit)
 	term->cmds = ft_strsplit(term->parselst->cmd, ' ');
 	if (ft_check_builtin(term))
 		return ;
+	ft_check_in_path(term);
 	father = fork();
 	if (father == 0)
 	{
 		while (term->parselst)
 		{
-			// ft_display_parse(term->parselst);
+			ft_display_parse(term->parselst);
 			term->cmds = ft_strsplit(term->parselst->cmd, ' ');
-			if (!ft_check_builtin(term))
+			if (!ft_check_builtin(term) && ft_check_in_path(term))
 			{
 				if (!term->parselst->next)
 				{
-					ft_check_in_path(term);
 					execve(term->path, term->cmds, term->env);
 					break ;
 				}
@@ -107,11 +109,10 @@ void		ft_process_exec(t_term *term, char *cmdsplit)
 					ft_copy_redirections(term, term->parselst);
 				}
 				else
-				{
-					ft_check_in_path(term);
 					ft_create_process(term);
-				}
 			}
+			else
+				exit(0);
 			term->parselst = term->parselst->next;
 		}
 	}

@@ -19,7 +19,7 @@ void		ft_process_unsetenv(t_term *term, char *s1)
 	lst = term->lst;
 	if (!s1)
 	{
-		ft_putendl("21sh: unsetenv: Invalid option");
+		ft_putendl("jush: unsetenv: Invalid option");
 		ft_putendl("unsetenv NAME");
 	}
 	else
@@ -39,7 +39,7 @@ void		ft_process_setenv(t_term *term, char *s1, char *s2)
 	lst = term->lst;
 	if (!s1 || !s2)
 	{
-		ft_putendl("21sh: setenv: Invalid option");
+		ft_putendl("jush: setenv: Invalid option");
 		ft_putendl("setenv NAME VALUE");
 	}
 	else

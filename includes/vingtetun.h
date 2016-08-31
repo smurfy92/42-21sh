@@ -80,6 +80,7 @@ typedef	struct			s_parse
 	char				*last;
 	char				*dbred;
 	char				*sgred;
+	char				*heredoc;
 	int					operato;
 	struct s_parse		*next;
 }						t_parse;

@@ -70,7 +70,7 @@ int			ft_check_in_path(t_term *term)
 		return (1);
 	}
 	else
-		ft_putendl(ft_strjoin("21sh: command not found: ", term->cmds[0]));
+		ft_putendl(ft_strjoin("jush: command not found: ", term->cmds[0]));
 	term->exec = 0;
 	return (0);
 }

@@ -83,12 +83,26 @@ void		ft_process2(t_term *term)
 		ft_left_arrow(term);
 	else if (ft_is_right_arrow(term))
 		ft_right_arrow(term);
+	else if (term->buf[0] == 9)
+		return ;
 	else
 		ft_print_buf(term, term->buf);
 }
 
 void		ft_process(t_term *term)
 {
+	// ft_putnbr(term->buf[0]);
+	// ft_putchar('\n');
+	// ft_putnbr(term->buf[1]);
+	// ft_putchar('\n');
+	// ft_putnbr(term->buf[2]);
+	// ft_putchar('\n');
+	// ft_putnbr(term->buf[3]);
+	// ft_putchar('\n');
+	// ft_putnbr(term->buf[4]);
+	// ft_putchar('\n');
+	// ft_putnbr(term->buf[5]);
+	// ft_putchar('\n');
 	if (ft_is_shift_up(term))
 		(term->cmdlength > 0) ? (term->copy = ft_strdup(term->cmdactual)) : 0;
 	else if (ft_is_shift_right(term))

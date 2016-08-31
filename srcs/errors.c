@@ -16,7 +16,7 @@ void		ft_permission_denied(char *str)
 {
 	char *tmp;
 
-	tmp = "21sh: permission denied: ";
+	tmp = "jush: permission denied: ";
 	write(2, tmp, ft_strlen(tmp));
 	write(2, str, ft_strlen(str));
 	write(2, "\n", 1);
@@ -42,7 +42,7 @@ void		ft_env_options(t_term *term)
 		else if (!ft_strchr(term->cmds[i], '=') &&\
 		ft_strcmp(term->cmds[i], "-i") != 0)
 		{
-			ft_putstr(ft_strjoin("21sh: ", term->cmds[i]));
+			ft_putstr(ft_strjoin("jush: ", term->cmds[i]));
 			ft_putendl(" No such file or directory");
 			return ;
 		}

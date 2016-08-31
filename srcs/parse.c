@@ -15,7 +15,8 @@
 void			ft_display_parse(t_parse *parse)
 {
 	ft_putstr("command :");
-	ft_putendl(parse->cmd);
+	ft_putstr(parse->cmd);
+	ft_putendl("|");
 	ft_putstr("sgred :");
 	ft_putstr(parse->sgred);
 	ft_putendl("|");
@@ -24,6 +25,9 @@ void			ft_display_parse(t_parse *parse)
 	ft_putendl("|");
 	ft_putstr("last :");
 	ft_putstr(parse->last);
+	ft_putendl("|");
+	ft_putstr("heredoc :");
+	ft_putstr(parse->heredoc);
 	ft_putendl("|");
 }
 
@@ -53,7 +57,7 @@ void		ft_adddoubleredirection(t_term *term, t_parse *parse, int i)
 	if (!parse->cmd[i])
 	{
 		term->fail = 1;
-		return (ft_putendl("zsh : parse error near `\\n'"));
+		return (ft_putendl("jush : parse error near `\\n'"));
 	}
 	start = i - 2;
 	while (!ft_isalpha(parse->cmd[i]) && parse->cmd[i + 1])
@@ -85,7 +89,7 @@ void		ft_addredirection(t_term *term, t_parse *parse, int i)
 	if (!parse->cmd[i])
 	{
 		term->fail = 1;
-		return (ft_putendl("zsh : parse error near `\\n'"));
+		return (ft_putendl("jush : parse error near `\\n'"));
 	}
 	start = i - 1;
 	while (!ft_isalpha(parse->cmd[i]) && parse->cmd[i + 1])
@@ -96,7 +100,7 @@ void		ft_addredirection(t_term *term, t_parse *parse, int i)
 	if (end == i)
 	{
 		term->fail = 1;
-		return (ft_putendl("zsh : parse error near `\\n'"));
+		return (ft_putendl("jush : parse error near `\\n'"));
 	}
 	tmp = ft_strsub(&parse->cmd[i], 0 , end - i);
 	if (!parse->sgred)
@@ -104,6 +108,35 @@ void		ft_addredirection(t_term *term, t_parse *parse, int i)
 	else
 		parse->sgred = ft_strjoin(ft_strjoin(parse->sgred, ";"), tmp);
 	parse->last = tmp;
+	while (ft_is_space(parse->cmd[end]) && parse->cmd[end])
+		end++;
+	tmp = ft_strdup(&parse->cmd[end]);
+	parse->cmd[start] = '\0';
+	parse->cmd = ft_strjoin(parse->cmd, tmp);
+}
+
+void		ft_addheredoc(t_term *term, t_parse *parse, int i)
+{
+	int		start;
+	int		end;
+	char	*tmp;
+
+	start = i - 2;
+	while (!ft_isalpha(parse->cmd[i]) && parse->cmd[i + 1])
+		i++;
+	end = i;
+	while (parse->cmd[end] && ft_isalpha(parse->cmd[end]))
+		end++;
+	if (end == i)
+	{
+		term->fail = 1;
+		return (ft_putendl("jush : parse error near `\\n'"));
+	}
+	tmp = ft_strsub(&parse->cmd[i], 0 , end - i);
+	if (!parse->heredoc)
+		parse->heredoc = ft_strdup(tmp);
+	else
+		parse->heredoc = ft_strjoin(ft_strjoin(parse->heredoc, ";"), tmp);
 	while (ft_is_space(parse->cmd[end]) && parse->cmd[end])
 		end++;
 	tmp = ft_strdup(&parse->cmd[end]);
@@ -124,6 +157,8 @@ t_parse		*ft_parse_redirections(t_term *term, t_parse *parse)
 			ft_adddoubleredirection(term, parse, i + 2);
 		else if (parse->cmd[i] == '>')
 			ft_addredirection(term, parse , i + 1);
+		else if (parse->cmd[i] == '<' && parse->cmd[i + 1] && parse->cmd[i + 1] == '<')
+			ft_addheredoc(term, parse, i + 2);
 		else
 			i++;
 		if (term->fail)
