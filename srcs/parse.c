@@ -23,9 +23,6 @@ void			ft_display_parse(t_parse *parse)
 	ft_putstr("dbred :");
 	ft_putstr(parse->dbred);
 	ft_putendl("|");
-	ft_putstr("last :");
-	ft_putstr(parse->last);
-	ft_putendl("|");
 	ft_putstr("heredoc :");
 	ft_putstr(parse->heredoc);
 	ft_putendl("|");
@@ -66,17 +63,13 @@ void		ft_adddoubleredirection(t_term *term, t_parse *parse, int i)
 	while (parse->cmd[end] && ft_isalpha(parse->cmd[end]))
 		end++;
 	tmp = ft_strsub(&parse->cmd[i], 0 , end - i);
-	if (!parse->dbred)
-		parse->dbred = ft_strdup(tmp);
-	else
-		parse->dbred = ft_strjoin(ft_strjoin(parse->dbred, ";"), tmp);
-	parse->last = tmp;
+	parse->dbred = ft_strdup(tmp);
+	parse->sgred = NULL;
 	while (ft_is_space(parse->cmd[end]) && parse->cmd[end])
 		end++;
 	tmp = ft_strdup(&parse->cmd[end]);
 	parse->cmd[start] = '\0';
 	parse->cmd = ft_strjoin(parse->cmd, tmp);
-	parse->last = parse->cmd;
 }
 
 void		ft_addredirection(t_term *term, t_parse *parse, int i)
@@ -103,11 +96,8 @@ void		ft_addredirection(t_term *term, t_parse *parse, int i)
 		return (ft_putendl("jush : parse error near `\\n'"));
 	}
 	tmp = ft_strsub(&parse->cmd[i], 0 , end - i);
-	if (!parse->sgred)
-		parse->sgred = ft_strdup(tmp);
-	else
-		parse->sgred = ft_strjoin(ft_strjoin(parse->sgred, ";"), tmp);
-	parse->last = tmp;
+	parse->sgred = ft_strdup(tmp);
+	parse->dbred = NULL;
 	while (ft_is_space(parse->cmd[end]) && parse->cmd[end])
 		end++;
 	tmp = ft_strdup(&parse->cmd[end]);
@@ -166,7 +156,7 @@ t_parse		*ft_parse_redirections(t_term *term, t_parse *parse)
 			term->fail = 0;
 			break ;
 		}
-		if (parse->last)
+		if (parse->sgred || parse->dbred)
 			ft_create_redirections(parse);
 		// else if (parse->cmd[i] == '<' &&
 		// parse->cmd[i + 1] && parse->cmd[i + 1] == '<')
