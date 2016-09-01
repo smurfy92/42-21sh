@@ -28,6 +28,15 @@ void			ft_display_parse(t_parse *parse)
 	ft_putendl("|");
 }
 
+int			ft_end_of_red(char c)
+{
+	if (c == '\t' || c == ' ' || c == '\v' || c == '\f' || c == '\r'
+	|| c == '\n' || c == '>' || c == '<')
+		return (1);
+	else
+		return (0);
+}
+
 void		ft_parse(t_term *term, char *cmd)
 {
 	char 		**tabl;
@@ -60,7 +69,7 @@ void		ft_adddoubleredirection(t_term *term, t_parse *parse, int i)
 	while (!ft_isalpha(parse->cmd[i]) && parse->cmd[i + 1])
 		i++;
 	end = i;
-	while (parse->cmd[end] && ft_isalpha(parse->cmd[end]))
+	while (parse->cmd[end] && !ft_end_of_red(parse->cmd[end]))
 		end++;
 	tmp = ft_strsub(&parse->cmd[i], 0 , end - i);
 	parse->dbred = ft_strdup(tmp);
@@ -88,7 +97,7 @@ void		ft_addredirection(t_term *term, t_parse *parse, int i)
 	while (!ft_isalpha(parse->cmd[i]) && parse->cmd[i + 1])
 		i++;
 	end = i;
-	while (parse->cmd[end] && ft_isalpha(parse->cmd[end]))
+	while (parse->cmd[end] && !ft_end_of_red(parse->cmd[end]))
 		end++;
 	if (end == i)
 	{
