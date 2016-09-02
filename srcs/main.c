@@ -99,7 +99,8 @@ void		ft_process_exec(t_term *term, char *cmdsplit)
 				{
 					ft_write_in_tmp(term, term->parselst->cmd);
 					ft_copy_redirections(term, term->parselst);
-					exit(0);
+					if (!term->parselst->next)
+						exit(0);
 				}
 				else
 					ft_create_process(term);

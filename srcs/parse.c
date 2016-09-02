@@ -31,7 +31,7 @@ void			ft_display_parse(t_parse *parse)
 int			ft_end_of_red(char c)
 {
 	if (c == '\t' || c == ' ' || c == '\v' || c == '\f' || c == '\r'
-	|| c == '\n' || c == '>' || c == '<')
+	|| c == '\n' || c == '>' || c == '<' || c == '|')
 		return (1);
 	else
 		return (0);
@@ -99,7 +99,7 @@ void		ft_addredirection(t_term *term, t_parse *parse, int i)
 		return (ft_putendl("jush : parse error near `\\n'"));
 	}
 	start = i - 1;
-	while (parse->cmd[i] && !ft_isalpha(parse->cmd[i + 1]))
+	while (parse->cmd[i] && !ft_isalpha(parse->cmd[i]))
 		i++;
 	end = i;
 	while (parse->cmd[end] && !ft_end_of_red(parse->cmd[end]))
