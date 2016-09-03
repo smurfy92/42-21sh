@@ -62,7 +62,7 @@ t_term		*ft_set_term(t_term *term, char **env, t_env *lst)
 {
 	term->buf = (char*)malloc(sizeof(char) * BUFFSIZE);
 	term->u = NULL;
-	term->exec = 0;
+	term->exec = 1;
 	term->cursorpos = 0;
 	term->cmdlength = 0;
 	term->copy = NULL;
