@@ -26,6 +26,9 @@ void			ft_display_parse(t_parse *parse)
 	ft_putstr("heredoc :");
 	ft_putstr(parse->heredoc);
 	ft_putendl("|");
+	ft_putstr("file :");
+	ft_putstr(parse->file);
+	ft_putendl("|");
 }
 
 int			ft_end_of_red(char c)
@@ -126,10 +129,10 @@ void		ft_addheredoc(t_term *term, t_parse *parse, int i)
 	char	*tmp;
 
 	start = i - 2;
-	while (!ft_isalpha(parse->cmd[i]) && parse->cmd[i + 1])
+	while (!ft_isalpha(parse->cmd[i]) && parse->cmd[i])
 		i++;
 	end = i;
-	while (parse->cmd[end] && ft_isalpha(parse->cmd[end]))
+	while (parse->cmd[end] && !ft_end_of_red(parse->cmd[end]))
 		end++;
 	if (end == i)
 	{
@@ -141,6 +144,36 @@ void		ft_addheredoc(t_term *term, t_parse *parse, int i)
 		parse->heredoc = ft_strdup(tmp);
 	else
 		parse->heredoc = ft_strjoin(ft_strjoin(parse->heredoc, ";"), tmp);
+	parse->sgred = NULL;
+	parse->dbred = NULL;
+	while (ft_is_space(parse->cmd[end]) && parse->cmd[end])
+		end++;
+	tmp = ft_strdup(&parse->cmd[end]);
+	parse->cmd[start] = '\0';
+	parse->cmd = ft_strjoin(parse->cmd, tmp);
+}
+
+void		ft_addfile(t_term *term, t_parse *parse, int i)
+{
+	int		start;
+	int		end;
+	char	*tmp;
+
+	start = i - 1;
+	while (!ft_isalpha(parse->cmd[i]) && parse->cmd[i])
+		i++;
+	end = i;
+	while (parse->cmd[end] && !ft_end_of_red(parse->cmd[end]))
+		end++;
+	if (end == i)
+	{
+		term->fail = 1;
+		return (ft_putendl("jush : parse error near `\\n'"));
+	}
+	tmp = ft_strsub(&parse->cmd[i], 0 , end - i);
+	parse->file = ft_strdup(tmp);
+	parse->sgred = NULL;
+	parse->dbred = NULL;
 	while (ft_is_space(parse->cmd[end]) && parse->cmd[end])
 		end++;
 	tmp = ft_strdup(&parse->cmd[end]);
@@ -161,6 +194,8 @@ t_parse		*ft_parse_redirections(t_term *term, t_parse *parse)
 			ft_addredirection(term, parse , i + 1);
 		else if (parse->cmd[i] == '<' && parse->cmd[i + 1] && parse->cmd[i + 1] == '<')
 			ft_addheredoc(term, parse, i + 2);
+		else if (parse->cmd[i] == '<')
+			ft_addfile(term, parse , i + 1);
 		else
 			i++;
 		if (term->fail)

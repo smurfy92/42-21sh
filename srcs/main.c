@@ -69,12 +69,14 @@ void		ft_create_heredoc(t_term *term)
 {
 	int		i;
 	char	**tabl;
+	int		fd;
 
 	i = -1;
 	tabl = ft_strsplit(term->parselst->heredoc, ';');
 	term->inheredoc = 1;
 	while (tabl && tabl[++i])
 	{
+		fd = open(ft_strjoin(ft_strjoin(ft_get_env_by_name(term, "HOME"), "/"),".21shheredoctmp"), O_WRONLY | O_CREAT | O_APPEND | O_TRUNC, S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
 		if (i == 0)
 			ft_putstr("heredoc->");
 		else
@@ -86,10 +88,39 @@ void		ft_create_heredoc(t_term *term)
 				ft_process(term);
 			if (ft_strequ(term->cmdactual, tabl[i]))
 				break ;
+			ft_putendl_fd(term->cmdactual, fd);
 			ft_putstr("\nheredoc->");
 		}
 	}
+	ft_putchar('\n');
+	close(fd);
+	if (!term->parselst->file)
+		term->parselst->file = ft_strjoin(ft_strjoin(ft_get_env_by_name(term, "HOME"), "/"),".21shheredoctmp");
 	term->inheredoc = 0;
+}
+
+void		ft_create_file_dup(t_term *term)
+{
+	int 	tabl[2];
+	int 	son;
+	int 	fd;
+	char	*line;
+
+	line = NULL;
+	pipe(tabl);
+	son = fork();
+	if (son == 0)
+	{
+		dup2(tabl[1], STDOUT_FILENO);
+		close(tabl[0]);
+		fd = open(term->parselst->file, O_RDONLY);
+		while ((get_next_line(fd, &line)) > 0)
+			ft_putendl(line);
+		exit(0);
+	}
+	dup2(tabl[0], STDIN_FILENO);
+	close(tabl[1]);
+	wait(0);
 }
 
 void		ft_process_exec(t_term *term, char *cmdsplit)
@@ -117,10 +148,12 @@ void		ft_process_exec(t_term *term, char *cmdsplit)
 	{
 		while (term->parselst)
 		{
-			ft_display_parse(term->parselst);
+			// ft_display_parse(term->parselst);
 			term->cmds = ft_strsplit(term->parselst->cmd, ' ');
 			if (!ft_check_builtin(term) && ft_check_in_path(term))
 			{
+				if (term->parselst->file)
+					ft_create_file_dup(term);
 				if (!term->parselst->next && !term->parselst->sgred && !term->parselst->dbred)
 				{
 					execve(term->path, term->cmds, term->env);
@@ -134,7 +167,10 @@ void		ft_process_exec(t_term *term, char *cmdsplit)
 						exit(0);
 				}
 				else
-					ft_create_process(term);
+				{
+					if (!term->parselst->file)
+						ft_create_process(term);
+				}
 			}
 			term->parselst = term->parselst->next;
 		}
