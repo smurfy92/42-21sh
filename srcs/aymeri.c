@@ -89,15 +89,6 @@ void		ft_refresh_env(t_term *term)
 	}
 }
 
-void		ft_prompt(t_term *term, int nb)
-{
-	nb = 0;
-	if (term->exec)
-		ft_putstr("\n$> ");
-	else
-		ft_putstr("\n$> ");
-}
-
 char		*ft_get_env_by_name(t_term *term, char *name)
 {
 	t_env	*lst;

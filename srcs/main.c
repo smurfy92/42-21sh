@@ -65,6 +65,34 @@ void		ft_create_redirections(t_parse *parse)
 		parse->fd = open(parse->dbred, O_WRONLY | O_CREAT | O_APPEND, S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
 }
 
+void		ft_create_heredoc(t_term *term)
+{
+	int		i;
+	char	**tabl;
+	//char	*cmd;
+
+	i = -1;
+	tabl = ft_strsplit(term->parselst->heredoc, ';');
+	term->inheredoc = 1;
+	while (tabl && tabl[++i])
+	{
+		if (i == 0)
+			ft_putstr("heredoc->");
+		else
+			ft_putstr("\nheredoc->");
+		while (42)
+		{
+			ft_reset_term(term);
+			while ((read(0, term->buf, BUFFSIZE)) && term->buf[0] != 10)
+				ft_process(term);
+			if (ft_strequ(term->cmdactual, tabl[i]))
+				break ;
+			ft_putstr("\nheredoc->");
+		}
+	}
+	term->inheredoc = 0;
+}
+
 void		ft_process_exec(t_term *term, char *cmdsplit)
 {
 	int father;
@@ -76,6 +104,10 @@ void		ft_process_exec(t_term *term, char *cmdsplit)
 	if (term->fail)
 		return ;
 	term->cmds = ft_strsplit(term->parselst->cmd, ' ');
+	if (term->parselst->heredoc)
+	{
+		ft_create_heredoc(term);
+	}
 	if (ft_check_builtin(term))
 		return ;
 	if (ft_check_in_path(term))
@@ -131,7 +163,9 @@ int			main(int argc, char **argv, char **env)
 		ft_putchar('\n');
 		term->cmdsplit = ft_strsplit(term->cmdactual, ';');
 		while (term->cmdsplit && term->cmdsplit[++argc])
+		{
 			ft_process_exec(term, term->cmdsplit[argc]);
+		}
 	}
 	return (0);
 }

@@ -37,6 +37,7 @@ typedef	struct			s_term
 	char				*copy;
 	char				**cmds;
 	char				**cmdsplit;
+	int					inheredoc;
 	int					i;
 	int					fail;
 	int					exec;
