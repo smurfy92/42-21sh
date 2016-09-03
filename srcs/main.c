@@ -69,7 +69,6 @@ void		ft_create_heredoc(t_term *term)
 {
 	int		i;
 	char	**tabl;
-	//char	*cmd;
 
 	i = -1;
 	tabl = ft_strsplit(term->parselst->heredoc, ';');
