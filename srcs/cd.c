@@ -80,6 +80,7 @@ int			ft_check_builtin(t_term *term)
 	else if (ft_strcmp(term->cmds[0], "exit") == 0)
 	{
 		reset_shell();
+		ft_putendl("Exiting shell");
 		exit(0);
 	}
 	else
