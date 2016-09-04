@@ -182,6 +182,34 @@ void		ft_process_exec(t_term *term, char *cmdsplit)
 	wait(0);
 }
 
+int			ft_is_separator(char c)
+{
+	if (c == 39 || c == '"' || c == '(' || c == ')' || c == '['
+	|| c == ']' || c == '{' || c == '}')
+		return (1);
+	else
+		return (0);
+}
+
+void		ft_add_separators(t_term *term, char c)
+{
+	if (c == 39 || c == )
+}
+
+void		ft_check_separators(t_term *term)
+{
+	int i;
+
+	i = -1;
+	while (term->cmdactual[++i])
+	{
+		if (ft_is_separator(term->cmdactual[i]))
+		{
+			ft_add_separator(term, term->cmdactual[i]);
+		}
+	}
+}
+
 int			main(int argc, char **argv, char **env)
 {
 	t_term		*term;
@@ -200,6 +228,7 @@ int			main(int argc, char **argv, char **env)
 		ft_add_history(term, term->cmdactual) : 0;
 		reset_shell();
 		ft_putchar('\n');
+		ft_check_separators(term);
 		term->cmdsplit = ft_strsplit(term->cmdactual, ';');
 		while (term->cmdsplit && term->cmdsplit[++argc])
 		{
