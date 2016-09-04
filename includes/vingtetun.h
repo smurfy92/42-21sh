@@ -79,6 +79,8 @@ typedef	struct			s_parse
 {
 	char				*cmd;
 	int					fd;
+	int					close1;
+	int					close2;
 	char				*dbred;
 	char				*sgred;
 	char				*heredoc;

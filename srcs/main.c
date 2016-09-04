@@ -148,6 +148,10 @@ void		ft_process_exec(t_term *term, char *cmdsplit)
 	{
 		while (term->parselst)
 		{
+			if (term->parselst->close1)
+				close(1);
+			if (term->parselst->close2)
+				close(2);
 			// ft_display_parse(term->parselst);
 			term->cmds = ft_strsplit(term->parselst->cmd, ' ');
 			if (!ft_check_builtin(term) && ft_check_in_path(term))

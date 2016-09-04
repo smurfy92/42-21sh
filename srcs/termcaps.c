@@ -85,6 +85,17 @@ void		ft_process2(t_term *term)
 		ft_right_arrow(term);
 	else if (term->buf[0] == 9)
 		return ;
+	else if (term->buf[0] == 4 && !term->cmdactual)
+	{
+		ft_putchar('\n');
+		reset_shell();
+		exit(0);
+	}
+	else if (term->buf[0] == 3)
+	{
+		ft_putchar('\n');
+		ft_reset_term(term);
+	}
 	else
 		ft_print_buf(term, term->buf);
 }
