@@ -29,6 +29,7 @@ typedef	struct			s_term
 	struct s_window		*window;
 	struct s_parse		*parselst;
 	pid_t				father;
+	char				*separators;
 	char				*path;
 	char				*u;
 	char				**env;

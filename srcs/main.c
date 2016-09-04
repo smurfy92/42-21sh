@@ -191,9 +191,15 @@ int			ft_is_separator(char c)
 		return (0);
 }
 
-void		ft_add_separators(t_term *term, char c)
+void		ft_add_separator(t_term *term, char c)
 {
-	if (c == 39 || c == )
+	char *str;
+
+	str = ft_strnew(1);
+	str[0] = c;
+	str[1] = '\0';
+	if (c == '(' || c == '[' || c == '{')
+		(!term->separators) ? (term->separators = ft_strdup(str)) : (term->separators = ft_strjoin(term->separators, str));
 }
 
 void		ft_check_separators(t_term *term)
@@ -201,13 +207,15 @@ void		ft_check_separators(t_term *term)
 	int i;
 
 	i = -1;
-	while (term->cmdactual[++i])
+	while (term->cmdactual && term->cmdactual[++i])
 	{
 		if (ft_is_separator(term->cmdactual[i]))
 		{
 			ft_add_separator(term, term->cmdactual[i]);
 		}
 	}
+	ft_putstr("separators-> ");
+	ft_putendl(term->separators);
 }
 
 int			main(int argc, char **argv, char **env)
