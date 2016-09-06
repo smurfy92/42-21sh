@@ -29,7 +29,8 @@ SRC =	srcs/main.c \
 		srcs/cd.c \
 		srcs/init.c \
 		srcs/parse.c \
-		srcs/test.c
+		srcs/test.c \
+		srcs/separators.c
 OBJ = $(SRC:.c=.o)
 FLAG = -Wall -Werror -Wextra
 CG = \033[92m
