@@ -102,6 +102,8 @@ void					ft_check_last_in_cmd(t_term *term, char c);
 void					ft_del_last_in_seperator(t_term *term, char c);
 void					ft_del_first_in_cmd(t_term *term, char c);
 void					ft_create_redirections(t_parse *parse);
+int						ft_is_separator(char c);
+int						ft_has_separator(t_term *term, char c);
 int						ft_is_page_up(t_term *term);
 int						ft_is_page_down(t_term *term);
 int						ft_is_down_arrow(t_term *term);

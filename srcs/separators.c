@@ -6,78 +6,11 @@
 /*   By: jtranchi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/06 16:25:10 by jtranchi          #+#    #+#             */
-/*   Updated: 2016/09/06 16:25:11 by jtranchi         ###   ########.fr       */
+/*   Updated: 2016/09/06 20:24:40 by jtranchi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/vingtetun.h"
-
-int			ft_is_separator(char c)
-{
-	if (c == 39 || c == '"' || c == '(' || c == ')' || c == '['
-	|| c == ']' || c == '{' || c == '}')
-		return (1);
-	else
-		return (0);
-}
-
-int 		ft_has_separator(t_term *term, char c)
-{
-	int i;
-
-	i = -1;
-	while (term->separators && term->separators[++i])
-	{
-		if (term->separators[i] == c)
-			return (1);
-	}
-	return (0);
-}
-
-void		ft_check_last_in_cmd(t_term *term, char c)
-{
-	if (c == '{')
-	{
-		ft_del_first_in_cmd(term, '}');
-		ft_del_last_in_cmd(term, '{');
-	}
-	if (c == '[')
-	{
-		ft_del_first_in_cmd(term, ']');
-		ft_del_last_in_cmd(term, '[');
-	}
-	if (c == '(')
-	{
-		ft_putendl("coucou2");
-		ft_del_first_in_cmd(term, ')');
-		ft_del_last_in_cmd(term, '(');
-	}
-	if (c == 39)
-	{
-		ft_del_first_in_cmd(term, 39);
-		ft_del_first_in_cmd(term, 39);
-	}
-	if (c == '"')
-	{
-		ft_del_first_in_cmd(term, '"');
-		ft_del_first_in_cmd(term, '"');
-	}
-}
-
-void		ft_del_last_in_cmd(t_term *term, char c)
-{
-	int i;
-
-	i = ft_strlen(term->cmdactual);
-	while (term->cmdactual && term->cmdactual[--i])
-	{
-		if (term->cmdactual[i] == c)
-		{
-			term->cmdactual[i] = ' ';
-			return ;
-		}
-	}
-}
 
 void		ft_del_last_in_seperator(t_term *term, char c)
 {
