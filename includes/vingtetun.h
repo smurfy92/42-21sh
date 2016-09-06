@@ -90,12 +90,6 @@ typedef	struct			s_parse
 	struct s_parse		*next;
 }						t_parse;
 
-//debug
-
-void					ft_out(char *str);
-
-//official
-
 void					ft_check_separators(t_term *term);
 void					ft_del_last_in_cmd(t_term *term, char c);
 void					ft_check_last_in_cmd(t_term *term, char c);
