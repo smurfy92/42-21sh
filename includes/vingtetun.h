@@ -91,6 +91,8 @@ typedef	struct			s_parse
 }						t_parse;
 
 void					ft_check_separators(t_term *term);
+void					ft_copy_redirections(t_term *term, t_parse *parse);
+void					ft_create_heredoc(t_term *term);
 void					ft_del_last_in_cmd(t_term *term, char c);
 void					ft_check_last_in_cmd(t_term *term, char c);
 void					ft_del_last_in_seperator(t_term *term, char c);
