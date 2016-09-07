@@ -108,7 +108,7 @@ void		ft_add_separator(t_term *term, char c)
 		return (ft_del_first_in_separator(term, '('));
 	if (ft_has_separator(term,'[') && c == ']')
 		return (ft_del_first_in_separator(term, '['));
-	if (ft_has_separator(term,'{') && c == '{')
+	if (ft_has_separator(term,'{') && c == '}')
 		return (ft_del_first_in_separator(term, '{'));
 	if (ft_has_separator(term, 39) && c == 39)
 		return (ft_del_first_in_separator(term, 39));
