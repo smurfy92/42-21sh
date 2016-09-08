@@ -115,6 +115,7 @@ int						ft_check_in_env(t_term *term, char *cmd);
 int						init_shell(int lflag);
 int						ft_check_builtin(t_term *term);
 int						ft_is_space(char c);
+void					ft_create_builtin(t_term *term);
 void					ft_addheredoc(t_term *term, t_parse *parse, int i);
 void					ft_check_separators(t_term *term);
 void					ft_copy_redirections(t_term *term, t_parse *parse);

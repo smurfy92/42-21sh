@@ -34,6 +34,13 @@ void		ft_parse(t_term *term, char *cmd)
 	term->cmdlength = 0;
 	cmd = NULL;
 	tmp = term->parselst;
+	while (tmp)
+	{
+		i = ft_strlen(tmp->cmd);
+		while (tmp->cmd[--i] == ' ')
+			tmp->cmd[i] = '\0';
+		tmp = tmp->next;
+	}
 
 }
 

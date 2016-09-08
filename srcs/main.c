@@ -59,8 +59,30 @@ void		ft_father_process(t_term *term)
 		if (term->parselst->close2)
 			close(2);
 		term->cmds = ft_strsplit(term->parselst->cmd, ' ');
-		if (!ft_check_builtin(term) && ft_check_in_path(term))
+		if (ft_check_builtin(term) || ft_check_in_path(term))
 		{
+			ft_putendl("ici1");
+			ft_putnbr(ft_check_builtin(term));
+			ft_putendl("|");
+			ft_putstr(term->parselst->cmd);
+			ft_putendl("|");
+			if (ft_check_builtin(term))
+			{
+				ft_putendl("ici2");
+				int tabl[2];
+				pipe(tabl);
+				int father = fork();
+				if (father == 0)
+				{
+					ft_putendl("ici3");
+					dup2(tabl[1], STDOUT_FILENO);
+					close(tabl[0]);
+					ft_create_builtin(term);
+				}
+				dup2(tabl[0], STDIN_FILENO);
+				close(tabl[1]);
+				wait(0);
+			}
 			if (term->parselst->file)
 				ft_create_file_dup(term);
 			if (!term->parselst->next && !term->parselst->sgred && !term->parselst->dbred)
@@ -87,8 +109,11 @@ void		ft_process_exec(t_term *term, char *cmdsplit)
 	term->cmds = ft_strsplit(term->parselst->cmd, ' ');
 	if (term->parselst->heredoc)
 		ft_create_heredoc(term);
-	if (ft_check_builtin(term))
+	if (ft_check_builtin(term) && !term->parselst->next)
+	{
+		ft_create_builtin(term);
 		return ;
+	}
 	if (ft_check_in_path(term))
 		father = fork();
 	else
@@ -108,16 +133,24 @@ int			main(int argc, char **argv, char **env)
 	while (42)
 	{
 		argc = -1;
-		ft_reset_term(term);
 		ft_get_history(term);
-		while ((read(0, term->buf, BUFFSIZE)) && term->buf[0] != 10)
-			ft_process(term);
-		ft_check_separators(term);
-		if (term->separators)
+		ft_reset_term(term);
+		// while ((read(0, term->buf, BUFFSIZE)) && term->buf[0] != 10)
+		// 		ft_process(term);
+		term->separators = "";
+		while (term->separators)
 		{
-			ft_putendl("not good my friend");
-			ft_putstr(term->separators);
-			ft_putendl("|");
+			term->separators = NULL;
+			while ((read(0, term->buf, BUFFSIZE)) && term->buf[0] != 10)
+				ft_process(term);
+			ft_check_separators(term);
+			if (term->separators)
+			{
+				term->cmdactual = ft_strjoin(term->cmdactual, "\n");
+				term->cmdlength++;
+				term->cursorpos++;
+				ft_putstr("\n> ");
+			}
 		}
 		(ft_strlen(term->cmdactual) > 0) ?
 		ft_add_history(term, term->cmdactual) : 0;

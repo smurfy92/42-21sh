@@ -55,7 +55,6 @@ void		ft_reset_term(t_term *term)
 	term->cmdsplit = NULL;
 	term->path = NULL;
 	term->cmdactual = NULL;
-	term->separators = NULL;
 	ft_bzero(term->cmdactual, ft_strlen(term->cmdactual));
 	ft_bzero(term->buf, ft_strlen(term->buf));
 	ft_get_window(term);

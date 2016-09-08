@@ -64,7 +64,7 @@ void		ft_cd(t_term *term)
 	ft_process_setenv(term, "PWD", getwd(buf));
 }
 
-int			ft_check_builtin(t_term *term)
+void			ft_create_builtin(t_term *term)
 {
 	char	*tmp;
 
@@ -72,7 +72,9 @@ int			ft_check_builtin(t_term *term)
 	if (ft_strcmp(term->cmds[0], "cd") == 0)
 		ft_cd(term);
 	else if (ft_strcmp(term->cmds[0], "env") == 0)
+	{
 		(!term->cmds[1]) ? ft_display_env(term) : ft_env_options(term);
+	}
 	else if (ft_strcmp(term->cmds[0], "setenv") == 0)
 		ft_process_setenv(term, term->cmds[1], term->cmds[2]);
 	else if (ft_strcmp(term->cmds[0], "unsetenv") == 0)
@@ -83,9 +85,22 @@ int			ft_check_builtin(t_term *term)
 		ft_putendl("Exiting shell");
 		exit(0);
 	}
-	else
-		return (0);
 	term->i = 0;
 	term->u = NULL;
-	return (1);
+}
+
+int			ft_check_builtin(t_term *term)
+{
+	if (ft_strcmp(term->parselst->cmd, "cd") == 0)
+		return (1);
+	else if (ft_strcmp(term->parselst->cmd, "env") == 0)
+		return (1);
+	else if (ft_strcmp(term->parselst->cmd, "setenv") == 0)
+		return (1);
+	else if (ft_strcmp(term->parselst->cmd, "unsetenv") == 0)
+		return (1);
+	else if (ft_strcmp(term->parselst->cmd, "exit") == 0)
+		return (1);
+	else
+		return (0);
 }
