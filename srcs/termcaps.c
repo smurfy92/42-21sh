@@ -42,25 +42,21 @@ void		ft_go_down(t_term *term)
 		ft_right_cursor(term);
 }
 
-void		ft_replace_cursor(t_term *term)
+void		ft_process3(t_term *term)
 {
-	int i;
-	int y;
-
-	i = -1;
-	while (++i < (int)ft_strlen(&term->cmdactual[term->cursorpos]))
+	if (term->buf[0] == 4 && !term->cmdactual)
 	{
-		if (((term->cursorpos + 3 + (int)ft_strlen(&term->cmdactual
-		[term->cursorpos]) - i) % term->window->width) == 0)
-		{
-			tputs(tgetstr("up", NULL), 1, ft_outchar);
-			y = 0;
-			while (y++ < term->window->width)
-				tputs(tgetstr("nd", NULL), 0, ft_outchar);
-		}
-		else
-			tputs(tgetstr("le", NULL), 0, ft_outchar);
+		ft_putchar('\n');
+		reset_shell();
+		exit(0);
 	}
+	else if (term->buf[0] == 3)
+	{
+		ft_putchar('\n');
+		ft_reset_term(term);
+	}
+	else
+		ft_print_buf(term, term->buf);
 }
 
 void		ft_process2(t_term *term)
@@ -85,35 +81,12 @@ void		ft_process2(t_term *term)
 		ft_right_arrow(term);
 	else if (term->buf[0] == 9)
 		return ;
-	else if (term->buf[0] == 4 && !term->cmdactual)
-	{
-		ft_putchar('\n');
-		reset_shell();
-		exit(0);
-	}
-	else if (term->buf[0] == 3)
-	{
-		ft_putchar('\n');
-		ft_reset_term(term);
-	}
 	else
-		ft_print_buf(term, term->buf);
+		ft_process3(term);
 }
 
 void		ft_process(t_term *term)
 {
-	// ft_putnbr(term->buf[0]);
-	// ft_putchar('\n');
-	// ft_putnbr(term->buf[1]);
-	// ft_putchar('\n');
-	// ft_putnbr(term->buf[2]);
-	// ft_putchar('\n');
-	// ft_putnbr(term->buf[3]);
-	// ft_putchar('\n');
-	// ft_putnbr(term->buf[4]);
-	// ft_putchar('\n');
-	// ft_putnbr(term->buf[5]);
-	// ft_putchar('\n');
 	if (ft_is_shift_up(term))
 		(term->cmdlength > 0) ? (term->copy = ft_strdup(term->cmdactual)) : 0;
 	else if (ft_is_shift_right(term))

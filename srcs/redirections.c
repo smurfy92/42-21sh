@@ -12,19 +12,10 @@
 
 #include "../includes/vingtetun.h"
 
-int			ft_is_space(char c)
-{
-	if (c == '\t' || c == ' ' || c == '\v' || c == '\f' || c == '\r'
-	|| c == '\n')
-		return (1);
-	else
-		return (0);
-}
-
 void		ft_copy_redirections(t_term *term, t_parse *parse)
 {
 	char	*line;
-	char 	*tmp;
+	char	*tmp;
 	int		fd;
 	int		fd2;
 
@@ -60,11 +51,30 @@ void		ft_write_in_tmp(t_term *term, char *cmd)
 void		ft_create_redirections(t_parse *parse)
 {
 	if (parse->sgred)
-		parse->fd = open(parse->sgred, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
+		parse->fd = open(parse->sgred, O_WRONLY |
+		O_CREAT | O_TRUNC, S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
 	if (parse->dbred)
-		parse->fd = open(parse->dbred, O_WRONLY | O_CREAT | O_APPEND, S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
+		parse->fd = open(parse->dbred, O_WRONLY | O_CREAT |
+		O_APPEND, S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
 }
 
+void		ft_create_heredoc2(t_term *term, char *str, int fd, int i)
+{
+	if (i == 0)
+		ft_putstr("heredoc->");
+	else
+		ft_putstr("\nheredoc->");
+	while (42)
+	{
+		ft_reset_term(term);
+		while ((read(0, term->buf, BUFFSIZE)) && term->buf[0] != 10)
+			ft_process(term);
+		if (ft_strequ(term->cmdactual, str))
+			break ;
+		ft_putendl_fd(term->cmdactual, fd);
+		ft_putstr("\nheredoc->");
+	}
+}
 
 void		ft_create_heredoc(t_term *term)
 {
@@ -77,25 +87,15 @@ void		ft_create_heredoc(t_term *term)
 	term->inheredoc = 1;
 	while (tabl && tabl[++i])
 	{
-		fd = open(ft_strjoin(ft_strjoin(ft_get_env_by_name(term, "HOME"), "/"),".21shheredoctmp"), O_WRONLY | O_CREAT | O_APPEND | O_TRUNC, S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
-		if (i == 0)
-			ft_putstr("heredoc->");
-		else
-			ft_putstr("\nheredoc->");
-		while (42)
-		{
-			ft_reset_term(term);
-			while ((read(0, term->buf, BUFFSIZE)) && term->buf[0] != 10)
-				ft_process(term);
-			if (ft_strequ(term->cmdactual, tabl[i]))
-				break ;
-			ft_putendl_fd(term->cmdactual, fd);
-			ft_putstr("\nheredoc->");
-		}
+		fd = open(ft_strjoin(ft_strjoin(ft_get_env_by_name(term, "HOME"), "/"),
+		".21shheredoctmp"), O_WRONLY | O_CREAT | O_APPEND | O_TRUNC, S_IRUSR |
+		S_IRGRP | S_IWGRP | S_IWUSR);
+		ft_create_heredoc2(term, tabl[i], fd, i);
 	}
 	ft_putchar('\n');
 	close(fd);
 	if (!term->parselst->file)
-		term->parselst->file = ft_strjoin(ft_strjoin(ft_get_env_by_name(term, "HOME"), "/"),".21shheredoctmp");
+		term->parselst->file = ft_strjoin(ft_strjoin(ft_get_env_by_name(term,
+		"HOME"), "/"), ".21shheredoctmp");
 	term->inheredoc = 0;
 }

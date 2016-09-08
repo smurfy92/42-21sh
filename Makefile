@@ -30,9 +30,11 @@ SRC =	srcs/main.c \
 		srcs/init.c \
 		srcs/parse.c \
 		srcs/parse2.c \
+		srcs/parse3.c \
 		srcs/test.c \
 		srcs/separators.c \
 		srcs/separators2.c \
+		srcs/separators3.c \
 		srcs/redirections.c
 OBJ = $(SRC:.c=.o)
 FLAG = -Wall -Werror -Wextra

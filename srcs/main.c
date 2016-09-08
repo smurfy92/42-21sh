@@ -12,42 +12,25 @@
 
 #include "../includes/vingtetun.h"
 
-void		ft_create_file_dup(t_term *term)
+void		ft_builtin_fork(t_term *term)
 {
-	int 	tabl[2];
-	int 	father;
-	int 	fd;
-	char	*line;
+	int tabl[2];
+	int father;
 
-	line = NULL;
 	pipe(tabl);
 	father = fork();
 	if (father == 0)
 	{
 		dup2(tabl[1], STDOUT_FILENO);
 		close(tabl[0]);
-		fd = open(term->parselst->file, O_RDONLY);
-		while ((get_next_line(fd, &line)) > 0)
-			ft_putendl(line);
+		ft_create_builtin(term);
 		exit(0);
 	}
 	dup2(tabl[0], STDIN_FILENO);
 	close(tabl[1]);
 	wait(0);
-}
-
-void		ft_father_exec(t_term *term)
-{
-	if (term->parselst->sgred || term->parselst->dbred)
-	{
-		ft_write_in_tmp(term, term->parselst->cmd);
-		ft_copy_redirections(term, term->parselst);
-		if (!term->parselst->next)
-			exit(0);
-	}
-	else
-		if (!term->parselst->file)
-			ft_create_process(term);
+	term->parselst = term->parselst->next;
+	ft_father_process(term);
 }
 
 void		ft_father_process(t_term *term)
@@ -61,31 +44,12 @@ void		ft_father_process(t_term *term)
 		term->cmds = ft_strsplit(term->parselst->cmd, ' ');
 		if (ft_check_builtin(term) || ft_check_in_path(term))
 		{
-			ft_putendl("ici1");
-			ft_putnbr(ft_check_builtin(term));
-			ft_putendl("|");
-			ft_putstr(term->parselst->cmd);
-			ft_putendl("|");
 			if (ft_check_builtin(term))
-			{
-				ft_putendl("ici2");
-				int tabl[2];
-				pipe(tabl);
-				int father = fork();
-				if (father == 0)
-				{
-					ft_putendl("ici3");
-					dup2(tabl[1], STDOUT_FILENO);
-					close(tabl[0]);
-					ft_create_builtin(term);
-				}
-				dup2(tabl[0], STDIN_FILENO);
-				close(tabl[1]);
-				wait(0);
-			}
+				ft_builtin_fork(term);
 			if (term->parselst->file)
 				ft_create_file_dup(term);
-			if (!term->parselst->next && !term->parselst->sgred && !term->parselst->dbred)
+			if (!term->parselst->next && !term->parselst->sgred &&
+			!term->parselst->dbred)
 			{
 				execve(term->path, term->cmds, term->env);
 				break ;
@@ -123,6 +87,24 @@ void		ft_process_exec(t_term *term, char *cmdsplit)
 	wait(0);
 }
 
+void		ft_boucle(t_term *term)
+{
+	while (term->separators)
+	{
+		term->separators = NULL;
+		while ((read(0, term->buf, BUFFSIZE)) && term->buf[0] != 10)
+			ft_process(term);
+		ft_check_separators(term);
+		if (term->separators)
+		{
+			term->cmdactual = ft_strjoin(term->cmdactual, "\n");
+			term->cmdlength++;
+			term->cursorpos++;
+			ft_putstr("\n> ");
+		}
+	}
+}
+
 int			main(int argc, char **argv, char **env)
 {
 	t_term		*term;
@@ -135,23 +117,8 @@ int			main(int argc, char **argv, char **env)
 		argc = -1;
 		ft_get_history(term);
 		ft_reset_term(term);
-		// while ((read(0, term->buf, BUFFSIZE)) && term->buf[0] != 10)
-		// 		ft_process(term);
 		term->separators = "";
-		while (term->separators)
-		{
-			term->separators = NULL;
-			while ((read(0, term->buf, BUFFSIZE)) && term->buf[0] != 10)
-				ft_process(term);
-			ft_check_separators(term);
-			if (term->separators)
-			{
-				term->cmdactual = ft_strjoin(term->cmdactual, "\n");
-				term->cmdlength++;
-				term->cursorpos++;
-				ft_putstr("\n> ");
-			}
-		}
+		ft_boucle(term);
 		(ft_strlen(term->cmdactual) > 0) ?
 		ft_add_history(term, term->cmdactual) : 0;
 		reset_shell();

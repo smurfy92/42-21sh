@@ -12,34 +12,40 @@
 
 #include "../includes/vingtetun.h"
 
-void		ft_create_process(t_term *term)
+void		ft_father(t_term *term, int *tabl)
 {
-	int		y;
 	char	*tmp;
-	int 	tabl[2];
+	int		y;
 
 	tmp = NULL;
+	dup2(tabl[1], STDOUT_FILENO);
+	close(tabl[0]);
+	(y = -1) ? ft_check_cmds(term) : 0;
+	(term->i) ? ft_env_i(term) : 0;
+	while (term->cmds[++y])
+		(ft_strcmp(term->cmds[y], term->path) == 0) ?\
+		term->cmds = &term->cmds[y] : 0;
+	y = 0;
+	(!term->cmds[1]) ? (tmp = term->cmds[0]) : 0;
+	while (term->cmds[++y])
+	{
+		(!tmp) ? (tmp = ft_strdup(term->cmds[y - 1])) : 0;
+		tmp = ft_strjoin(ft_strjoin(tmp, " "), term->cmds[y]);
+	}
+	execve(term->path, term->cmds, term->env);
+	term->path = NULL;
+}
+
+void		ft_create_process(t_term *term)
+{
+	int		tabl[2];
+
 	pipe(tabl);
 	term->father = fork();
 	ft_refresh_env(term);
 	if (term->father == 0)
 	{
-		dup2(tabl[1], STDOUT_FILENO);
-		close(tabl[0]);	
-		(y = -1) ? ft_check_cmds(term) : 0;
-		(term->i) ? ft_env_i(term) : 0;
-		while (term->cmds[++y])
-			(ft_strcmp(term->cmds[y], term->path) == 0) ?\
-			term->cmds = &term->cmds[y] : 0;
-		y = 0;
-		(!term->cmds[1]) ? (tmp = term->cmds[0]) : 0;
-		while (term->cmds[++y])
-		{
-			(!tmp) ? (tmp = ft_strdup(term->cmds[y - 1])) : 0;
-			tmp = ft_strjoin(ft_strjoin(tmp, " "), term->cmds[y]);
-		}
-		execve(term->path, term->cmds, term->env);
-		term->path = NULL;
+		ft_father(term, tabl);
 	}
 	dup2(tabl[0], STDIN_FILENO);
 	close(tabl[1]);

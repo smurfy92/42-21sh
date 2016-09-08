@@ -64,7 +64,7 @@ void		ft_cd(t_term *term)
 	ft_process_setenv(term, "PWD", getwd(buf));
 }
 
-void			ft_create_builtin(t_term *term)
+void		ft_create_builtin(t_term *term)
 {
 	char	*tmp;
 
@@ -87,20 +87,4 @@ void			ft_create_builtin(t_term *term)
 	}
 	term->i = 0;
 	term->u = NULL;
-}
-
-int			ft_check_builtin(t_term *term)
-{
-	if (ft_strcmp(term->parselst->cmd, "cd") == 0)
-		return (1);
-	else if (ft_strcmp(term->parselst->cmd, "env") == 0)
-		return (1);
-	else if (ft_strcmp(term->parselst->cmd, "setenv") == 0)
-		return (1);
-	else if (ft_strcmp(term->parselst->cmd, "unsetenv") == 0)
-		return (1);
-	else if (ft_strcmp(term->parselst->cmd, "exit") == 0)
-		return (1);
-	else
-		return (0);
 }
