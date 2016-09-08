@@ -115,6 +115,7 @@ int						ft_check_in_env(t_term *term, char *cmd);
 int						init_shell(int lflag);
 int						ft_check_builtin(t_term *term);
 int						ft_is_space(char c);
+void					ft_addfile(t_term *term, t_parse *parse, int i);
 void					ft_create_file_dup(t_term *term);
 void					ft_father_process(t_term *term);
 void					ft_create_builtin(t_term *term);
@@ -127,7 +128,8 @@ void					ft_check_last_in_cmd(t_term *term, char c);
 void					ft_del_last_in_seperator(t_term *term, char c);
 void					ft_del_first_in_cmd(t_term *term, char c);
 void					ft_create_redirections(t_parse *parse);
-void					ft_adddoubleredirection(t_term *term, t_parse *parse, int i);
+void					ft_adddoubleredirection(t_term *term,
+t_parse *parse, int i);
 void					ft_addredirection(t_term *term, t_parse *parse, int i);
 void					ft_display_parse(t_parse *parse);
 void					ft_create_parse(t_term *term, char *cmd);

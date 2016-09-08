@@ -21,7 +21,7 @@ int			ft_is_separator(char c)
 		return (0);
 }
 
-int 		ft_has_separator(t_term *term, char c)
+int			ft_has_separator(t_term *term, char c)
 {
 	int i;
 
