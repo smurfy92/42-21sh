@@ -42,26 +42,30 @@ void		ft_check_close2(t_parse *parse, int i)
 	parse->close2 = 1;
 }
 
-void		ft_parse_redirections2(t_term *term, t_parse *parse, int *i)
+void		ft_parse_redirections2(t_term *term, t_parse *parse, int i)
 {
-	if (parse->cmd[*i] == '>' && parse->cmd[*i + 1] &&
-	parse->cmd[*i + 1] == '>')
-		ft_adddoubleredirection(term, parse, *i + 2);
-	else if (parse->cmd[*i] == '>')
-		ft_addredirection(term, parse, *i + 1);
-	else if (parse->cmd[*i] == '<' && parse->cmd[*i + 1] &&
-	parse->cmd[*i + 1] == '<')
-		ft_addheredoc(term, parse, *i + 2);
-	else if (parse->cmd[*i] == '<')
-		ft_addfile(term, parse, *i + 1);
-	else if (parse->cmd[*i] == '1' && parse->cmd[*i + 3] && parse->cmd[*i + 1]
-	== '>' && parse->cmd[*i + 2] == '&' && parse->cmd[*i + 3] == '-')
-		ft_check_close1(parse, *i);
-	else if (parse->cmd[*i] == '2' && parse->cmd[*i + 3] && parse->cmd[*i + 1]
-	== '>' && parse->cmd[*i + 2] == '&' && parse->cmd[*i + 3] == '-')
-		ft_check_close2(parse, *i);
+	if (parse->cmd[i] == '>' && parse->cmd[i + 1] &&
+	parse->cmd[i + 1] == '>')
+		ft_adddoubleredirection(term, parse, i + 2);
+	else if (parse->cmd[i] == '>')
+	{
+		ft_putendl("ici");
+		parse->cmd[i] = '\0';
+		ft_addredirection(term, parse, i + 1);
+	}
+	else if (parse->cmd[i] == '<' && parse->cmd[i + 1] &&
+	parse->cmd[i + 1] == '<')
+		ft_addheredoc(term, parse, i + 2);
+	else if (parse->cmd[i] == '<')
+		ft_addfile(term, parse, i + 1);
+	else if (parse->cmd[i] == '1' && parse->cmd[i + 3] && parse->cmd[i + 1]
+	== '>' && parse->cmd[i + 2] == '&' && parse->cmd[i + 3] == '-')
+		ft_check_close1(parse, i);
+	else if (parse->cmd[i] == '2' && parse->cmd[i + 3] && parse->cmd[i + 1]
+	== '>' && parse->cmd[i + 2] == '&' && parse->cmd[i + 3] == '-')
+		ft_check_close2(parse, i);
 	else
-		*i = *i + 1;
+		term->minus = 1;
 }
 
 t_parse		*ft_parse_redirections(t_term *term, t_parse *parse)
@@ -71,11 +75,16 @@ t_parse		*ft_parse_redirections(t_term *term, t_parse *parse)
 	i = 0;
 	while (parse->cmd[i])
 	{
-		ft_parse_redirections2(term, parse, &i);
+		term->minus = 0;
+		ft_parse_redirections2(term, parse, i);
 		if (term->fail)
 			break ;
 		if (parse->sgred || parse->dbred)
 			ft_create_redirections(parse);
+		if (term->minus)
+			i++;
+		ft_putstr("|");
+		ft_putendl(&parse->cmd[i]);
 	}
 	return (parse);
 }

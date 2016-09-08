@@ -29,15 +29,17 @@ void		ft_parse(t_term *term, char *cmd)
 
 	i = -1;
 	tabl = ft_strsplit(cmd, '|');
-	while (tabl[++i])
+	while (tabl && tabl[++i])
+	{
 		ft_create_parse(term, tabl[i]);
+	}
 	term->cmdlength = 0;
 	cmd = NULL;
 	tmp = term->parselst;
 	while (tmp)
 	{
 		i = ft_strlen(tmp->cmd);
-		while (tmp->cmd[--i] == ' ')
+		while (tmp->cmd && tmp->cmd[--i] == ' ')
 			tmp->cmd[i] = '\0';
 		tmp = tmp->next;
 	}

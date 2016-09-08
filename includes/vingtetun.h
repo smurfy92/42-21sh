@@ -40,6 +40,7 @@ typedef	struct			s_term
 	char				**cmdsplit;
 	int					inheredoc;
 	int					i;
+	int					minus;
 	int					fail;
 	int					exec;
 	int					cursorpos;

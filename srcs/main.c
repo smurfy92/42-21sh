@@ -83,7 +83,9 @@ void		ft_process_exec(t_term *term, char *cmdsplit)
 	else
 		return ;
 	if (father == 0)
+	{
 		ft_father_process(term);
+	}
 	wait(0);
 }
 
