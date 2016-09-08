@@ -49,7 +49,6 @@ void		ft_parse_redirections2(t_term *term, t_parse *parse, int i)
 		ft_adddoubleredirection(term, parse, i + 2);
 	else if (parse->cmd[i] == '>')
 	{
-		ft_putendl("ici");
 		parse->cmd[i] = '\0';
 		ft_addredirection(term, parse, i + 1);
 	}
@@ -83,8 +82,6 @@ t_parse		*ft_parse_redirections(t_term *term, t_parse *parse)
 			ft_create_redirections(parse);
 		if (term->minus)
 			i++;
-		ft_putstr("|");
-		ft_putendl(&parse->cmd[i]);
 	}
 	return (parse);
 }
