@@ -15,14 +15,14 @@
 void		ft_create_file_dup(t_term *term)
 {
 	int 	tabl[2];
-	int 	son;
+	int 	father;
 	int 	fd;
 	char	*line;
 
 	line = NULL;
 	pipe(tabl);
-	son = fork();
-	if (son == 0)
+	father = fork();
+	if (father == 0)
 	{
 		dup2(tabl[1], STDOUT_FILENO);
 		close(tabl[0]);
