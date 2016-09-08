@@ -26,7 +26,10 @@ void		ft_del_last_in_seperator(t_term *term, char c)
 			ft_check_last_in_cmd(term, c);
 			if (!term->separators[i + 1])
 			{
-				term->separators[i] = '\0';
+				if (i == 0)
+					term->separators = NULL;
+				else
+					term->separators[i] = '\0';
 				return ;
 			}
 			if (i == 0)
@@ -78,7 +81,10 @@ void		ft_del_first_in_separator(t_term *term, char c)
 			ft_check_last_in_cmd(term, c);
 			if (!term->separators[i + 1])
 			{
-				term->separators[i] = '\0';
+				if (i == 0)
+					term->separators = NULL;
+				else
+					term->separators[i] = '\0';
 				return ;
 			}
 			if (i == 0)

@@ -112,11 +112,17 @@ int			main(int argc, char **argv, char **env)
 		ft_get_history(term);
 		while ((read(0, term->buf, BUFFSIZE)) && term->buf[0] != 10)
 			ft_process(term);
+		ft_check_separators(term);
+		if (term->separators)
+		{
+			ft_putendl("not good my friend");
+			ft_putstr(term->separators);
+			ft_putendl("|");
+		}
 		(ft_strlen(term->cmdactual) > 0) ?
 		ft_add_history(term, term->cmdactual) : 0;
 		reset_shell();
 		ft_putchar('\n');
-		ft_check_separators(term);
 		term->cmdsplit = ft_strsplit(term->cmdactual, ';');
 		while (term->cmdsplit && term->cmdsplit[++argc])
 		{
