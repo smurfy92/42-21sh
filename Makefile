@@ -31,7 +31,6 @@ SRC =	srcs/main.c \
 		srcs/parse.c \
 		srcs/parse2.c \
 		srcs/parse3.c \
-		srcs/test.c \
 		srcs/separators.c \
 		srcs/separators2.c \
 		srcs/separators3.c \
