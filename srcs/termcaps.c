@@ -20,7 +20,7 @@ void		ft_go_up(t_term *term)
 	i = -1;
 	while (++i < term->window->width && term->cursorpos > 0)
 	{
-		if (((term->cursorpos + 3) % term->window->width) == 0)
+		if (((term->cursorpos + 7) % term->window->width) == 0)
 		{
 			y = 0;
 			tputs(tgetstr("up", NULL), 0, ft_outchar);
@@ -44,7 +44,38 @@ void		ft_go_down(t_term *term)
 
 void		ft_process3(t_term *term)
 {
-	if (term->buf[0] == 4 && !term->cmdactual)
+	char *tmp;
+
+	if (ft_is_shift_down(term))
+	{
+		if (!term->copy)
+			return ;
+		if (!term->cmdactual)
+		{
+			term->cmdactual = ft_strdup(term->copy);
+		}
+		else if (!term->cmdactual[term->cursorpos])
+		{
+			term->cmdactual = ft_strjoin(term->cmdactual, term->copy);
+		}
+		else if (term->cursorpos == 0)
+			term->cmdactual = ft_strjoin(term->copy, term->cmdactual);
+		else
+		{
+			tmp = ft_strjoin(term->copy, &term->cmdactual[term->cursorpos]);
+			term->cmdactual[term->cursorpos] = '\0';
+			term->cmdactual = ft_strjoin(term->cmdactual, tmp);
+		}
+		term->cmdlength = ft_strlen(term->cmdactual);
+		tmp = ft_strdup(term->cmdactual);
+		ft_clean_line(term);
+		term->cmdactual = ft_strdup(tmp);
+		term->cmdlength = ft_strlen(term->cmdactual);
+		ft_putstr(&term->cmdactual[term->cursorpos]);
+		term->cursorpos += ft_strlen(term->copy);
+		// ft_replace_cursor(term);
+	}
+	else if (term->buf[0] == 4 && !term->cmdactual)
 	{
 		ft_putchar('\n');
 		reset_shell();
@@ -87,6 +118,18 @@ void		ft_process2(t_term *term)
 
 void		ft_process(t_term *term)
 {
+	// ft_putnbr(term->buf[0]);
+	// ft_putendl("|");
+	// ft_putnbr(term->buf[1]);
+	// ft_putendl("|");
+	// ft_putnbr(term->buf[2]);
+	// ft_putendl("|");
+	// ft_putnbr(term->buf[3]);
+	// ft_putendl("|");
+	// ft_putnbr(term->buf[4]);
+	// ft_putendl("|");
+	// ft_putnbr(term->buf[5]);
+	// ft_putendl("|");
 	if (ft_is_shift_up(term))
 		(term->cmdlength > 0) ? (term->copy = ft_strdup(term->cmdactual)) : 0;
 	else if (ft_is_shift_right(term))

@@ -58,14 +58,14 @@ void		ft_print_buf(t_term *term, char *str)
 	{
 		while (term->cmdactual[++i])
 			ft_putchar(term->cmdactual[i]);
-		if (((i + 3) % term->window->width) == 0)
+		if (((i + 7) % term->window->width) == 0)
 			tputs(tgetstr("do", NULL), 0, ft_outchar);
 		ft_replace_cursor(term);
 		ft_right_cursor(term);
 	}
 	else
 	{
-		if (((term->cursorpos + 3) % term->window->width) == 0)
+		if (((term->cursorpos + 7) % term->window->width) == 0)
 			tputs(tgetstr("do", NULL), 0, ft_outchar);
 	}
 }

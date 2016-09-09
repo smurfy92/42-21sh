@@ -54,7 +54,7 @@ void		ft_left_arrow(t_term *term)
 
 	if (term->cursorpos == 0)
 		return ;
-	if (((term->cursorpos + 3) % term->window->width) == 0)
+	if (((term->cursorpos + 7) % term->window->width) == 0)
 	{
 		i = 0;
 		tputs(tgetstr("up", NULL), 0, ft_outchar);
@@ -71,7 +71,7 @@ void		ft_right_arrow(t_term *term)
 	if (term->cursorpos == term->cmdlength)
 		return ;
 	term->cursorpos++;
-	if (((term->cursorpos + 3) % term->window->width) == 0)
+	if (((term->cursorpos + 7) % term->window->width) == 0)
 		tputs(tgetstr("do", NULL), 0, ft_outchar);
 	else
 		tputs(tgetstr("nd", NULL), 0, ft_outchar);

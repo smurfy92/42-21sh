@@ -25,7 +25,7 @@ void		ft_left_cursor(t_term *term)
 	int y;
 
 	term->cursorpos--;
-	if (((term->cursorpos + 3) % term->window->width) == 0)
+	if (((term->cursorpos + 7) % term->window->width) == 0)
 	{
 		tputs(tgetstr("up", NULL), 1, ft_outchar);
 		y = 0;
@@ -39,7 +39,7 @@ void		ft_left_cursor(t_term *term)
 void		ft_right_cursor(t_term *term)
 {
 	term->cursorpos++;
-	if (((term->cursorpos + 3) % term->window->width) == 0)
+	if (((term->cursorpos + 7) % term->window->width) == 0)
 		tputs(tgetstr("do", NULL), 0, ft_outchar);
 	else
 		tputs(tgetstr("nd", NULL), 0, ft_outchar);

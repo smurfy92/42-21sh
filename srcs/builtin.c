@@ -69,7 +69,7 @@ void		ft_replace_cursor(t_term *term)
 	i = -1;
 	while (++i < (int)ft_strlen(&term->cmdactual[term->cursorpos]))
 	{
-		if (((term->cursorpos + 3 + (int)ft_strlen(&term->cmdactual
+		if (((term->cursorpos + 7 + (int)ft_strlen(&term->cmdactual
 		[term->cursorpos]) - i) % term->window->width) == 0)
 		{
 			tputs(tgetstr("up", NULL), 1, ft_outchar);
