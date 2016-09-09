@@ -66,14 +66,16 @@ void		ft_process3(t_term *term)
 			term->cmdactual[term->cursorpos] = '\0';
 			term->cmdactual = ft_strjoin(term->cmdactual, tmp);
 		}
-		term->cmdlength = ft_strlen(term->cmdactual);
 		tmp = ft_strdup(term->cmdactual);
+		int save;
 		ft_clean_line(term);
 		term->cmdactual = ft_strdup(tmp);
+		ft_putstr(term->cmdactual);
 		term->cmdlength = ft_strlen(term->cmdactual);
-		ft_putstr(&term->cmdactual[term->cursorpos]);
-		term->cursorpos += ft_strlen(term->copy);
-		// ft_replace_cursor(term);
+		term->cmdlength += ft_strlen(term->copy);
+		term->cursorpos = save + (int)ft_strlen(term->copy);
+		term->cmdlength += ft_strlen(term->copy);
+		// term->cursorpos += ft_strlen(term->copy);
 	}
 	else if (term->buf[0] == 4 && !term->cmdactual)
 	{
