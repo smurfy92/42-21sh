@@ -48,10 +48,7 @@ void		ft_parse_redirections2(t_term *term, t_parse *parse, int i)
 	parse->cmd[i + 1] == '>')
 		ft_adddoubleredirection(term, parse, i + 2);
 	else if (parse->cmd[i] == '>')
-	{
-		parse->cmd[i] = '\0';
 		ft_addredirection(term, parse, i + 1);
-	}
 	else if (parse->cmd[i] == '<' && parse->cmd[i + 1] &&
 	parse->cmd[i + 1] == '<')
 		ft_addheredoc(term, parse, i + 2);
