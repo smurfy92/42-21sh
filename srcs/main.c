@@ -83,9 +83,7 @@ void		ft_process_exec(t_term *term, char *cmdsplit)
 	else
 		return ;
 	if (father == 0)
-	{
 		ft_father_process(term);
-	}
 	wait(0);
 }
 
@@ -127,9 +125,7 @@ int			main(int argc, char **argv, char **env)
 		ft_putchar('\n');
 		term->cmdsplit = ft_strsplit(term->cmdactual, ';');
 		while (term->cmdsplit && term->cmdsplit[++argc])
-		{
 			ft_process_exec(term, term->cmdsplit[argc]);
-		}
 	}
 	return (0);
 }

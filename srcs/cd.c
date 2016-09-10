@@ -72,9 +72,7 @@ void		ft_create_builtin(t_term *term)
 	if (ft_strcmp(term->cmds[0], "cd") == 0)
 		ft_cd(term);
 	else if (ft_strcmp(term->cmds[0], "env") == 0)
-	{
 		(!term->cmds[1]) ? ft_display_env(term) : ft_env_options(term);
-	}
 	else if (ft_strcmp(term->cmds[0], "setenv") == 0)
 		ft_process_setenv(term, term->cmds[1], term->cmds[2]);
 	else if (ft_strcmp(term->cmds[0], "unsetenv") == 0)

@@ -92,10 +92,12 @@ void		ft_add_separator(t_term *term, char c)
 
 void		ft_check_separators(t_term *term)
 {
-	term->i = -1;
-	while (term->cmdactual && term->cmdactual[++term->i])
+	int i;
+
+	i = -1;
+	while (term->cmdactual && term->cmdactual[++i])
 	{
-		if (ft_is_separator(term->cmdactual[term->i]))
-			ft_add_separator(term, term->cmdactual[term->i]);
+		if (ft_is_separator(term->cmdactual[i]))
+			ft_add_separator(term, term->cmdactual[i]);
 	}
 }

@@ -62,7 +62,7 @@ int			ft_check_in_env(t_term *term, char *cmd)
 	while (lst && ft_strcmp(lst->var, "PATH") != 0)
 		lst = lst->next;
 	tabl = ft_strsplit(lst->val, ':');
-	while (tabl[++i])
+	while (tabl && tabl[++i])
 	{
 		tabl[i] = ft_strjoin(ft_strjoin(tabl[i], "/"), cmd);
 		if (access(tabl[i], X_OK) == 0)
@@ -73,7 +73,12 @@ int			ft_check_in_env(t_term *term, char *cmd)
 		ft_strdup(&cmd[2]) : ft_permission_denied(&cmd[0]);
 	if (term->path)
 	{
-		ft_create_process(term);
+		int father;
+
+		father = fork();
+		if (father == 0)
+			execve(term->path, term->cmds, &term->path);
+		wait(0);
 		return (1);
 	}
 	else

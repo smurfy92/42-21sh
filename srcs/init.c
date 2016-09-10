@@ -19,6 +19,8 @@ void		ft_get_window(t_term *term)
 	ioctl(0, TIOCGWINSZ, &w);
 	if (!term->window)
 		term->window = (t_window*)malloc(sizeof(t_window));
+	if (!w.ws_col || w.ws_row)
+		return ;
 	term->window->width = w.ws_col;
 	term->window->heigth = w.ws_row;
 }

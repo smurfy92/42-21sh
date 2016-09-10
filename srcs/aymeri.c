@@ -59,7 +59,7 @@ int			ft_check_in_path(t_term *term)
 
 	i = -1;
 	tabl = ft_strsplit(ft_get_env_by_name(term, "PATH"), ':');
-	while (tabl[++i])
+	while (tabl && tabl[++i])
 	{
 		tabl[i] = ft_strjoin(tabl[i], "/");
 		tabl[i] = ft_strjoin(tabl[i], term->cmds[0]);
