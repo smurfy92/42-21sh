@@ -47,15 +47,19 @@ void		ft_parse(t_term *term, char *cmd)
 
 int			ft_check_builtin(t_term *term)
 {
-	if (ft_strcmp(term->parselst->cmd, "cd") == 0)
+	char	**tabl;
+
+	tabl = ft_strsplit(term->parselst->cmd, ' ');
+
+	if (ft_strcmp(tabl[0], "cd") == 0)
 		return (1);
-	else if (ft_strcmp(term->parselst->cmd, "env") == 0)
+	else if (ft_strcmp(tabl[0], "env") == 0)
 		return (1);
-	else if (ft_strcmp(term->parselst->cmd, "setenv") == 0)
+	else if (ft_strcmp(tabl[0], "setenv") == 0)
 		return (1);
-	else if (ft_strcmp(term->parselst->cmd, "unsetenv") == 0)
+	else if (ft_strcmp(tabl[0], "unsetenv") == 0)
 		return (1);
-	else if (ft_strcmp(term->parselst->cmd, "exit") == 0)
+	else if (ft_strcmp(tabl[0], "exit") == 0)
 		return (1);
 	else
 		return (0);
