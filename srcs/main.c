@@ -92,9 +92,9 @@ void		ft_boucle(t_term *term)
 {
 	while (term->separators)
 	{
-		term->separators = NULL;
 		while ((read(0, term->buf, BUFFSIZE)) && term->buf[0] != 10)
 			ft_process(term);
+		term->separators = NULL;
 		ft_check_separators(term);
 		if (term->separators)
 		{
@@ -106,6 +106,15 @@ void		ft_boucle(t_term *term)
 	}
 }
 
+void		ft_ctrl_c(int sig)
+{
+	t_term			*term;
+
+	sig = 0;
+	term = ft_get_term();
+	ioctl(0, TIOCSTI, "\n");
+}
+
 int			main(int argc, char **argv, char **env)
 {
 	t_term		*term;
@@ -113,6 +122,7 @@ int			main(int argc, char **argv, char **env)
 	argv = NULL;
 	term = ft_set_term(ft_get_term(), env, ft_parse_env(env));
 	signal(SIGWINCH, ft_get_window_sig);
+	signal(SIGWINCH, ft_ctrl_c);
 	while (42)
 	{
 		argc = -1;

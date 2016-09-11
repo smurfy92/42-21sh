@@ -35,10 +35,8 @@ t_term		*ft_get_term(void)
 
 void		ft_get_window_sig(void)
 {
-	struct winsize	w;
 	t_term			*term;
 
-	ioctl(0, TIOCGWINSZ, &w);
 	term = ft_get_term();
 }
 
