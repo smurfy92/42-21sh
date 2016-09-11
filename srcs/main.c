@@ -66,8 +66,8 @@ void		ft_process_exec(t_term *term, char *cmdsplit)
 	int father;
 
 	term->cmds = NULL;
-	term->parselst = NULL;
 	term->fail = 0;
+	term->parselst = NULL;
 	ft_parse(term, cmdsplit);
 	if (term->fail)
 		return ;
@@ -118,7 +118,6 @@ int			main(int argc, char **argv, char **env)
 		argc = -1;
 		ft_get_history(term);
 		ft_reset_term(term);
-		term->separators = "";
 		ft_boucle(term);
 		(ft_strlen(term->cmdactual) > 0) ?
 		ft_add_history(term, term->cmdactual) : 0;

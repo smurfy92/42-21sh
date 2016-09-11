@@ -93,6 +93,7 @@ void		ft_create_parse(t_term *term, char *cmd)
 		cmd = &cmd[1];
 	tmp->cmd = ft_strdup(cmd);
 	tmp->next = NULL;
+	tmp->heredoc = 0;
 	tmp->dbred = NULL;
 	tmp->sgred = NULL;
 	tmp->close1 = 0;

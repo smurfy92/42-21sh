@@ -43,9 +43,7 @@ void		ft_create_process(t_term *term)
 	pipe(tabl);
 	term->father = fork();
 	if (term->father == 0)
-	{
 		ft_father(term, tabl);
-	}
 	dup2(tabl[0], STDIN_FILENO);
 	close(tabl[1]);
 	wait(0);
