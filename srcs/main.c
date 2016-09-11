@@ -44,6 +44,7 @@ void		ft_father_process(t_term *term)
 		term->cmds = ft_strsplit(term->parselst->cmd, ' ');
 		if (ft_check_builtin(term) || ft_check_in_path(term))
 		{
+			ft_refresh_env(term);
 			if (ft_check_builtin(term))
 				ft_builtin_fork(term);
 			if (term->parselst->file)

@@ -42,7 +42,6 @@ void		ft_create_process(t_term *term)
 
 	pipe(tabl);
 	term->father = fork();
-	ft_refresh_env(term);
 	if (term->father == 0)
 	{
 		ft_father(term, tabl);
@@ -67,16 +66,17 @@ int			ft_check_in_path(t_term *term)
 			term->path = ft_strdup(tabl[i]);
 	}
 	if (term->cmds[0][0] == '.' && term->cmds[0][1] == '/')
+	{
 		(access(&term->cmds[0][2], X_OK) == 0) ? term->path =\
-		ft_strdup(&term->cmds[0][2]) : ft_permission_denied(term->cmds[0]);
+		ft_strdup(&term->cmds[0][2]) : 0;
+	}
 	if (term->path)
 	{
 		term->exec = 1;
 		term->historylen++;
 		return (1);
 	}
-	else
-		ft_putendl(ft_strjoin("jush: command not found: ", term->cmds[0]));
+	ft_putendl(ft_strjoin("jush: command not found: ", ft_strdup(term->cmds[0])));
 	term->exec = 0;
 	return (0);
 }
@@ -90,7 +90,7 @@ void		ft_refresh_env(t_term *term)
 	i = 0;
 	while (lst)
 	{
-		term->env[i++] = ft_strjoin(ft_strjoin(lst->var, "="), lst->val);
+		term->env[i++] = ft_strdup(ft_strjoin(ft_strjoin(lst->var, "="), lst->val));
 		lst = lst->next;
 	}
 }

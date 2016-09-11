@@ -77,7 +77,7 @@ t_env		*ft_create_lst(char *str)
 	tabl = ft_strsplit(str, '=');
 	lst->var = tabl[0];
 	if (ft_strcmp(lst->var, "SHLVL") == 0)
-		lst->val = ft_itoa(ft_atoi(tabl[1]) + 1);
+		lst->val = ft_strdup(ft_itoa(ft_atoi(tabl[1]) + 1));
 	else
 		lst->val = tabl[1];
 	lst->next = NULL;

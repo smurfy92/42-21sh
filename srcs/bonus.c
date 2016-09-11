@@ -51,6 +51,31 @@ void		ft_check_cmds(t_term *term)
 	}
 }
 
+int			ft_check_in_env2(t_term *term, char *cmd)
+{
+	int father;
+	
+	if (cmd[0] == '.' && cmd[1] == '/')
+		(access(&cmd[2], X_OK) == 0) ? term->path =\
+		ft_strdup(&cmd[2]) : ft_permission_denied(&cmd[0]);
+	if (term->path)
+	{
+		ft_refresh_env(term);
+		father = fork();
+		if (father == 0)
+		{
+			if (term->i)
+				execve(term->path, term->cmds, NULL);
+			else
+				execve(term->path, term->cmds, term->env);
+		}
+		wait(0);
+		return (1);
+	}
+	else
+		return (0);
+}
+
 int			ft_check_in_env(t_term *term, char *cmd)
 {
 	char		**tabl;
@@ -58,6 +83,8 @@ int			ft_check_in_env(t_term *term, char *cmd)
 	t_env		*lst;
 
 	lst = term->lst;
+	if (!ft_get_val_exists(term, "PATH"))
+		return (0);
 	i = -1;
 	while (lst && ft_strcmp(lst->var, "PATH") != 0)
 		lst = lst->next;
@@ -66,23 +93,12 @@ int			ft_check_in_env(t_term *term, char *cmd)
 	{
 		tabl[i] = ft_strjoin(ft_strjoin(tabl[i], "/"), cmd);
 		if (access(tabl[i], X_OK) == 0)
-			term->path = "/usr/bin/env";
+		{
+			term->path = ft_strdup(tabl[i]);
+			break ;
+		}
 	}
-	if (cmd[0] == '.' && cmd[1] == '/')
-		(access(&cmd[2], X_OK) == 0) ? term->path =\
-		ft_strdup(&cmd[2]) : ft_permission_denied(&cmd[0]);
-	if (term->path)
-	{
-		int father;
-
-		father = fork();
-		if (father == 0)
-			execve(term->path, term->cmds, &term->path);
-		wait(0);
-		return (1);
-	}
-	else
-		return (0);
+	return (ft_check_in_env2(term, cmd));
 }
 
 void		ft_newenv_display(t_term *term)
