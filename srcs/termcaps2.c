@@ -65,11 +65,6 @@ void		ft_left_arrow(t_term *term)
 		tputs(tgetstr("le", NULL), 0, ft_outchar);
 	term->cursorpos--;
 }
-void		ft_out(char *str)
-{
-	int fd = open("/dev/ttys002", O_WRONLY|O_NONBLOCK|O_NOCTTY);
-	write(fd, str, ft_strlen(str));
-}
 
 void		ft_right_arrow(t_term *term)
 {
@@ -77,10 +72,6 @@ void		ft_right_arrow(t_term *term)
 	if (term->cursorpos == term->cmdlength)
 		return ;
 	term->cursorpos++;
-	ft_out("term->cursopos ->");
-	ft_out(ft_itoa(term->cursorpos));
-	ft_out("term->window->width ->");
-	ft_out(ft_itoa(term->window->width));
 	if (((term->cursorpos + 7) % term->window->width) == 0)
 		tputs(tgetstr("do", NULL), 0, ft_outchar);
 	else
