@@ -81,7 +81,10 @@ void		ft_create_builtin(t_term *term)
 	{
 		reset_shell();
 		ft_putendl("Exiting shell");
-		exit(0);
+		if (term->cmds[1])
+			exit(ft_atoi(term->cmds[1]));
+		else
+			exit(0);
 	}
 	term->i = 0;
 	term->u = NULL;
