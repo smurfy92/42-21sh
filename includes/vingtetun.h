@@ -49,6 +49,7 @@ typedef	struct			s_term
 	int					inhistory;
 	int					historycurrent;
 	int					parenthese;
+	struct termios		cpy_term;
 }						t_term;
 
 typedef	struct			s_u

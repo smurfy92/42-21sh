@@ -60,13 +60,16 @@ int			init_shell(int lflag)
 {
 	char			*name;
 	struct termios	term;
+	t_term			*t;
 
+	t = ft_get_term();
 	if ((name = getenv("TERM")) == NULL)
 		name = "xterm-256color";
 	if (tgetent(NULL, name) == ERR)
 		return (-1);
 	if (tcgetattr(0, &term) == -1)
 		return (-1);
+	t->cpy_term = term;
 	term.c_lflag = term.c_lflag & lflag;
 	term.c_cc[VMIN] = 1;
 	term.c_cc[VTIME] = 0;
@@ -77,14 +80,12 @@ int			init_shell(int lflag)
 
 int			reset_shell(void)
 {
-	struct termios term;
+	t_term			*t;
 
-	tputs(tgetstr("me", NULL), 1, ft_outchar);
-	tputs(tgetstr("ve", NULL), 1, ft_outchar);
-	if (tcgetattr(0, &term) == -1)
-		return (-1);
-	term.c_lflag = (ICANON | ECHO);
-	if (tcsetattr(0, 0, &term) == -1)
+	t = ft_get_term();
+	// tputs(tgetstr("me", NULL), 1, ft_outchar);
+	// tputs(tgetstr("ve", NULL), 1, ft_outchar);
+	if (tcsetattr(0, 0, &(t->cpy_term)) == -1)
 		return (-1);
 	return (0);
 }

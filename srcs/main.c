@@ -112,7 +112,8 @@ void		ft_ctrl_c(int sig)
 
 	sig = 0;
 	term = ft_get_term();
-	ioctl(0, TIOCSTI, "\n");
+	// ioctl(0, TIOCSTI, "\n");
+	ft_putchar_fd('\n', 2);
 }
 
 int			main(int argc, char **argv, char **env)
@@ -121,8 +122,10 @@ int			main(int argc, char **argv, char **env)
 
 	argv = NULL;
 	term = ft_set_term(ft_get_term(), env, ft_parse_env(env));
+	signal(SIGTSTP, ft_ctrl_c);
+	signal(SIGINT, ft_ctrl_c);
+	signal(SIGQUIT, ft_ctrl_c);
 	signal(SIGWINCH, ft_get_window_sig);
-	signal(SIGWINCH, ft_ctrl_c);
 	while (42)
 	{
 		argc = -1;

@@ -38,6 +38,7 @@ void		ft_get_window_sig(void)
 	t_term			*term;
 
 	term = ft_get_term();
+	ft_get_window(term);
 }
 
 void		ft_reset_term(t_term *term)
