@@ -12,22 +12,6 @@
 
 #include "../includes/vingtetun.h"
 
-void		ft_check_u(t_term *term, int i)
-{
-	int y;
-
-	y = 0;
-	while (ft_strcmp(term->cmds[i + 1], \
-	ft_strsplit(term->env[y], '=')[0]) != 0)
-		y++;
-	while (term->env[++y])
-	{
-		term->env[y - 1] = ft_strdup(term->env[y]);
-		(ft_strcmp(term->env[y - 1], term->env[y]) == 0) ?\
-		(term->env[y] = NULL) : 0;
-	}
-}
-
 void		ft_check_cmds(t_term *term)
 {
 	int i;
@@ -54,7 +38,7 @@ void		ft_check_cmds(t_term *term)
 int			ft_check_in_env2(t_term *term, char *cmd)
 {
 	int father;
-	
+
 	if (cmd[0] == '.' && cmd[1] == '/')
 		(access(&cmd[2], X_OK) == 0) ? term->path =\
 		ft_strdup(&cmd[2]) : ft_permission_denied(&cmd[0]);

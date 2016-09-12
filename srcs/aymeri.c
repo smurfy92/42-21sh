@@ -72,7 +72,8 @@ int			ft_check_in_path(t_term *term)
 		term->historylen++;
 		return (1);
 	}
-	ft_putendl(ft_strjoin("jush: command not found: ", ft_strdup(term->cmds[0])));
+	ft_putendl(ft_strjoin("jush: command not found: ",
+	ft_strdup(term->cmds[0])));
 	term->exec = 0;
 	return (0);
 }
@@ -86,7 +87,8 @@ void		ft_refresh_env(t_term *term)
 	i = 0;
 	while (lst)
 	{
-		term->env[i++] = ft_strdup(ft_strjoin(ft_strjoin(lst->var, "="), lst->val));
+		term->env[i++] = ft_strdup(ft_strjoin(ft_strjoin(lst->var, "="),
+		lst->val));
 		lst = lst->next;
 	}
 }

@@ -68,7 +68,6 @@ void		ft_left_arrow(t_term *term)
 
 void		ft_right_arrow(t_term *term)
 {
-	
 	if (term->cursorpos == term->cmdlength)
 		return ;
 	term->cursorpos++;

@@ -50,7 +50,6 @@ int			ft_check_builtin(t_term *term)
 	char	**tabl;
 
 	tabl = ft_strsplit(term->parselst->cmd, ' ');
-
 	if (ft_strcmp(tabl[0], "cd") == 0)
 		return (1);
 	else if (ft_strcmp(tabl[0], "env") == 0)

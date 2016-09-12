@@ -106,27 +106,13 @@ void		ft_boucle(t_term *term)
 	}
 }
 
-void		ft_ctrl_c(int sig)
-{
-	t_term			*term;
-
-	sig = 0;
-	term = ft_get_term();
-	ft_putchar_fd('\n', 2);
-	ft_reset_term(term);
-	term->test = 1;
-}
-
 int			main(int argc, char **argv, char **env)
 {
 	t_term		*term;
 
 	argv = NULL;
 	term = ft_set_term(ft_get_term(), env, ft_parse_env(env));
-	signal(SIGTSTP, ft_ctrl_c);
-	signal(SIGINT, ft_ctrl_c);
-	signal(SIGQUIT, ft_ctrl_c);
-	signal(SIGWINCH, ft_get_window_sig);
+	ft_handle_signal();
 	while (42)
 	{
 		argc = -1;
