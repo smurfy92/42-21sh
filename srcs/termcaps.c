@@ -47,9 +47,7 @@ void		ft_process3(t_term *term)
 	int i;
 
 	i = 1;
-	if (term->buf[0] == 3 && term->cmdactual)
-		ft_putchar_fd('\n', 2);
-	else if (ft_is_shift_down(term))
+	if (ft_is_shift_down(term))
 	{
 		if (!term->copy)
 			return ;
@@ -62,11 +60,6 @@ void		ft_process3(t_term *term)
 		ft_putchar('\n');
 		reset_shell();
 		exit(0);
-	}
-	else if (term->buf[0] == 3)
-	{
-		ft_putchar('\n');
-		ft_reset_term(term);
 	}
 	else
 		ft_print_buf(term, term->buf);

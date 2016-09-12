@@ -112,8 +112,9 @@ void		ft_ctrl_c(int sig)
 
 	sig = 0;
 	term = ft_get_term();
-	// ioctl(0, TIOCSTI, "\n");
 	ft_putchar_fd('\n', 2);
+	ft_reset_term(term);
+	term->test = 1;
 }
 
 int			main(int argc, char **argv, char **env)
@@ -130,7 +131,10 @@ int			main(int argc, char **argv, char **env)
 	{
 		argc = -1;
 		ft_get_history(term);
-		ft_reset_term(term);
+		if (!term->test)
+			ft_reset_term(term);
+		else
+			term->test = 0;
 		ft_boucle(term);
 		(ft_strlen(term->cmdactual) > 0) ?
 		ft_add_history(term, term->cmdactual) : 0;

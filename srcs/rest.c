@@ -82,9 +82,7 @@ int			reset_shell(void)
 {
 	t_term			*t;
 
-	t = ft_get_term();
-	// tputs(tgetstr("me", NULL), 1, ft_outchar);
-	// tputs(tgetstr("ve", NULL), 1, ft_outchar);
+	t = ft_get_term();;
 	if (tcsetattr(0, 0, &(t->cpy_term)) == -1)
 		return (-1);
 	return (0);

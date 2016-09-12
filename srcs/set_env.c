@@ -61,6 +61,7 @@ void		ft_check_env(t_term *term)
 t_term		*ft_set_term(t_term *term, char **env, t_env *lst)
 {
 	term->buf = (char*)malloc(sizeof(char) * BUFFSIZE);
+	term->test = 0;
 	term->u = NULL;
 	term->exec = 1;
 	term->cursorpos = 0;
