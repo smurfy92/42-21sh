@@ -31,6 +31,9 @@ void		ft_cd_home(t_term *term)
 
 void		ft_cd_suite(t_term *term)
 {
+	char				*buf;
+
+	buf = NULL;
 	ft_process_unsetenv(term, "OLDPWD");
 	ft_process_setenv(term, "OLDPWD", getwd(buf));
 	chdir(term->cmds[1]);

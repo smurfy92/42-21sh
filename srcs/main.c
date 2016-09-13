@@ -125,7 +125,7 @@ int			main(int argc, char **argv, char **env)
 		(ft_strlen(term->cmdactual) > 0) ?
 		ft_add_history(term, term->cmdactual) : 0;
 		reset_shell();
-		ft_putchar('\n');
+		ft_putchar_fd('\n', 2);
 		term->cmdsplit = ft_strsplit(term->cmdactual, ';');
 		while (term->cmdsplit && term->cmdsplit[++argc])
 			ft_process_exec(term, term->cmdsplit[argc]);

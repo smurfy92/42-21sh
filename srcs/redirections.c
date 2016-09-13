@@ -92,7 +92,7 @@ void		ft_create_heredoc(t_term *term)
 		S_IRGRP | S_IWGRP | S_IWUSR);
 		ft_create_heredoc2(term, tabl[i], fd, i);
 	}
-	ft_putchar('\n');
+	ft_putchar_fd('\n', 2);
 	close(fd);
 	if (!term->parselst->file)
 		term->parselst->file = ft_strjoin(ft_strjoin(ft_get_env_by_name(term,

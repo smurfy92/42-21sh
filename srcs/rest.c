@@ -53,7 +53,7 @@ void		ft_get_cmd(t_term *term, char *str)
 	term->cmdlength = ft_strlen(term->cmdactual);
 	if (term->inhistory)
 		term->history->var = term->cmdactual;
-	ft_putstr(str);
+	ft_putstr_fd(str, 2);
 }
 
 int			init_shell(int lflag)
