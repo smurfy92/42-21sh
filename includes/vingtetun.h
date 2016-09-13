@@ -117,6 +117,7 @@ int						ft_get_val_exists(t_term *term, char *str);
 int						ft_check_in_env(t_term *term, char *cmd);
 int						init_shell(int lflag);
 int						ft_check_builtin(t_term *term);
+int						ft_is_printable(char *order);
 int						ft_is_space(char c);
 void					ft_handle_signal(void);
 void					ft_check_u(t_term *term, int i);

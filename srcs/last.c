@@ -74,3 +74,14 @@ void		ft_check_u(t_term *term, int i)
 		(term->env[y] = NULL) : 0;
 	}
 }
+
+int			ft_is_printable(char *order)
+{
+	int	i;
+
+	i = -1;
+	while (order[++i] != '\0')
+		if (ft_isprint(order[i]) == false)
+			return (0);
+	return (1);
+}

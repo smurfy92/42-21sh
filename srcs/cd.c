@@ -29,6 +29,15 @@ void		ft_cd_home(t_term *term)
 	chdir(ft_get_val(term, "HOME"));
 }
 
+void		ft_cd_suite(t_term *term)
+{
+	ft_process_unsetenv(term, "OLDPWD");
+	ft_process_setenv(term, "OLDPWD", getwd(buf));
+	chdir(term->cmds[1]);
+	ft_process_unsetenv(term, "PWD");
+	ft_process_setenv(term, "PWD", getwd(buf));
+}
+
 void		ft_cd(t_term *term)
 {
 	char				*buf;
@@ -54,11 +63,7 @@ void		ft_cd(t_term *term)
 			"cd: no such file or directory: ", term->cmds[1])));
 		}
 	}
-	ft_process_unsetenv(term, "OLDPWD");
-	ft_process_setenv(term, "OLDPWD", getwd(buf));
-	chdir(term->cmds[1]);
-	ft_process_unsetenv(term, "PWD");
-	ft_process_setenv(term, "PWD", getwd(buf));
+	ft_cd_suite(term);
 }
 
 void		ft_create_builtin(t_term *term)
