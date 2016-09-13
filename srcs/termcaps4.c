@@ -52,6 +52,7 @@ void		ft_print_buf(t_term *term, char *str)
 {
 	int i;
 
+	term = ft_get_term();
 	i = term->cursorpos - 1;
 	ft_get_cmd(term, str);
 	if (term->cursorpos < term->cmdlength)

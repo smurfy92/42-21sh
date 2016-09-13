@@ -42,6 +42,17 @@ void		ft_go_down(t_term *term)
 		ft_right_cursor(term);
 }
 
+int		ft_is_printable(char *order)
+{
+	int	i;
+
+	i = -1;
+	while (order[++i] != '\0')
+		if (ft_isprint(order[i]) == false)
+			return (0);
+	return (1);
+}
+
 void		ft_process3(t_term *term)
 {
 	int i;
@@ -61,7 +72,7 @@ void		ft_process3(t_term *term)
 		reset_shell();
 		exit(0);
 	}
-	else
+	else if (ft_is_printable(term->buf))
 		ft_print_buf(term, term->buf);
 }
 

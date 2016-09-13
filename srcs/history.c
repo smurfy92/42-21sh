@@ -14,7 +14,7 @@
 
 int			ft_outchar(int c)
 {
-	return (write(1, &c, 1));
+	return (write(2, &c, 1));
 }
 
 void		ft_add_history(t_term *term, char *cmd)

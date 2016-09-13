@@ -14,19 +14,7 @@
 
 void		ft_cd_error(char *cmd)
 {
-	ft_putendl(ft_strjoin("cd: no such file or directory: ", cmd));
-}
-
-void		ft_cd_else(t_term *term)
-{
-	struct stat			bufstat;
-
-	(access(term->cmds[1], R_OK)) ? ft_cd_error(term->cmds[1]) : 0;
-	if (lstat(term->cmds[1], &bufstat) == -1)
-	{
-		return (ft_putendl(ft_strjoin(
-		"cd: no such file or directory: ", term->cmds[1])));
-	}
+	ft_putendl(ft_strjoin("cd: permission denied: ", cmd));
 }
 
 void		ft_cd_home(t_term *term)
@@ -37,13 +25,14 @@ void		ft_cd_home(t_term *term)
 	if (!ft_get_val_exists(term, "HOME"))
 		return (ft_putendl("NO HOME"));
 	ft_process_unsetenv(term, "OLDPWD");
-	ft_process_setenv(term, "OLDPWD", getwd(buf));
+	ft_process_setenv(term, "OLDPWD", ft_get_val(term, "PWD"));
 	chdir(ft_get_val(term, "HOME"));
 }
 
 void		ft_cd(t_term *term)
 {
-	char	*buf;
+	char				*buf;
+	struct stat			bufstat;
 
 	buf = NULL;
 	if (!ft_get_val_exists(term, "OLDPWD"))
@@ -56,7 +45,15 @@ void		ft_cd(t_term *term)
 	ft_strcmp(term->cmds[1], "~") == 0))
 		return (ft_cd_home(term));
 	else
-		ft_cd_else(term);
+	{
+		if (access(term->cmds[1], R_OK))
+			return (ft_cd_error(term->cmds[1]));
+		if (lstat(term->cmds[1], &bufstat) == -1)
+		{
+			return (ft_putendl(ft_strjoin(
+			"cd: no such file or directory: ", term->cmds[1])));
+		}
+	}
 	ft_process_unsetenv(term, "OLDPWD");
 	ft_process_setenv(term, "OLDPWD", getwd(buf));
 	chdir(term->cmds[1]);

@@ -61,9 +61,9 @@ void		ft_create_redirections(t_parse *parse)
 void		ft_create_heredoc2(t_term *term, char *str, int fd, int i)
 {
 	if (i == 0)
-		ft_putstr("heredoc-> ");
+		ft_putstr_fd("heredoc-> ", 2);
 	else
-		ft_putstr("\nheredoc-> ");
+		ft_putstr_fd("\nheredoc-> ", 2);
 	while (42)
 	{
 		ft_reset_term(term);
@@ -72,7 +72,7 @@ void		ft_create_heredoc2(t_term *term, char *str, int fd, int i)
 		if (ft_strequ(term->cmdactual, str))
 			break ;
 		ft_putendl_fd(term->cmdactual, fd);
-		ft_putstr("\nheredoc-> ");
+		ft_putstr_fd("\nheredoc-> ", 2);
 	}
 }
 

@@ -27,7 +27,7 @@ void		ft_addfile(t_term *term, t_parse *parse, int i)
 	if (end == i)
 	{
 		term->fail = 1;
-		return (ft_putendl("jush : parse error near `\\n'"));
+		return (ft_putendl_fd("jush : parse error near `\\n'", 2));
 	}
 	tmp = ft_strsub(&parse->cmd[i], 0, end - i);
 	parse->file = ft_strdup(tmp);

@@ -62,7 +62,7 @@ void		ft_reset_term(t_term *term)
 	if (term->inheredoc)
 		return ;
 	if (term->exec)
-		write(1, "\033[92mjush-> \033[0m", 17);
+		write(2, "\033[92mjush-> \033[0m", 17);
 	else
-		write(1, "\033[91mjush-> \033[0m", 17);
+		write(2, "\033[91mjush-> \033[0m", 17);
 }
