@@ -81,6 +81,7 @@ void		ft_create_file_dup(t_term *term)
 		fd = open(term->parselst->file, O_RDONLY);
 		while ((get_next_line(fd, &line)) > 0)
 			ft_putendl(line);
+		close(fd);
 		exit(0);
 	}
 	dup2(tabl[0], STDIN_FILENO);

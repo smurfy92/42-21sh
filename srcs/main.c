@@ -48,7 +48,10 @@ void		ft_father_process(t_term *term)
 			if (ft_check_builtin(term))
 				ft_builtin_fork(term);
 			if (term->parselst->file)
+			{
 				ft_create_file_dup(term);
+				term->parselst->file = NULL;
+			}
 			if (!term->parselst->next && !term->parselst->sgred &&
 			!term->parselst->dbred)
 			{
