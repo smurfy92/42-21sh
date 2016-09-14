@@ -36,7 +36,7 @@ void		ft_adddoubleredirection(t_term *term, t_parse *parse, int i)
 		return (ft_putendl_fd("jush : parse error near `\\n", 2));
 	}
 	start = i - 2;
-	while (parse->cmd[i] && !ft_isalpha(parse->cmd[i]))
+	while (parse->cmd[i] && !ft_isalpha(parse->cmd[i]) && parse->cmd[i] != '/')
 		i++;
 	end = i;
 	while (parse->cmd[end] && !ft_end_of_red(parse->cmd[end]))
@@ -65,7 +65,7 @@ void		ft_addredirection(t_term *term, t_parse *parse, int i)
 		return (ft_putendl_fd("jush : parse error near `\\n'", 2));
 	}
 	start = i - 1;
-	while (parse->cmd[i] && !ft_isalpha(parse->cmd[i]))
+	while (parse->cmd[i] && !ft_isalpha(parse->cmd[i]) && parse->cmd[i] != '/')
 		i++;
 	end = i;
 	while (parse->cmd[end] && !ft_end_of_red(parse->cmd[end]))

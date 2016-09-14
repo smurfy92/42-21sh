@@ -19,7 +19,7 @@ void		ft_addfile(t_term *term, t_parse *parse, int i)
 	char	*tmp;
 
 	start = i - 1;
-	while (!ft_isalpha(parse->cmd[i]) && parse->cmd[i])
+	while (!ft_isalpha(parse->cmd[i]) && parse->cmd[i] && parse->cmd[i] != '/')
 		i++;
 	end = i;
 	while (parse->cmd[end] && !ft_end_of_red(parse->cmd[end]))

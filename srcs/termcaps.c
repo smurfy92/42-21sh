@@ -57,9 +57,14 @@ void		ft_process3(t_term *term)
 	}
 	else if (term->buf[0] == 4 && !term->cmdactual)
 	{
-		ft_putchar('\n');
-		reset_shell();
-		exit(0);
+		if (term->inheredoc)
+			ft_putendl_fd("EOF\n", 2);
+		else
+		{
+			ft_putchar_fd('\n', 2);
+			reset_shell();
+			exit(0);
+		}
 	}
 	else if (ft_is_printable(term->buf))
 		ft_print_buf(term, term->buf);

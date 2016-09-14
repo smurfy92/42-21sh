@@ -27,7 +27,9 @@ void		ft_copy_redirections(t_term *term, t_parse *parse)
 	if (parse->dbred)
 		fd = open(parse->dbred, O_WRONLY, S_IRUSR);
 	while ((get_next_line(fd2, &line)) > 0)
+	{
 		ft_putendl_fd(line, fd);
+	}
 }
 
 void		ft_write_in_tmp(t_term *term, char *cmd)

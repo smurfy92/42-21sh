@@ -21,6 +21,7 @@
 # include <curses.h>
 # include <sys/ioctl.h>
 # include <term.h>
+# include <errno.h>
 
 typedef	struct			s_term
 {
