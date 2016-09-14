@@ -49,7 +49,7 @@ $(NAME): $(OBJ)
 	@echo "$(CY)[MINISH] :$(CE) $(CG)Creating Library$(CE)";
 	-@make -C libft nohd
 	@echo "$(CY)[MINISH] :$(CE) $(CG)Compiling 21sh ...$(CE)";
-	@gcc -g -o $(NAME) $(FLAG) $(SRC) $(LIB) -lncurses
+	@gcc -o $(NAME) $(FLAG) $(SRC) $(LIB) -lncurses
 
 %.o: %.c
 	@echo "$(CY)[MINISH] :$(CE) $(CG)Compiling $<$(CE)";
