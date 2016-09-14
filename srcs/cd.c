@@ -52,7 +52,7 @@ void		ft_cd(t_term *term)
 	if (!ft_get_val_exists(term, "PWD"))
 		ft_process_setenv(term, "PWD", getwd(buf));
 	if (term->cmds[1] && ft_strcmp(term->cmds[1], "-") == 0)
-		chdir(ft_get_env_by_name(term, "OLDPWD"));
+		term->cmds[1] = ft_strdup(ft_get_env_by_name(term, "OLDPWD"));
 	else if (!term->cmds[1] || (term->cmds[1] &&
 	ft_strcmp(term->cmds[1], "~") == 0))
 		return (ft_cd_home(term));

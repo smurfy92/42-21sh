@@ -37,10 +37,8 @@ void		ft_father_process(t_term *term)
 {
 	while (term->parselst)
 	{
-		if (term->parselst->close1)
-			close(1);
-		if (term->parselst->close2)
-			close(2);
+		(term->parselst->close1) ? close(1) : 0;
+		(term->parselst->close2) ? close(2) : 0;
 		term->cmds = ft_strsplit(term->parselst->cmd, ' ');
 		if (ft_check_builtin(term) || ft_check_in_path(term))
 		{
