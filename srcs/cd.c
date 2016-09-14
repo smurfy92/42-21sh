@@ -12,11 +12,6 @@
 
 #include "../includes/vingtetun.h"
 
-void		ft_cd_error(char *cmd)
-{
-	ft_putendl(ft_strjoin("cd: permission denied: ", cmd));
-}
-
 void		ft_cd_home(t_term *term)
 {
 	char				*buf;

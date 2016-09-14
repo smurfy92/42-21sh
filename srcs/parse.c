@@ -12,21 +12,6 @@
 
 #include "../includes/vingtetun.h"
 
-void		ft_check_close1(t_parse *parse, int i)
-{
-	char *tmp;
-
-	if (parse->cmd[i + 4])
-	{
-		tmp = ft_strdup(&parse->cmd[i + 4]);
-		parse->cmd[i] = '\0';
-		parse->cmd = ft_strjoin(parse->cmd, tmp);
-	}
-	else
-		parse->cmd[i] = '\0';
-	parse->close1 = 1;
-}
-
 void		ft_check_close2(t_parse *parse, int i)
 {
 	char *tmp;
@@ -40,11 +25,6 @@ void		ft_check_close2(t_parse *parse, int i)
 	else
 		parse->cmd[i] = '\0';
 	parse->close2 = 1;
-}
-
-void		ft_check_var()
-{
-
 }
 
 void		ft_replace_vars(t_term *term, t_parse *parse, int i)
@@ -70,7 +50,8 @@ void		ft_replace_vars(t_term *term, t_parse *parse, int i)
 		{
 			tmp2 = ft_strdup(&parse->cmd[i]);
 			parse->cmd[start - 1] = '\0';
-			parse->cmd = ft_strjoin(ft_strjoin(parse->cmd, ft_get_val(term, tmp)), tmp2);
+			parse->cmd = ft_strjoin(ft_strjoin(parse->cmd,
+			ft_get_val(term, tmp)), tmp2);
 		}
 	}
 }

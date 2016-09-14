@@ -35,7 +35,8 @@ SRC =	srcs/main.c \
 		srcs/separators2.c \
 		srcs/separators3.c \
 		srcs/redirections.c \
-		srcs/last.c
+		srcs/last.c \
+		srcs/last2.c
 OBJ = $(SRC:.c=.o)
 FLAG = -Wall -Werror -Wextra
 CG = \033[92m

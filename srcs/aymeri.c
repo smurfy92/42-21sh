@@ -12,30 +12,6 @@
 
 #include "../includes/vingtetun.h"
 
-void		ft_father(t_term *term, int *tabl)
-{
-	char	*tmp;
-	int		y;
-
-	tmp = NULL;
-	dup2(tabl[1], STDOUT_FILENO);
-	close(tabl[0]);
-	(y = -1) ? ft_check_cmds(term) : 0;
-	(term->i) ? ft_env_i(term) : 0;
-	while (term->cmds[++y])
-		(ft_strcmp(term->cmds[y], term->path) == 0) ?\
-		term->cmds = &term->cmds[y] : 0;
-	y = 0;
-	(!term->cmds[1]) ? (tmp = term->cmds[0]) : 0;
-	while (term->cmds[++y])
-	{
-		(!tmp) ? (tmp = ft_strdup(term->cmds[y - 1])) : 0;
-		tmp = ft_strjoin(ft_strjoin(tmp, " "), term->cmds[y]);
-	}
-	execve(term->path, term->cmds, term->env);
-	term->path = NULL;
-}
-
 void		ft_create_process(t_term *term)
 {
 	int		tabl[2];
@@ -47,6 +23,16 @@ void		ft_create_process(t_term *term)
 	dup2(tabl[0], STDIN_FILENO);
 	close(tabl[1]);
 	wait(0);
+}
+
+void		ft_check_in_path2(t_term *term)
+{
+	if (term->cmds[0][0] == '.' && term->cmds[0][1] == '/' && term->cmds[0][2])
+		(access(&term->cmds[0][2], X_OK) == 0) ? term->path =\
+		ft_strdup(&term->cmds[0][2]) : 0;
+	if (term->cmds[0][0] == '/')
+		(access(term->cmds[0], X_OK) == 0) ? term->path =\
+		ft_strdup(term->cmds[0]) : 0;
 }
 
 int			ft_check_in_path(t_term *term)
@@ -63,12 +49,7 @@ int			ft_check_in_path(t_term *term)
 		if (access(tabl[i], X_OK) == 0)
 			term->path = ft_strdup(tabl[i]);
 	}
-	if (term->cmds[0][0] == '.' && term->cmds[0][1] == '/' && term->cmds[0][2])
-		(access(&term->cmds[0][2], X_OK) == 0) ? term->path =\
-		ft_strdup(&term->cmds[0][2]) : 0;
-	if (term->cmds[0][0] == '/')
-		(access(term->cmds[0], X_OK) == 0) ? term->path =\
-		ft_strdup(term->cmds[0]) : 0;
+	ft_check_in_path2(term);
 	if (term->path)
 	{
 		term->exec = 1;
