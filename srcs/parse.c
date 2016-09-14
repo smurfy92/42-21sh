@@ -42,6 +42,39 @@ void		ft_check_close2(t_parse *parse, int i)
 	parse->close2 = 1;
 }
 
+void		ft_check_var()
+{
+
+}
+
+void		ft_replace_vars(t_term *term, t_parse *parse, int i)
+{
+	int		start;
+	char	*tmp;
+	char	*tmp2;
+
+	start = i;
+	while (parse->cmd[i] && ft_isalpha(parse->cmd[i]))
+		i++;
+	tmp = ft_strsub(&parse->cmd[start], 0, i - start);
+	if (!ft_get_val_exists(term, tmp))
+		term->minus = 1;
+	else
+	{
+		if (!parse->cmd[i + 1])
+		{
+			parse->cmd[start - 1] = '\0';
+			parse->cmd = ft_strjoin(parse->cmd, ft_get_val(term, tmp));
+		}
+		else
+		{
+			tmp2 = ft_strdup(&parse->cmd[i]);
+			parse->cmd[start - 1] = '\0';
+			parse->cmd = ft_strjoin(ft_strjoin(parse->cmd, ft_get_val(term, tmp)), tmp2);
+		}
+	}
+}
+
 void		ft_parse_redirections2(t_term *term, t_parse *parse, int i)
 {
 	if (parse->cmd[i] == '>' && parse->cmd[i + 1] &&
@@ -60,6 +93,8 @@ void		ft_parse_redirections2(t_term *term, t_parse *parse, int i)
 	else if (parse->cmd[i] == '2' && parse->cmd[i + 3] && parse->cmd[i + 1]
 	== '>' && parse->cmd[i + 2] == '&' && parse->cmd[i + 3] == '-')
 		ft_check_close2(parse, i);
+	else if (parse->cmd[i] == '$' && parse->cmd[i + 1])
+		ft_replace_vars(term, parse, i + 1);
 	else
 		term->minus = 1;
 }

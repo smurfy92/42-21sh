@@ -66,6 +66,9 @@ int			ft_check_in_path(t_term *term)
 	if (term->cmds[0][0] == '.' && term->cmds[0][1] == '/' && term->cmds[0][2])
 		(access(&term->cmds[0][2], X_OK) == 0) ? term->path =\
 		ft_strdup(&term->cmds[0][2]) : 0;
+	if (term->cmds[0][0] == '/')
+		(access(term->cmds[0], X_OK) == 0) ? term->path =\
+		ft_strdup(term->cmds[0]) : 0;
 	if (term->path)
 	{
 		term->exec = 1;
