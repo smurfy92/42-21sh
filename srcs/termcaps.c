@@ -33,13 +33,22 @@ void		ft_go_up(t_term *term)
 	}
 }
 
-void		ft_go_down(t_term *term)
+void		ft_process4(t_term *term)
 {
-	int i;
-
-	i = -1;
-	while (++i < term->window->width && term->cursorpos < term->cmdlength)
+	if (term->buf[0] == 4 && !term->cmdactual)
+	{
+		ft_putchar_fd('\n', 2);
+		reset_shell();
+		exit(0);
+	}
+	else if (term->buf[0] == 4 && term->cursorpos != 0 &&
+	term->cursorpos < term->cmdlength)
+	{
 		ft_right_cursor(term);
+		ft_backspace(term);
+	}
+	else if (ft_is_printable(term->buf))
+		ft_print_buf(term, term->buf);
 }
 
 void		ft_process3(t_term *term)
@@ -57,19 +66,8 @@ void		ft_process3(t_term *term)
 	}
 	else if (term->buf[0] == 4 && term->inheredoc)
 		ft_ctrl_d(term);
-	else if (term->buf[0] == 4 && !term->cmdactual)
-	{
-		ft_putchar_fd('\n', 2);
-		reset_shell();
-		exit(0);
-	}
-	else if (term->buf[0] == 4 && term->cursorpos != 0 && term->cursorpos < term->cmdlength)
-	{
-		ft_right_cursor(term);
-		ft_backspace(term);
-	}
-	else if (ft_is_printable(term->buf))
-		ft_print_buf(term, term->buf);
+	else
+		ft_process4(term);
 }
 
 void		ft_process2(t_term *term)

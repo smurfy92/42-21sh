@@ -65,3 +65,12 @@ void		ft_ctrl_d(t_term *term)
 		ft_putstr_fd("\nheredoc-> ", 2);
 	}
 }
+
+void		ft_go_down(t_term *term)
+{
+	int i;
+
+	i = -1;
+	while (++i < term->window->width && term->cursorpos < term->cmdlength)
+		ft_right_cursor(term);
+}
