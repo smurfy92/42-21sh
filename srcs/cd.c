@@ -45,7 +45,7 @@ void		ft_cd2(t_term *term, char *buf)
 	if (term->cmds[1] && ft_strcmp(term->cmds[1], "-") == 0)
 	{
 		term->cmds[1] = ft_strdup(ft_get_env_by_name(term, "OLDPWD"));
-		ft_putendl(term->cmds[1]);
+		ft_putendl_fd(term->cmds[1], 2);
 	}
 }
 

@@ -55,16 +55,31 @@ void		ft_process3(t_term *term)
 		while (i++ < (int)ft_strlen(term->copy))
 			ft_right_arrow(term);
 	}
-	else if (term->buf[0] == 4 && !term->cmdactual)
+	else if (term->buf[0] == 4 && term->inheredoc)
 	{
-		if (term->inheredoc)
-			ft_putendl_fd("EOF\n", 2);
+		if (!term->cmdactual)
+		{
+			term->inheredoc = 0;
+			term->cmdactual = "EOF";
+		}
 		else
 		{
-			ft_putchar_fd('\n', 2);
-			reset_shell();
-			exit(0);
+			ft_putendl_fd(term->cmdactual, term->heredocfd);
+			ft_reset_term(term);
+			ft_putstr_fd("\nheredoc-> ", 2);
 		}
+
+	}
+	else if (term->buf[0] == 4 && !term->cmdactual)
+	{
+		ft_putchar_fd('\n', 2);
+		reset_shell();
+		exit(0);
+	}
+	else if (term->buf[0] == 4 && term->cursorpos != 0 && term->cursorpos < term->cmdlength)
+	{
+		ft_right_cursor(term);
+		ft_backspace(term);
 	}
 	else if (ft_is_printable(term->buf))
 		ft_print_buf(term, term->buf);

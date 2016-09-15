@@ -27,9 +27,7 @@ void		ft_copy_redirections(t_term *term, t_parse *parse)
 	if (parse->dbred)
 		fd = open(parse->dbred, O_WRONLY, S_IRUSR);
 	while ((get_next_line(fd2, &line)) > 0)
-	{
 		ft_putendl_fd(line, fd);
-	}
 }
 
 void		ft_write_in_tmp(t_term *term, char *cmd)
@@ -62,15 +60,21 @@ void		ft_create_redirections(t_parse *parse)
 
 void		ft_create_heredoc2(t_term *term, char *str, int fd, int i)
 {
+	term->cmdlength = ft_strlen(term->cmdactual) - 12;
+	ft_go_end(term);
 	if (i == 0)
 		ft_putstr_fd("heredoc-> ", 2);
 	else
-		ft_putstr_fd("\nheredoc-> ", 2);
+	 	ft_putstr_fd("\nheredoc-> ", 2);
 	while (42)
 	{
 		ft_reset_term(term);
 		while ((read(0, term->buf, BUFFSIZE)) && term->buf[0] != 10)
+		{
 			ft_process(term);
+			if (!term->inheredoc)
+				break ;
+		}
 		if (ft_strequ(term->cmdactual, str))
 			break ;
 		ft_putendl_fd(term->cmdactual, fd);
@@ -82,20 +86,20 @@ void		ft_create_heredoc(t_term *term)
 {
 	int		i;
 	char	**tabl;
-	int		fd;
 
 	i = -1;
 	tabl = ft_strsplit(term->parselst->heredoc, ';');
 	term->inheredoc = 1;
 	while (tabl && tabl[++i])
 	{
-		fd = open(ft_strjoin(ft_strjoin(ft_get_env_by_name(term, "HOME"), "/"),
-		".21shheredoctmp"), O_WRONLY | O_CREAT | O_APPEND | O_TRUNC, S_IRUSR |
+		term->heredocfd = open(ft_strjoin(ft_strjoin(ft_get_env_by_name(term,
+		"HOME"), "/"), ".21shheredoctmp"), O_WRONLY | O_CREAT | O_APPEND |
+		O_TRUNC, S_IRUSR |
 		S_IRGRP | S_IWGRP | S_IWUSR);
-		ft_create_heredoc2(term, tabl[i], fd, i);
+		ft_create_heredoc2(term, tabl[i], term->heredocfd, i);
 	}
 	ft_putchar_fd('\n', 2);
-	close(fd);
+	close(term->heredocfd);
 	if (!term->parselst->file)
 		term->parselst->file = ft_strjoin(ft_strjoin(ft_get_env_by_name(term,
 		"HOME"), "/"), ".21shheredoctmp");

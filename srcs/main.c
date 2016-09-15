@@ -74,7 +74,9 @@ void		ft_process_exec(t_term *term, char *cmdsplit)
 		return ;
 	term->cmds = ft_strsplit(term->parselst->cmd, ' ');
 	if (term->parselst->heredoc)
+	{
 		ft_create_heredoc(term);
+	}
 	if (ft_check_builtin(term) && !term->parselst->next)
 	{
 		ft_create_builtin(term);

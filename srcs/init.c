@@ -53,7 +53,6 @@ void		ft_reset_term(t_term *term)
 	term->separators = "";
 	term->cursorpos = 0;
 	term->cmdlength = 0;
-	term->cmdsplit = NULL;
 	term->path = NULL;
 	term->cmdactual = NULL;
 	ft_bzero(term->cmdactual, ft_strlen(term->cmdactual));
