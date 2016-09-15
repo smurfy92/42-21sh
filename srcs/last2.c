@@ -50,3 +50,18 @@ void		ft_father(t_term *term, int *tabl)
 	execve(term->path, term->cmds, term->env);
 	term->path = NULL;
 }
+
+void		ft_ctrl_d(t_term *term)
+{
+	if (!term->cmdactual)
+	{
+		term->inheredoc = 0;
+		term->cmdactual = "EOF";
+	}
+	else
+	{
+		ft_putendl_fd(term->cmdactual, term->heredocfd);
+		ft_reset_term(term);
+		ft_putstr_fd("\nheredoc-> ", 2);
+	}
+}

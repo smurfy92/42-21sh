@@ -121,6 +121,7 @@ int						init_shell(int lflag);
 int						ft_check_builtin(t_term *term);
 int						ft_is_printable(char *order);
 int						ft_is_space(char c);
+void					ft_ctrl_d(t_term *term);
 void					ft_check_close1(t_parse *parse, int i);
 void					ft_father(t_term *term, int *tabl);
 void					ft_cd_error(char *cmd);

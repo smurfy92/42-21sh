@@ -58,7 +58,13 @@ void		ft_replace_vars(t_term *term, t_parse *parse, int i)
 
 void		ft_parse_redirections2(t_term *term, t_parse *parse, int i)
 {
-	if (parse->cmd[i] == '>' && parse->cmd[i + 1] &&
+	if (parse->cmd[i] == '1' && parse->cmd[i + 3] && parse->cmd[i + 1]
+	== '>' && parse->cmd[i + 2] == '&' && parse->cmd[i + 3] == '-')
+		ft_check_close1(parse, i);
+	else if (parse->cmd[i] == '2' && parse->cmd[i + 3] && parse->cmd[i + 1]
+	== '>' && parse->cmd[i + 2] == '&' && parse->cmd[i + 3] == '-')
+		ft_check_close2(parse, i);
+	else if (parse->cmd[i] == '>' && parse->cmd[i + 1] &&
 	parse->cmd[i + 1] == '>')
 		ft_adddoubleredirection(term, parse, i + 2);
 	else if (parse->cmd[i] == '>')
@@ -68,12 +74,6 @@ void		ft_parse_redirections2(t_term *term, t_parse *parse, int i)
 		ft_addheredoc(term, parse, i + 2);
 	else if (parse->cmd[i] == '<')
 		ft_addfile(term, parse, i + 1);
-	else if (parse->cmd[i] == '1' && parse->cmd[i + 3] && parse->cmd[i + 1]
-	== '>' && parse->cmd[i + 2] == '&' && parse->cmd[i + 3] == '-')
-		ft_check_close1(parse, i);
-	else if (parse->cmd[i] == '2' && parse->cmd[i + 3] && parse->cmd[i + 1]
-	== '>' && parse->cmd[i + 2] == '&' && parse->cmd[i + 3] == '-')
-		ft_check_close2(parse, i);
 	else if (parse->cmd[i] == '$' && parse->cmd[i + 1])
 		ft_replace_vars(term, parse, i + 1);
 	else

@@ -56,20 +56,7 @@ void		ft_process3(t_term *term)
 			ft_right_arrow(term);
 	}
 	else if (term->buf[0] == 4 && term->inheredoc)
-	{
-		if (!term->cmdactual)
-		{
-			term->inheredoc = 0;
-			term->cmdactual = "EOF";
-		}
-		else
-		{
-			ft_putendl_fd(term->cmdactual, term->heredocfd);
-			ft_reset_term(term);
-			ft_putstr_fd("\nheredoc-> ", 2);
-		}
-
-	}
+		ft_ctrl_d(term);
 	else if (term->buf[0] == 4 && !term->cmdactual)
 	{
 		ft_putchar_fd('\n', 2);

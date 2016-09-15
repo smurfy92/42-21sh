@@ -65,7 +65,7 @@ void		ft_create_heredoc2(t_term *term, char *str, int fd, int i)
 	if (i == 0)
 		ft_putstr_fd("heredoc-> ", 2);
 	else
-	 	ft_putstr_fd("\nheredoc-> ", 2);
+		ft_putstr_fd("\nheredoc-> ", 2);
 	while (42)
 	{
 		ft_reset_term(term);
