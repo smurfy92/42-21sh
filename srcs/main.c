@@ -74,9 +74,9 @@ void		ft_process_exec(t_term *term, char *cmdsplit)
 		return ;
 	term->cmds = ft_strsplit(term->parselst->cmd, ' ');
 	if (term->parselst->heredoc)
-	{
 		ft_create_heredoc(term);
-	}
+	if (term->fail)
+		return ;
 	if (ft_check_builtin(term) && !term->parselst->next)
 	{
 		ft_create_builtin(term);
@@ -120,10 +120,7 @@ int			main(int argc, char **argv, char **env)
 	{
 		argc = -1;
 		ft_get_history(term);
-		if (!term->test)
-			ft_reset_term(term);
-		else
-			term->test = 0;
+		(!term->test) ? ft_reset_term(term) : (term->test = 0);
 		ft_boucle(term);
 		(ft_strlen(term->cmdactual) > 0) ?
 		ft_add_history(term, term->cmdactual) : 0;

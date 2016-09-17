@@ -48,8 +48,15 @@ void		ft_ctrl_c(int sig)
 	reset_shell();
 	term = ft_get_term();
 	ft_putchar_fd('\n', 2);
-	ft_reset_term(term);
 	term->test = 1;
+	if (term->inheredoc)
+	{
+		term->inheredoc = 0;
+		term->parselst->file = NULL;
+		term->fail = 1;
+		term->test = 0;
+	}
+	ft_reset_term(term);
 }
 
 void		ft_handle_signal(void)
