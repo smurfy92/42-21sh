@@ -35,14 +35,13 @@ void		ft_go_up(t_term *term)
 
 void		ft_process4(t_term *term)
 {
-	if (term->buf[0] == 4 && !term->cmdactual)
+	if (term->buf[0] == 4 && ft_strlen(term->cmdactual) == 0)
 	{
 		ft_putchar_fd('\n', 2);
 		reset_shell();
 		exit(0);
 	}
-	else if (term->buf[0] == 4 && term->cursorpos != 0 &&
-	term->cursorpos < term->cmdlength)
+	else if (term->buf[0] == 4 && term->cursorpos < term->cmdlength)
 	{
 		ft_right_cursor(term);
 		ft_backspace(term);

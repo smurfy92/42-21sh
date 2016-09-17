@@ -60,7 +60,7 @@ void		ft_del_first_in_separator(t_term *term, char c)
 			}
 			if (i == 0)
 			{
-				term->separators = &term->separators[1];
+				term->separators = NULL;
 				return ;
 			}
 			ft_del_first_in_separator2(term, i);

@@ -103,7 +103,7 @@ void		ft_boucle(t_term *term)
 		{
 			term->cmdactual = ft_strjoin(term->cmdactual, "\n");
 			term->cmdlength++;
-			term->cursorpos++;
+			ft_go_end(term);
 			ft_putstr("\n> ");
 		}
 	}
