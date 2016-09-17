@@ -66,31 +66,13 @@ void		ft_check_last_in_cmd(t_term *term, char c)
 void		ft_del_last_in_cmd(t_term *term, char c)
 {
 	int		i;
-	char	*tmp;
 
 	i = ft_strlen(term->cmdactual);
 	while (term->cmdactual && term->cmdactual[--i])
 	{
 		if (term->cmdactual[i] == c)
 		{
-			if (i == 0)
-			{
-				if (term->cmdactual[i + 1])
-					term->cmdactual = ft_strdup(&term->cmdactual[i + 1]);
-				else
-					term->cmdactual = NULL;
-			}
-			else
-			{
-				if (!term->cmdactual[i + 1])
-					term->cmdactual[i] = '\0';
-				else
-				{
-					tmp = ft_strdup(&term->cmdactual[i + 1]);
-					term->cmdactual[i] = '\0';
-					term->cmdactual = ft_strjoin(term->cmdactual, tmp);
-				}
-			}
+			term->cmdactual[i] = ' ';
 			return ;
 		}
 	}
