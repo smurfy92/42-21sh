@@ -70,7 +70,7 @@ SRC= ft_memset.c\
 	 ft_lstadd.c\
 	 ft_lstiter.c\
 	 get_next_line.c
-	 
+
 LIB = libft.a
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror
@@ -86,25 +86,25 @@ CB = \033[34m
 all: $(LIB)
 
 $(LIB): start $(OBJ)
-	@echo "$(CY)[LIBFT] :$(CE) $(CG)Creating Library$(CE)";
+	@echo "\033[K$(CY)[LIBFT] :$(CE) $(CG)Creating Library$(CE)\033[1A";
 	@$(AR) $(LIB) $(OBJ)
-	@echo "$(CY)[LIBFT] :$(CE) $(CG)Indexing Library$(CE)";
+	@echo "\033[K$(CY)[LIBFT] :$(CE) $(CG)Indexing Library$(CE)\033[1A";
 	@$(AR) $(LIB) $(OBJ)
 	@$(RANLIB) $(LIB)
 
 nohd: $(OBJ)
-	@echo "$(CY)[LIBFT] :$(CE) $(CG)Creating Library$(CE)";
+	@echo "\033[K$(CY)[LIBFT] :$(CE) $(CG)Creating Library$(CE)\033[1A";
 	@$(AR) $(LIB) $(OBJ)
-	@echo "$(CY)[LIBFT] :$(CE) $(CG)Indexing Library$(CE)";
+	@echo "\033[K$(CY)[LIBFT] :$(CE) $(CG)Indexing Library$(CE)\033[1A";
 	@$(AR) $(LIB) $(OBJ)
 	@$(RANLIB) $(LIB)
 
 nohdclean:
-	@echo "$(CY)[LIBFT] :$(CE) $(CG)Cleaning object files...$(CE)";
+	@echo "\033[K$(CY)[LIBFT] :$(CE) $(CG)Cleaning object files...$(CE)\033[1A";
 	@$(RM) $(OBJ)
 
 nohdfclean: nohdclean
-	@echo "$(CY)[LIBFT] :$(CE) $(CG)Cleaning Library...$(CE)";
+	@echo "\033[K$(CY)[LIBFT] :$(CE) $(CG)Cleaning Library...$(CE)\033[1A";
 	@$(RM) $(LIB)
 
 
@@ -141,15 +141,15 @@ start:
 	@echo "						$(CY) - - - - - - - - - - - - - - - - - - - - - - - - - - -$(CE)";
 
 %.o: %.c
-	@echo "$(CY)[LIBFT] :$(CE) $(CG)Compiling $<$(CE)";
+	@echo "\033[K$(CY)[LIBFT] :$(CE) $(CG)Compiling $<$(CE)\033[1A";
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 clean: start
-	@echo "$(CY)[LIBFT] :$(CE) $(CG)Cleaning object files...$(CE)";
+	@echo "\033[K$(CY)[LIBFT] :$(CE) $(CG)Cleaning object files...$(CE)\033[1A";
 	@$(RM) $(OBJ)
 
 fclean: start clean
-	@echo "$(CY)[LIBFT] :$(CE) $(CG)Cleaning Library...$(CE)";
+	@echo "\033[K$(CY)[LIBFT] :$(CE) $(CG)Cleaning Library...$(CE)\033[1A";
 	@$(RM) $(LIB)
 
 re: fclean all

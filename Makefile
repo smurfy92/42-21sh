@@ -47,13 +47,13 @@ CB = \033[34m
 all: start $(NAME)
 
 $(NAME): $(OBJ)
-	@echo "$(CY)[MINISH] :$(CE) $(CG)Creating Library$(CE)";
+	@echo "\033[K$(CY)[21SH] :$(CE) $(CG)Creating Library$(CE)\033[1A";
 	-@make -C libft nohd
-	@echo "$(CY)[MINISH] :$(CE) $(CG)Compiling 21sh ...$(CE)";
+	@echo "\033[K$(CY)[21SH] :$(CE) $(CG)Compiling 21sh ...$(CE)";
 	@gcc -o $(NAME) $(FLAG) $(SRC) $(LIB) -lncurses
 
 %.o: %.c
-	@echo "$(CY)[MINISH] :$(CE) $(CG)Compiling $<$(CE)";
+	@echo "\033[K$(CY)[21SH] :$(CE) $(CG)Compiling $<$(CE) \033[1A";
 	@gcc $(FLAG) -c $< -o $@
 
 start:
@@ -93,15 +93,15 @@ start:
 	@echo "								$(CG)|____| |_| |___/ |_| |_|     $(CE)";
 
 clean: start
-	@echo "$(CY)[MINISH] :$(CE) $(CG)Cleaning Library ...$(CE)";
+	@echo "\033[K$(CY)[21SH] :$(CE) $(CG)Cleaning Library ...$(CE)\033[1A";
 	-@make -C libft nohdclean
-	@echo "$(CY)[MINISH] :$(CE) $(CG)Cleaning 21sh objects$(CE)";
+	@echo "\033[K$(CY)[21SH] :$(CE) $(CG)Cleaning 21sh objects$(CE)\033[1A";
 	@/bin/rm -rf $(OBJ)
 
 fclean: start clean
-	@echo "$(CY)[MINISH] :$(CE) $(CG)FCleaning Library ...$(CE)";
+	@echo "\033[K$(CY)[21SH] :$(CE) $(CG)FCleaning Library ...$(CE)\033[1A";
 	-@make -C libft nohdfclean
-	@echo "$(CY)[MINISH] :$(CE) $(CG)Cleaning 21sh ...$(CE)";
+	@echo "\033[K$(CY)[21SH] :$(CE) $(CG)Cleaning 21sh ...$(CE)\033[1A";
 	@/bin/rm -f $(NAME)
 
 re: fclean all
