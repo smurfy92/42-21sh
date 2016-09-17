@@ -91,11 +91,14 @@ int			reset_shell(void)
 void		ft_clean_line(t_term *term)
 {
 	ft_go_end(term);
+	if (term->cmdlength == 0)
+		return ;
 	while (term->cmdlength-- > 0)
 	{
 		ft_left_arrow(term);
 		tputs(tgetstr("dc", NULL), 0, ft_outchar);
 		tputs(tgetstr("cd", NULL), 0, ft_outchar);
 	}
+	term->cmdlength = 0;
 	term->cmdactual = NULL;
 }

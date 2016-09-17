@@ -48,7 +48,9 @@ int			ft_check_in_path(t_term *term)
 		tabl[i] = ft_strjoin(tabl[i], term->cmds[0]);
 		if (access(tabl[i], X_OK) == 0)
 			term->path = ft_strdup(tabl[i]);
+		free(tabl[i]);
 	}
+	free(tabl);
 	ft_check_in_path2(term);
 	if (term->path)
 	{

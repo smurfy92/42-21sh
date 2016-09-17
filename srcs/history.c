@@ -25,12 +25,11 @@ void		ft_add_history(t_term *term, char *cmd)
 
 	fd = open("/tmp/.21sh_history", O_WRONLY | O_APPEND | O_CREAT,
 	S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
-	write(fd, cmd, ft_strlen(cmd));
+	ft_putendl_fd(cmd, fd);
 	tmp2 = term->history;
 	tmp = (t_history*)malloc(sizeof(t_history));
 	tmp->var = cmd;
 	tmp->next = NULL;
-	write(fd, "\n", 1);
 	close(fd);
 	if (!term->history)
 	{
@@ -61,21 +60,22 @@ void		ft_history_prev(t_term *term)
 	term->cursorpos = ft_strlen(term->history->var);
 	term->cmdlength = ft_strlen(term->history->var);
 	term->cmdactual = ft_strdup(term->history->var);
-	ft_putstr(term->history->var);
+	ft_putstr_fd(term->history->var, 2);
 }
 
 void		ft_history_next(t_term *term)
 {
 	if (!term->history)
 		return ;
-	ft_clean_line(term);
+	if (term->cmdactual)
+		ft_clean_line(term);
 	if (term->history->next)
 	{
 		term->history = term->history->next;
 		term->cursorpos = ft_strlen(term->history->var);
 		term->cmdlength = ft_strlen(term->history->var);
 		term->cmdactual = ft_strdup(term->history->var);
-		ft_putstr(term->history->var);
+		ft_putstr_fd(term->history->var, 2);
 	}
 	else
 		term->inhistory = 0;
@@ -107,4 +107,5 @@ void		ft_get_history(t_term *term)
 			term->history = term->history->next;
 		}
 	}
+	close(fd);
 }
