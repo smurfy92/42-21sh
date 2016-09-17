@@ -57,14 +57,11 @@ void		ft_del_first_in_separator(t_term *term, char c)
 					term->separators = NULL;
 				else
 					term->separators[i] = '\0';
-				return ;
 			}
-			if (i == 0)
-			{
+			else if (i == 0)
 				term->separators = NULL;
-				return ;
-			}
-			ft_del_first_in_separator2(term, i);
+			else
+				ft_del_first_in_separator2(term, i);
 			return ;
 		}
 	}

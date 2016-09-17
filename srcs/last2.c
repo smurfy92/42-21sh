@@ -71,3 +71,16 @@ void		ft_go_down(t_term *term)
 	while (++i < term->window->width && term->cursorpos < term->cmdlength)
 		ft_right_cursor(term);
 }
+
+int			ft_count_pipes(char *cmd)
+{
+	int i;
+	int nb;
+
+	nb = 1;
+	i = -1;
+	while (cmd && cmd[++i])
+		if (cmd[i] == '|')
+			nb++;
+	return (nb);
+}

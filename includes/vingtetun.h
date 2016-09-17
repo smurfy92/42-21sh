@@ -121,6 +121,7 @@ int						init_shell(int lflag);
 int						ft_check_builtin(t_term *term);
 int						ft_is_printable(char *order);
 int						ft_is_space(char c);
+int						ft_count_pipes(char *cmd);
 void					ft_go_down(t_term *term);
 void					ft_ctrl_d(t_term *term);
 void					ft_check_close1(t_parse *parse, int i);
