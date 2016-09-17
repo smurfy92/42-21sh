@@ -14,15 +14,32 @@
 
 void		ft_del_first_in_cmd(t_term *term, char c)
 {
-	int i;
+	int		i;
+	char	*tmp;
 
 	i = -1;
 	while (term->cmdactual && term->cmdactual[++i])
 	{
 		if (term->cmdactual[i] == c)
 		{
-			term->cmdactual[i] = ' ';
-			return ;
+			if (i == 0)
+			{
+				if (term->cmdactual[i + 1])
+					term->cmdactual = ft_strdup(&term->cmdactual[i + 1]);
+				else
+					term->cmdactual = NULL;
+			}
+			else
+			{
+				if (!term->cmdactual[i + 1])
+					term->cmdactual[i] = '\0';
+				else
+				{
+					tmp = ft_strdup(&term->cmdactual[i + 1]);
+					term->cmdactual[i] = '\0';
+					term->cmdactual = ft_strjoin(term->cmdactual, tmp);
+				}
+			}
 		}
 	}
 }
