@@ -30,9 +30,7 @@ void		ft_parse(t_term *term, char *cmd)
 	i = -1;
 	tabl = ft_strsplit(cmd, '|');
 	while (tabl && tabl[++i])
-	{
 		ft_create_parse(term, tabl[i]);
-	}
 	term->cmdlength = 0;
 	cmd = NULL;
 	tmp = term->parselst;

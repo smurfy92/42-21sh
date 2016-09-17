@@ -45,6 +45,7 @@ void		ft_ctrl_c(int sig)
 	t_term			*term;
 
 	sig = 0;
+	reset_shell();
 	term = ft_get_term();
 	ft_putchar_fd('\n', 2);
 	ft_reset_term(term);
