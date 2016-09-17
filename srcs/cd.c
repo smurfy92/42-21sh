@@ -14,9 +14,6 @@
 
 void		ft_cd_home(t_term *term)
 {
-	char				*buf;
-
-	buf = NULL;
 	if (!ft_get_val_exists(term, "HOME"))
 		return (ft_putendl("NO HOME"));
 	ft_process_unsetenv(term, "OLDPWD");
@@ -26,22 +23,19 @@ void		ft_cd_home(t_term *term)
 
 void		ft_cd_suite(t_term *term)
 {
-	char				*buf;
-
-	buf = NULL;
 	ft_process_unsetenv(term, "OLDPWD");
-	ft_process_setenv(term, "OLDPWD", getwd(buf));
+	ft_process_setenv(term, "OLDPWD", ft_get_val(term, "PATH"));
 	chdir(term->cmds[1]);
 	ft_process_unsetenv(term, "PWD");
-	ft_process_setenv(term, "PWD", getwd(buf));
+	ft_process_setenv(term, "PWD", ft_get_val(term, "PATH"));
 }
 
-void		ft_cd2(t_term *term, char *buf)
+void		ft_cd2(t_term *term)
 {
 	if (!ft_get_val_exists(term, "OLDPWD"))
-		ft_process_setenv(term, "OLDPWD", getwd(buf));
+		ft_process_setenv(term, "OLDPWD", ft_get_val(term, "PATH"));
 	if (!ft_get_val_exists(term, "PWD"))
-		ft_process_setenv(term, "PWD", getwd(buf));
+		ft_process_setenv(term, "PWD", ft_get_val(term, "PATH"));
 	if (term->cmds[1] && ft_strcmp(term->cmds[1], "-") == 0)
 	{
 		term->cmds[1] = ft_strdup(ft_get_env_by_name(term, "OLDPWD"));
@@ -51,11 +45,9 @@ void		ft_cd2(t_term *term, char *buf)
 
 void		ft_cd(t_term *term)
 {
-	char				*buf;
 	struct stat			bufstat;
 
-	buf = NULL;
-	ft_cd2(term, buf);
+	ft_cd2(term);
 	if (term->cmds[1] && term->cmds[1][0] == '~' && term->cmds[1][1])
 	{
 		if (!ft_get_val_exists(term, "HOME"))
