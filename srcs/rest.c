@@ -64,7 +64,7 @@ int			init_shell(int lflag)
 
 	t = ft_get_term();
 	if ((name = getenv("TERM")) == NULL)
-		name = "xterm-256color";
+		name = ft_strdup("xterm-256color");
 	if (tgetent(NULL, name) == ERR)
 		return (-1);
 	if (tcgetattr(0, &term) == -1)
