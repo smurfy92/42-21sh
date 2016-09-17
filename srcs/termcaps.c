@@ -37,9 +37,14 @@ void		ft_process4(t_term *term)
 {
 	if (term->buf[0] == 4 && ft_strlen(term->cmdactual) == 0)
 	{
-		ft_putchar_fd('\n', 2);
-		reset_shell();
-		exit(0);
+		if (term->inheredoc)
+			term->inheredoc = 0;
+		else
+		{
+			ft_putchar_fd('\n', 2);
+			reset_shell();
+			exit(0);
+		}
 	}
 	else if (term->buf[0] == 4 && term->cursorpos < term->cmdlength)
 	{
@@ -63,8 +68,6 @@ void		ft_process3(t_term *term)
 		while (i++ < (int)ft_strlen(term->copy))
 			ft_right_arrow(term);
 	}
-	else if (term->buf[0] == 4 && term->inheredoc)
-		ft_ctrl_d(term);
 	else
 		ft_process4(term);
 }

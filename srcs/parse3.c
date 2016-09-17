@@ -21,16 +21,36 @@ int			ft_end_of_red(char c)
 		return (0);
 }
 
+int 		ft_count_pipes(char *cmd)
+{
+	int i;
+	int nb;
+
+	nb = 1;
+	i = -1;
+	while (cmd && cmd[++i])
+		if (cmd[i] == '|')
+			nb++;
+	return (nb);
+}
+
 void		ft_parse(t_term *term, char *cmd)
 {
 	char		**tabl;
 	int			i;
+	int			y;
 	t_parse		*tmp;
 
 	i = -1;
 	tabl = ft_strsplit(cmd, '|');
+	y = ft_count_pipes(cmd);
 	while (tabl && tabl[++i])
 		ft_create_parse(term, tabl[i]);
+	if (y != i)
+	{
+		term->fail =1;
+		return (ft_putendl("Invalid null command"));
+	}
 	term->cmdlength = 0;
 	cmd = NULL;
 	tmp = term->parselst;

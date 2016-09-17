@@ -75,6 +75,8 @@ void		ft_create_heredoc2(t_term *term, char *str, int fd, int i)
 			if (!term->inheredoc)
 				break ;
 		}
+		if (!term->inheredoc)
+			break ;
 		if (ft_strequ(term->cmdactual, str))
 			break ;
 		ft_putendl_fd(term->cmdactual, fd);

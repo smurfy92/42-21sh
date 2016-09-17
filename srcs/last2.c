@@ -54,10 +54,7 @@ void		ft_father(t_term *term, int *tabl)
 void		ft_ctrl_d(t_term *term)
 {
 	if (!term->cmdactual)
-	{
 		term->inheredoc = 0;
-		term->cmdactual = "EOF";
-	}
 	else
 	{
 		ft_putendl_fd(term->cmdactual, term->heredocfd);
