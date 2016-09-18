@@ -58,8 +58,8 @@ int			ft_check_in_path(t_term *term)
 		term->historylen++;
 		return (1);
 	}
-	ft_putendl(ft_strjoin("jush: command not found: ",
-	ft_strdup(term->cmds[0])));
+	ft_putendl_fd(ft_strjoin("jush: command not found: ",
+	ft_strdup(term->cmds[0])), 2);
 	term->exec = 0;
 	return (0);
 }

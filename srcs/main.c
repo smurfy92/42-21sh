@@ -69,7 +69,8 @@ void		ft_process_exec(t_term *term, char *cmdsplit)
 	term->cmds = NULL;
 	term->fail = 0;
 	term->parselst = NULL;
-	ft_parse(term, cmdsplit);
+	ft_parse(term, ft_check_cmdsplit(term, cmdsplit));
+	ft_check_parse(term);
 	if (term->fail)
 		return ;
 	term->cmds = ft_strsplit(term->parselst->cmd, ' ');
@@ -86,8 +87,7 @@ void		ft_process_exec(t_term *term, char *cmdsplit)
 		father = fork();
 	else
 		return ;
-	if (father == 0)
-		ft_father_process(term);
+	(father == 0) ? ft_father_process(term) : 0;
 	wait(0);
 }
 
@@ -125,8 +125,7 @@ int			main(int argc, char **argv, char **env)
 		(ft_strlen(term->cmdactual) > 0) ?
 		ft_add_history(term, term->cmdactual) : 0;
 		reset_shell();
-		if (!term->test)
-			ft_putchar_fd('\n', 2);
+		(!term->test) ? ft_putchar_fd('\n', 2) : 0;
 		term->cmdsplit = ft_strsplit(term->cmdactual, ';');
 		while (term->cmdsplit && term->cmdsplit[++argc])
 			ft_process_exec(term, term->cmdsplit[argc]);
