@@ -14,8 +14,8 @@
 
 char		*ft_check_cmdsplit(t_term *term, char *str)
 {
-	int i;
-	char *tmp;
+	int		i;
+	char	*tmp;
 
 	i = -1;
 	while (str && str[++i])

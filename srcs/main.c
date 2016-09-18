@@ -62,6 +62,7 @@ void		ft_father_process(t_term *term)
 	}
 }
 
+
 void		ft_process_exec(t_term *term, char *cmdsplit)
 {
 	int father;
