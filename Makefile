@@ -39,7 +39,7 @@ SRC =	srcs/main.c \
 		srcs/last2.c \
 		srcs/last3.c
 OBJ = $(SRC:.c=.o)
-FLAG = -Wall -Werror -Wextra
+FLAG = -Wall -Werror -Wextra -g
 CG = \033[92m
 CY =  \033[93m
 CE = \033[0m

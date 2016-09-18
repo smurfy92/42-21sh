@@ -19,15 +19,19 @@ void		ft_cd_home(t_term *term)
 	ft_process_unsetenv(term, "OLDPWD");
 	ft_process_setenv(term, "OLDPWD", ft_get_val(term, "PWD"));
 	chdir(ft_get_val(term, "HOME"));
+	ft_process_unsetenv(term, "PWD");
+	ft_process_setenv(term, "PWD", ft_get_val(term, "HOME"));
 }
 
 void		ft_cd_suite(t_term *term)
 {
+	char *buf = NULL;
+
 	ft_process_unsetenv(term, "OLDPWD");
-	ft_process_setenv(term, "OLDPWD", ft_get_val(term, "PATH"));
+	ft_process_setenv(term, "OLDPWD", ft_get_val(term, "PWD"));
 	chdir(term->cmds[1]);
 	ft_process_unsetenv(term, "PWD");
-	ft_process_setenv(term, "PWD", ft_get_val(term, "PATH"));
+	ft_process_setenv(term, "PWD", getcwd(buf, 0));
 }
 
 void		ft_cd2(t_term *term)
@@ -39,7 +43,8 @@ void		ft_cd2(t_term *term)
 	if (term->cmds[1] && ft_strcmp(term->cmds[1], "-") == 0)
 	{
 		term->cmds[1] = ft_strdup(ft_get_env_by_name(term, "OLDPWD"));
-		ft_putendl_fd(term->cmds[1], 2);
+		if (!access(term->cmds[1], R_OK))
+			ft_putendl_fd(term->cmds[1], 2);
 	}
 }
 

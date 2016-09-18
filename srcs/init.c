@@ -28,7 +28,7 @@ t_term		*ft_get_term(void)
 	static t_term *term;
 
 	if (!term)
-		term = (t_term*)malloc(sizeof(t_term));
+		term = (t_term*)ft_memalloc(sizeof(t_term));
 	ft_get_window(term);
 	return (term);
 }
