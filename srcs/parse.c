@@ -58,6 +58,15 @@ void		ft_replace_vars(t_term *term, t_parse *parse, int i)
 
 void		ft_parse_redirections2(t_term *term, t_parse *parse, int i)
 {
+	// if (parse->cmd[i] == '1' && parse->cmd[i + 3] && parse->cmd[i + 1]
+	// == '>' && parse->cmd[i + 2] == '&' && parse->cmd[i + 3] == '2')
+	// {
+	// 	int tabl[2];
+	// 	pipe(tabl);
+	// 	dup2(tabl[0], STDOUT_FILENO);
+	// 	close(tabl[0]);
+	// 	dup2(tabl[1], STDERR_FILENO);
+	// }
 	if (parse->cmd[i] == '1' && parse->cmd[i + 3] && parse->cmd[i + 1]
 	== '>' && parse->cmd[i + 2] == '&' && parse->cmd[i + 3] == '-')
 		ft_check_close1(parse, i);
