@@ -64,10 +64,7 @@ void		ft_check_parse(t_term *term)
 	{
 		if (!ft_check_builtin(term) &&
 		!ft_check_exec(term, term->parselst->cmd))
-		{
 			term->fail = 1;
-			return ;
-		}
 		term->parselst = term->parselst->next;
 	}
 	term->parselst = tmp;

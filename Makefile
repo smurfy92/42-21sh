@@ -38,8 +38,10 @@ SRC =	srcs/main.c \
 		srcs/last.c \
 		srcs/last2.c \
 		srcs/last3.c
+
+#-fsanitize=address
 OBJ = $(SRC:.c=.o)
-FLAG = -Wall -Werror -Wextra -g -fsanitize=address
+FLAG = -Wall -Werror -Wextra -g
 CG = \033[92m
 CY =  \033[93m
 CE = \033[0m

@@ -62,7 +62,6 @@ void		ft_father_process(t_term *term)
 	}
 }
 
-
 void		ft_process_exec(t_term *term, char *cmdsplit)
 {
 	int father;
@@ -99,15 +98,23 @@ void		ft_boucle(t_term *term)
 		while ((read(0, term->buf, BUFFSIZE)) && term->buf[0] != 10)
 			ft_process(term);
 		term->separators = NULL;
+		if (term->cmdtmp)
+			term->cmdtmp = ft_strjoin(term->cmdtmp, term->cmdactual);
+		else
+			(term->cmdactual) ? term->cmdtmp = ft_strdup(term->cmdactual) : 0;
+		(term->cmdtmp) ? term->cmdactual = ft_strdup(term->cmdtmp) : 0;
 		ft_check_separators(term);
 		if (term->separators)
 		{
 			term->cmdactual = ft_strjoin(term->cmdactual, "\n");
-			term->cmdlength++;
+			term->cmdtmp = ft_strdup(term->cmdactual);
 			ft_go_end(term);
+			ft_reset_term(term);
 			ft_putstr_fd("\n> ", 2);
 		}
 	}
+	(term->cmdtmp) ? term->cmdactual = ft_strdup(term->cmdtmp) : 0;
+	term->cmdtmp = NULL;
 }
 
 int			main(int argc, char **argv, char **env)

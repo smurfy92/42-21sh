@@ -36,6 +36,7 @@ typedef	struct			s_term
 	char				**env;
 	char				*buf;
 	char				*cmdactual;
+	char				*cmdtmp;
 	char				*copy;
 	char				**cmds;
 	char				**cmdsplit;
