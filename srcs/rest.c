@@ -68,7 +68,10 @@ int			init_shell(int lflag)
 	if (tgetent(NULL, name) == ERR)
 		return (-1);
 	if (tcgetattr(0, &term) == -1)
-		return (-1);
+	{
+		ft_putendl_fd("jush: tcgetattr failed", 2);
+		exit(-1);
+	}
 	t->cpy_term = term;
 	term.c_lflag = term.c_lflag & lflag;
 	term.c_cc[VMIN] = 1;
