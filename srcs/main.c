@@ -69,8 +69,7 @@ void		ft_process_exec(t_term *term, char *cmdsplit)
 	term->cmds = NULL;
 	term->fail = 0;
 	term->parselst = NULL;
-	ft_parse(term, ft_check_cmdsplit(term, cmdsplit));
-	//ft_check_parse(term);
+	ft_parse(term, cmdsplit);
 	if (term->fail)
 		return ;
 	term->cmds = ft_strsplit(term->parselst->cmd, ' ');

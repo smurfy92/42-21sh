@@ -36,8 +36,7 @@ SRC =	srcs/main.c \
 		srcs/separators3.c \
 		srcs/redirections.c \
 		srcs/last.c \
-		srcs/last2.c \
-		srcs/last3.c
+		srcs/last2.c
 
 #-fsanitize=address
 OBJ = $(SRC:.c=.o)
