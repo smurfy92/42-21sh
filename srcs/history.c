@@ -106,6 +106,7 @@ void		ft_get_history(t_term *term)
 			tmp->prev = term->history;
 			term->history = term->history->next;
 		}
+		ft_strdel(&line);
 	}
 	close(fd);
 }

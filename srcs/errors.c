@@ -75,14 +75,22 @@ t_env		*ft_create_lst(char *str)
 {
 	t_env		*lst;
 	char		**tabl;
+	char		*tmp;
 
 	lst = (t_env*)malloc(sizeof(t_env));
 	tabl = ft_strsplit(str, '=');
-	lst->var = tabl[0];
+	lst->var = ft_strdup(tabl[0]);
 	if (ft_strcmp(lst->var, "SHLVL") == 0)
-		lst->val = ft_strdup(ft_itoa(ft_atoi(tabl[1]) + 1));
+	{
+		tmp = ft_itoa(ft_atoi(tabl[1]) + 1);
+		lst->val = ft_strdup(tmp);
+		free(tmp);
+	}
 	else
-		lst->val = tabl[1];
+		lst->val = ft_strdup(tabl[1]);
+	free(tabl[0]);
+	free(tabl[1]);
+	free(tabl);
 	lst->next = NULL;
 	return (lst);
 }

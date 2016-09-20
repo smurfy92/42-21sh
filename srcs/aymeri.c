@@ -39,15 +39,17 @@ int			ft_check_in_path(t_term *term)
 {
 	char		**tabl;
 	int			i;
+	char		*tmp;
 
 	i = -1;
-	tabl = ft_strsplit(ft_get_env_by_name(term, "PATH"), ':');
+	tmp = ft_get_env_by_name(term, "PATH");
+	tabl = ft_strsplit(tmp, ':');
 	while (tabl && tabl[++i])
 	{
-		tabl[i] = ft_strjoin_nf(tabl[i], "/", 1);
-		tabl[i] = ft_strjoin_nf(tabl[i], term->cmds[0], 1);
-		if (access(tabl[i], X_OK) == 0)
-			term->path = ft_strdup(tabl[i]);
+		tmp = ft_strjoin(tabl[i], "/");
+		tmp = ft_strjoin(tabl[i], term->cmds[0]);
+		if (access(tmp, X_OK) == 0)
+			term->path = ft_strdup(tmp);
 		free(tabl[i]);
 	}
 	free(tabl);
@@ -58,8 +60,8 @@ int			ft_check_in_path(t_term *term)
 		term->historylen++;
 		return (1);
 	}
-	ft_putendl_fd(ft_strjoin("jush: command not found: ",
-	term->parselst->cmd), 2);
+	tmp = ft_strjoin("jush: command not found: ", term->parselst->cmd);
+	ft_putendl_fd(tmp, 2);
 	term->exec = 0;
 	return (0);
 }
