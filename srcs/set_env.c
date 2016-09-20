@@ -68,12 +68,14 @@ t_term		*ft_set_term(t_term *term, char **env, t_env *lst)
 	term->cursorpos = 0;
 	term->cmdlength = 0;
 	term->copy = NULL;
-	term->historylen = 0;
 	term->inhistory = 0;
 	term->historycurrent = 0;
 	term->i = 0;
 	term->parenthese = 0;
 	term->parselst = NULL;
+	term->history = NULL;
+	term->historylen = 0;
+	term->historycurrent = 0;
 	term->env = env;
 	term->lst = lst;
 	ft_check_env(term);

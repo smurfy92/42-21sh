@@ -43,8 +43,8 @@ void		ft_get_window_sig(void)
 
 void		ft_reset_term(t_term *term)
 {
-	int fd;
-	char *tmp;
+	int		fd;
+	char	*tmp;
 
 	tmp = ft_strjoin(ft_get_env_by_name(term, "HOME"), "/");
 	tmp = ft_strjoin_nf(tmp, ".21shtmp", 1);

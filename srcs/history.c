@@ -88,9 +88,6 @@ void		ft_get_history(t_term *term)
 	char		*line;
 
 	fd = open("/tmp/.21sh_history", O_RDONLY);
-	term->history = NULL;
-	term->historylen = 0;
-	term->historycurrent = 0;
 	while ((get_next_line(fd, &line)) > 0)
 	{
 		tmp = (t_history*)malloc(sizeof(t_history));

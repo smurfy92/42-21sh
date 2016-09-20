@@ -75,20 +75,6 @@ void		ft_cd(t_term *term)
 	ft_cd_suite(term);
 }
 
-void		ft_clean_memory(t_term *term)
-{
-	t_history *tmp;
-	while (term->history)
-	{
-		tmp = term->history;
-		term->history = term->history->next;
-		tmp->next = NULL;
-		tmp->prev = NULL;
-		free(tmp);
-	}
-	ft_strdel(&term->cmdactual);
-}
-
 void		ft_create_builtin(t_term *term)
 {
 	char	*tmp;
@@ -106,7 +92,6 @@ void		ft_create_builtin(t_term *term)
 	{
 		reset_shell();
 		ft_putendl("Exiting shell");
-		ft_clean_memory(term);
 		if (term->cmds[1])
 			exit(ft_atoi(term->cmds[1]));
 		else

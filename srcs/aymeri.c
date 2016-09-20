@@ -25,7 +25,7 @@ void		ft_create_process(t_term *term)
 	wait(0);
 }
 
-void		ft_check_in_path2(t_term *term)
+int			ft_check_in_path2(t_term *term)
 {
 	if (term->cmds[0][0] == '.' && term->cmds[0][1] == '/' && term->cmds[0][2])
 		(access(&term->cmds[0][2], X_OK) == 0) ? term->path =\
@@ -33,6 +33,13 @@ void		ft_check_in_path2(t_term *term)
 	if (term->cmds[0][0] == '/')
 		(access(term->cmds[0], X_OK) == 0) ? term->path =\
 		ft_strdup(term->cmds[0]) : 0;
+	if (term->path)
+	{
+		term->exec = 1;
+		term->historylen++;
+		return (1);
+	}
+	return (0);
 }
 
 int			ft_check_in_path(t_term *term)
@@ -47,19 +54,14 @@ int			ft_check_in_path(t_term *term)
 	while (tabl && tabl[++i])
 	{
 		tmp = ft_strjoin(tabl[i], "/");
-		tmp = ft_strjoin(tabl[i], term->cmds[0]);
+		tmp = ft_strjoin(tmp, term->cmds[0]);
 		if (access(tmp, X_OK) == 0)
 			term->path = ft_strdup(tmp);
 		free(tabl[i]);
 	}
 	free(tabl);
-	ft_check_in_path2(term);
-	if (term->path)
-	{
-		term->exec = 1;
-		term->historylen++;
+	if (ft_check_in_path2(term))
 		return (1);
-	}
 	tmp = ft_strjoin("jush: command not found: ", term->parselst->cmd);
 	ft_putendl_fd(tmp, 2);
 	term->exec = 0;
