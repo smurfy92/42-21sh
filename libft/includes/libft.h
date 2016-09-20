@@ -37,6 +37,7 @@ size_t				ft_strlen(const char *s);
 void				*ft_memalloc(size_t size);
 void				*ft_memccpy(void *restrict dst,
 					const void *restrict src, int c, size_t n);
+char				*ft_strjoin_nf(char *s1, char *s2, int nb);
 void				*ft_memchr(const void *s, int c, size_t n);
 int					ft_memcmp(const void *s1, const void *s2, size_t n);
 void				*ft_memcpy(void *restrict dst,

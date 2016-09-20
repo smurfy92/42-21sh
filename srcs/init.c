@@ -45,7 +45,7 @@ void		ft_reset_term(t_term *term)
 {
 	int fd;
 
-	fd = open(ft_strjoin(ft_strjoin(ft_get_env_by_name(term, "HOME"), "/"),
+	fd = open(ft_strjoin(ft_strjoin_nf(ft_get_env_by_name(term, "HOME"), "/", 1),
 	".21shtmp"), O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IRGRP |
 	S_IWGRP | S_IWUSR);
 	close(fd);

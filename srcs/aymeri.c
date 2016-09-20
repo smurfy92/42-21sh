@@ -44,8 +44,8 @@ int			ft_check_in_path(t_term *term)
 	tabl = ft_strsplit(ft_get_env_by_name(term, "PATH"), ':');
 	while (tabl && tabl[++i])
 	{
-		tabl[i] = ft_strjoin(tabl[i], "/");
-		tabl[i] = ft_strjoin(tabl[i], term->cmds[0]);
+		tabl[i] = ft_strjoin_nf(tabl[i], "/", 1);
+		tabl[i] = ft_strjoin_nf(tabl[i], term->cmds[0], 1);
 		if (access(tabl[i], X_OK) == 0)
 			term->path = ft_strdup(tabl[i]);
 		free(tabl[i]);
@@ -59,7 +59,7 @@ int			ft_check_in_path(t_term *term)
 		return (1);
 	}
 	ft_putendl_fd(ft_strjoin("jush: command not found: ",
-	ft_strdup(term->parselst->cmd)), 2);
+	term->parselst->cmd), 2);
 	term->exec = 0;
 	return (0);
 }

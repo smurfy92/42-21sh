@@ -6,7 +6,7 @@
 #    By: jtranchi <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/01/28 18:42:36 by jtranchi          #+#    #+#              #
-#    Updated: 2016/02/28 20:13:13 by jtranchi         ###   ########.fr        #
+#    Updated: 2016/09/20 11:38:10 by jtranchi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -69,6 +69,7 @@ SRC= ft_memset.c\
 	 ft_lstdel.c\
 	 ft_lstadd.c\
 	 ft_lstiter.c\
+	 ft_strjoin_nf.c\
 	 get_next_line.c
 
 LIB = libft.a
