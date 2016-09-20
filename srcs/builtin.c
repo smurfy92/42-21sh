@@ -42,6 +42,8 @@ void		ft_process_setenv(t_term *term, char *s1, char *s2)
 	t_env *lst;
 
 	lst = term->lst;
+	if (ft_get_val_exists(term, s1))
+		ft_process_unsetenv(term, s1);
 	if (!s1 || !s2)
 	{
 		ft_putendl("jush: setenv: Invalid option");

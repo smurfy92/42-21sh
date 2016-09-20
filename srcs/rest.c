@@ -66,7 +66,10 @@ int			init_shell(int lflag)
 	if ((name = getenv("TERM")) == NULL)
 		name = ft_strdup("xterm-256color");
 	if (tgetent(NULL, name) == ERR)
-		return (-1);
+	{
+		ft_putendl_fd("jush: tcgetent failed", 2);
+		exit(-1);
+	}
 	if (tcgetattr(0, &term) == -1)
 	{
 		ft_putendl_fd("jush: tcgetattr failed", 2);

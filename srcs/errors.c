@@ -14,10 +14,8 @@
 
 void		ft_permission_denied(char *str)
 {
-	char *tmp;
-
-	tmp = "jush: permission denied: ";
-	write(2, tmp, ft_strlen(tmp));
+	write(2, "jush: permission denied: ",
+	ft_strlen("jush: permission denied: "));
 	write(2, str, ft_strlen(str));
 	write(2, "\n", 1);
 }
@@ -54,15 +52,20 @@ void		ft_env_options(t_term *term)
 void		ft_display_env(t_term *term)
 {
 	t_env		*lst;
+	int			fd;
 
 	lst = term->lst;
+	if (term->parselst->sgred || term->parselst->dbred)
+		fd = term->parselst->fd;
+	else
+		fd = 1;
 	while (lst)
 	{
 		if (!term->u || !ft_strstr(term->u, lst->var))
 		{
-			ft_putstr(lst->var);
-			ft_putchar('=');
-			ft_putendl(lst->val);
+			ft_putstr_fd(lst->var, fd);
+			ft_putchar_fd('=', fd);
+			ft_putendl_fd(lst->val, fd);
 		}
 		lst = lst->next;
 	}
