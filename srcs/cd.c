@@ -75,10 +75,21 @@ void		ft_cd(t_term *term)
 	ft_cd_suite(term);
 }
 
+void		ft_free_struct(t_term *term)
+{
+	ft_strdel(&(term->path));
+	ft_strdel(&(term->buf));
+	ft_strdel(&(term->cmdactual));
+	ft_strdel(&(term->cmdtmp));
+	ft_strdel(&(term->copy));
+}
+
 void		ft_create_builtin(t_term *term)
 {
 	char	*tmp;
+	int		i;
 
+	i = 0;
 	tmp = NULL;
 	if (ft_strcmp(term->cmds[0], "cd") == 0)
 		ft_cd(term);
@@ -93,9 +104,9 @@ void		ft_create_builtin(t_term *term)
 		reset_shell();
 		ft_putendl("Exiting shell");
 		if (term->cmds[1])
-			exit(ft_atoi(term->cmds[1]));
-		else
-			exit(0);
+			i = ft_atoi(term->cmds[1]);
+		ft_free_struct(term);
+		exit(i);
 	}
 	term->i = 0;
 	term->u = NULL;

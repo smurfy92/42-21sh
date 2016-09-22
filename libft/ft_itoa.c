@@ -26,6 +26,7 @@ static void		lengths(int n, size_t *len, int *weight)
 		*weight *= 10;
 		*len += 1;
 	}
+	*len += 1;
 }
 
 char			*ft_itoa(int n)

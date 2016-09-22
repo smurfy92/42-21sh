@@ -15,13 +15,12 @@
 t_env		*ft_parse_env(char **env)
 {
 	t_env		*lst;
+	int			i;
 
+	i = -1;
 	lst = NULL;
-	while (*env)
-	{
-		lst = ft_add_lst(ft_create_lst(*env), lst);
-		env++;
-	}
+	while (env[++i])
+		lst = ft_add_lst(ft_create_lst(env[i]), lst);
 	return (lst);
 }
 
@@ -60,7 +59,7 @@ void		ft_check_env(t_term *term)
 
 t_term		*ft_set_term(t_term *term, char **env, t_env *lst)
 {
-	term->buf = (char*)malloc(sizeof(char) * BUFFSIZE);
+	term->buf = ft_strnew(BUFFSIZE);
 	term->heredocfd = 0;
 	term->test = 0;
 	term->u = NULL;

@@ -58,11 +58,11 @@ void		ft_replace_vars(t_term *term, t_parse *parse, int i)
 
 void		ft_parse_redirections2(t_term *term, t_parse *parse, int i)
 {
-	if (parse->cmd[i] == '1' && parse->cmd[i + 3] && parse->cmd[i + 1]
-	== '>' && parse->cmd[i + 2] == '&' && parse->cmd[i + 3] == '-')
+	if (parse->cmd[i] == '1' && parse->cmd[i + 1] == '>' && parse->cmd[i + 2]
+	== '&' && parse->cmd[i + 3] && parse->cmd[i + 3] == '-')
 		ft_check_close1(parse, i);
-	else if (parse->cmd[i] == '2' && parse->cmd[i + 3] && parse->cmd[i + 1]
-	== '>' && parse->cmd[i + 2] == '&' && parse->cmd[i + 3] == '-')
+	else if (parse->cmd[i] == '2' && parse->cmd[i + 1] == '>' &&
+	parse->cmd[i + 2] == '&' && parse->cmd[i + 3] && parse->cmd[i + 3] == '-')
 		ft_check_close2(parse, i);
 	else if (parse->cmd[i] == '>' && parse->cmd[i + 1] &&
 	parse->cmd[i + 1] == '>')
@@ -112,6 +112,7 @@ void		ft_create_parse(t_term *term, char *cmd)
 	tmp->heredoc = 0;
 	tmp->dbred = NULL;
 	tmp->sgred = NULL;
+	tmp->file = NULL;
 	tmp->close1 = 0;
 	tmp->close2 = 0;
 	tmp = ft_parse_redirections(term, tmp);

@@ -58,8 +58,7 @@ void		ft_get_cmd(t_term *term, char *str)
 	}
 	term->cursorpos += ft_strlen(str);
 	term->cmdlength = ft_strlen(term->cmdactual);
-	if (term->inhistory)
-		term->history->var = term->cmdactual;
+	(term->inhistory) ? (term->history->var = term->cmdactual) : 0;
 	ft_putstr_fd(str, 2);
 }
 
@@ -87,7 +86,10 @@ int			init_shell(int lflag)
 	term.c_cc[VMIN] = 1;
 	term.c_cc[VTIME] = 0;
 	if (tcsetattr(0, 0, &term))
-		return (-1);
+	{
+		ft_putendl_fd("jush: tcsetattr failed", 2);
+		exit(-1);
+	}
 	return (1);
 }
 
