@@ -46,10 +46,7 @@ void		ft_get_cmd(t_term *term, char *str)
 		return ;
 	}
 	else if (!term->cmdactual)
-	{
-		ft_bzero(term->cmdactual, ft_strlen(term->cmdactual));
 		term->cmdactual = ft_strdup(str);
-	}
 	else
 	{
 		tmp = ft_strjoin(term->cmdactual, str);

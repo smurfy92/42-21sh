@@ -77,11 +77,37 @@ void		ft_cd(t_term *term)
 
 void		ft_free_struct(t_term *term)
 {
+	t_parse *parse;
+	t_env	*lst;
+
+	while (term->parselst)
+	{
+		ft_strdel(&(term->parselst->cmd));
+		ft_strdel(&(term->parselst->dbred));
+		ft_strdel(&(term->parselst->sgred));
+		ft_strdel(&(term->parselst->heredoc));
+		ft_strdel(&(term->parselst->file));
+		parse = term->parselst->next;
+		free(term->parselst);
+		term->parselst = parse;
+	}
+	while (term->lst)
+	{
+		ft_strdel(&(term->lst->var));
+		ft_strdel(&(term->lst->val));
+		lst = term->lst->next;
+		free(term->lst);
+		term->lst = lst;
+	}
+	free(term->lst);
+	free(term->parselst);
+	ft_putendl("ici");
 	ft_strdel(&(term->path));
 	ft_strdel(&(term->buf));
 	ft_strdel(&(term->cmdactual));
 	ft_strdel(&(term->cmdtmp));
 	ft_strdel(&(term->copy));
+	free(term);
 }
 
 void		ft_create_builtin(t_term *term)
