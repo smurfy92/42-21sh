@@ -53,11 +53,11 @@ int			ft_check_in_path(t_term *term)
 	tabl = ft_strsplit(tmp, ':');
 	while (tabl && tabl[++i])
 	{
-		tmp = ft_strjoin(tabl[i], "/");
-		tmp = ft_strjoin(tmp, term->cmds[0]);
+		tmp = ft_strjoin_nf(tabl[i], "/", 1);
+		tmp = ft_strjoin_nf(tmp, term->cmds[0], 1);
 		if (access(tmp, X_OK) == 0)
 			term->path = ft_strdup(tmp);
-		free(tabl[i]);
+		ft_strdel(&tmp);
 	}
 	free(tabl);
 	if (ft_check_in_path2(term))
@@ -76,13 +76,14 @@ void		ft_refresh_env(t_term *term)
 {
 	t_env		*lst;
 	int			i;
+	char		*tmp;
 
 	lst = term->lst;
 	i = 0;
 	while (lst)
 	{
-		term->env[i++] = ft_strdup(ft_strjoin(ft_strjoin(lst->var, "="),
-		lst->val));
+		tmp = ft_strjoin(lst->var, "=");
+		term->env[i++] = ft_strjoin_nf(tmp, lst->val, 1);
 		lst = lst->next;
 	}
 }

@@ -29,6 +29,7 @@ typedef	struct			s_term
 	struct s_history	*history;
 	struct s_window		*window;
 	struct s_parse		*parselst;
+	struct s_parse		*parselststart;
 	pid_t				father;
 	char				*separators;
 	char				*path;
@@ -85,6 +86,7 @@ typedef	struct			s_window
 typedef	struct			s_parse
 {
 	char				*cmd;
+	char				**cmdsplit;
 	char				*dbred;
 	char				*sgred;
 	char				*heredoc;
@@ -118,7 +120,7 @@ int						reset_shell(void);
 int						ft_check_in_path(t_term *term);
 int						ft_get_val_exists(t_term *term, char *str);
 int						ft_check_in_env(t_term *term, char *cmd);
-int						init_shell(int lflag);
+int						init_shell();
 int						ft_check_builtin(t_term *term);
 int						ft_is_printable(char *order);
 int						ft_is_space(char c);

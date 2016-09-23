@@ -71,6 +71,7 @@ void		ft_process_exec(t_term *term, char *cmdsplit)
 	term->parselst = NULL;
 	term->path = NULL;
 	ft_parse(term, cmdsplit);
+	term->parselststart = term->parselst;
 	if (term->fail)
 		return ;
 	term->cmds = ft_strsplit(term->parselst->cmd, ' ');
@@ -109,6 +110,7 @@ void		ft_boucle(t_term *term)
 		else
 			(term->cmdactual) ? term->cmdtmp = ft_strdup(term->cmdactual) : 0;
 		(term->cmdtmp) ? term->cmdactual = ft_strdup(term->cmdtmp) : 0;
+		ft_strdel(&(term->cmdtmp));
 		ft_check_separators(term);
 		if (term->separators)
 		{

@@ -53,7 +53,7 @@ void		ft_reset_term(t_term *term)
 	S_IWGRP | S_IWUSR);
 	free(tmp);
 	close(fd);
-	init_shell((~ICANON & ~ECHO));
+	init_shell();
 	term->separators = "";
 	term->cursorpos = 0;
 	term->cmdlength = 0;

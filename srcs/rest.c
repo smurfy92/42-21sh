@@ -55,7 +55,7 @@ void		ft_get_cmd(t_term *term, char *str)
 	ft_putstr_fd(str, 2);
 }
 
-int			init_shell(int lflag)
+int			init_shell(void)
 {
 	char			*name;
 	struct termios	term;
@@ -75,7 +75,7 @@ int			init_shell(int lflag)
 		exit(-1);
 	}
 	t->cpy_term = term;
-	term.c_lflag = term.c_lflag & lflag;
+	term.c_lflag = term.c_lflag & (~ICANON & ~ECHO);
 	term.c_cc[VMIN] = 1;
 	term.c_cc[VTIME] = 0;
 	if (tcsetattr(0, 0, &term))

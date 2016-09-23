@@ -82,17 +82,18 @@ void		ft_free_struct(t_term *term)
 	t_history	*hist;
 	int 		i;
 
-	while (term->parselst)
+	while (term->parselststart)
 	{
-		ft_strdel(&(term->parselst->cmd));
-		ft_strdel(&(term->parselst->dbred));
-		ft_strdel(&(term->parselst->sgred));
-		ft_strdel(&(term->parselst->heredoc));
-		ft_strdel(&(term->parselst->file));
-		parse = term->parselst->next;
-		free(term->parselst);
-		term->parselst = parse;
+		ft_strdel(&(term->parselststart->cmd));
+		ft_strdel(&(term->parselststart->dbred));
+		ft_strdel(&(term->parselststart->sgred));
+		ft_strdel(&(term->parselststart->heredoc));
+		ft_strdel(&(term->parselststart->file));
+		parse = term->parselststart->next;
+		free(term->parselststart);
+		term->parselststart = parse;
 	}
+	free(term->parselststart);
 	while (term->lst)
 	{
 		ft_strdel(&(term->lst->var));
@@ -122,7 +123,6 @@ void		ft_free_struct(t_term *term)
 	free(term->cmdsplit);
 	free(term->history);
 	free(term->lst);
-	free(term->parselst);
 	free(term->window);
 	ft_strdel(&(term->path));
 	ft_strdel(&(term->buf));
