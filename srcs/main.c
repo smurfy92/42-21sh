@@ -91,6 +91,12 @@ void		ft_process_exec(t_term *term, char *cmdsplit)
 	wait(0);
 }
 
+void		ft_realloc(char **dst, char *src)
+{
+	ft_strdel(dst);
+	*dst = ft_strdup(src);
+}
+
 void		ft_boucle(t_term *term)
 {
 	while (term->separators)
@@ -114,7 +120,7 @@ void		ft_boucle(t_term *term)
 		}
 	}
 	(term->cmdtmp) ? term->cmdactual = ft_strdup(term->cmdtmp) : 0;
-	term->cmdtmp = NULL;
+	ft_strdel(&(term->cmdtmp));
 }
 
 int			main(int argc, char **argv, char **env)
@@ -136,7 +142,9 @@ int			main(int argc, char **argv, char **env)
 		(!term->test) ? ft_putchar_fd('\n', 2) : 0;
 		term->cmdsplit = ft_strsplit(term->cmdactual, ';');
 		while (term->cmdsplit && term->cmdsplit[++argc])
+		{
 			ft_process_exec(term, term->cmdsplit[argc]);
+		}
 	}
 	return (0);
 }

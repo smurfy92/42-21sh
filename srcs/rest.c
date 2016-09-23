@@ -48,11 +48,7 @@ void		ft_get_cmd(t_term *term, char *str)
 	else if (!term->cmdactual)
 		term->cmdactual = ft_strdup(str);
 	else
-	{
-		tmp = ft_strjoin(term->cmdactual, str);
-		ft_bzero(term->cmdactual, ft_strlen(term->cmdactual));
-		term->cmdactual = ft_strdup(tmp);
-	}
+		term->cmdactual = ft_strjoin_nf(term->cmdactual, str, 1);
 	term->cursorpos += ft_strlen(str);
 	term->cmdlength = ft_strlen(term->cmdactual);
 	(term->inhistory) ? (term->history->var = term->cmdactual) : 0;

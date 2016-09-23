@@ -32,7 +32,12 @@ void		ft_parse(t_term *term, char *cmd)
 	tabl = ft_strsplit(cmd, '|');
 	y = ft_count_pipes(cmd);
 	while (tabl && tabl[++i])
+	{
 		ft_create_parse(term, tabl[i]);
+		ft_strdel(&tabl[i]);
+	}
+	if (tabl)
+		free(tabl);
 	if (y != i)
 	{
 		term->fail = 1;
@@ -53,20 +58,27 @@ void		ft_parse(t_term *term, char *cmd)
 int			ft_check_builtin(t_term *term)
 {
 	char	**tabl;
+	int 	i;
+	int 	y;
 
+	i = 0;
+	y = -1;
 	tabl = ft_strsplit(term->parselst->cmd, ' ');
 	if (ft_strcmp(tabl[0], "cd") == 0)
-		return (1);
+		i = 1;
 	else if (ft_strcmp(tabl[0], "env") == 0)
-		return (1);
+		i = 1;
 	else if (ft_strcmp(tabl[0], "setenv") == 0)
-		return (1);
+		i = 1;
 	else if (ft_strcmp(tabl[0], "unsetenv") == 0)
-		return (1);
+		i = 1;
 	else if (ft_strcmp(tabl[0], "exit") == 0)
-		return (1);
-	else
-		return (0);
+		i = 1;
+	while (tabl && tabl[++y])
+		ft_strdel(&tabl[y]);
+	if (tabl)
+		free(tabl);
+	return (i);
 }
 
 void		ft_create_file_dup(t_term *term)

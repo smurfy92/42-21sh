@@ -77,8 +77,10 @@ void		ft_cd(t_term *term)
 
 void		ft_free_struct(t_term *term)
 {
-	t_parse *parse;
-	t_env	*lst;
+	t_parse 	*parse;
+	t_env		*lst;
+	t_history	*hist;
+	int 		i;
 
 	while (term->parselst)
 	{
@@ -99,12 +101,31 @@ void		ft_free_struct(t_term *term)
 		free(term->lst);
 		term->lst = lst;
 	}
+	while (term->history->prev)
+		term->history = term->history->prev;
+	while (term->history)
+	{
+		if (term->history->var)
+			ft_strdel(&(term->history->var));
+		term->history->prev = NULL;
+		hist = term->history->next;
+		free(term->history);
+		term->history = hist;
+	}
+	i = -1;
+	while (term->cmdsplit[++i])
+		ft_strdel(&(term->cmdsplit[i]));
+	i = -1;
+	while (term->cmds[++i])
+		ft_strdel(&(term->cmds[i]));
+	free(term->cmds);
+	free(term->cmdsplit);
+	free(term->history);
 	free(term->lst);
 	free(term->parselst);
-	ft_putendl("ici");
+	free(term->window);
 	ft_strdel(&(term->path));
 	ft_strdel(&(term->buf));
-	ft_strdel(&(term->cmdactual));
 	ft_strdel(&(term->cmdtmp));
 	ft_strdel(&(term->copy));
 	free(term);
