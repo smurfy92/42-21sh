@@ -49,22 +49,23 @@ int			ft_check_in_path(t_term *term)
 	char		*tmp;
 
 	i = -1;
-	tmp = ft_get_env_by_name(term, "PATH");
-	tabl = ft_strsplit(tmp, ':');
+	tabl = ft_strsplit(ft_get_env_by_name(term, "PATH"), ':');
 	while (tabl && tabl[++i])
 	{
 		tmp = ft_strjoin_nf(tabl[i], "/", 1);
 		tmp = ft_strjoin_nf(tmp, term->cmds[0], 1);
 		if (access(tmp, X_OK) == 0)
+		{
+			ft_strdel(&(term->path));
 			term->path = ft_strdup(tmp);
+			ft_strdel(&tmp);
+			break ;
+		}
 		ft_strdel(&tmp);
 	}
 	free(tabl);
 	if (ft_check_in_path2(term))
-	{
-		ft_strdel(&tmp);
 		return (1);
-	}
 	tmp = ft_strjoin("jush: command not found: ", term->parselst->cmd);
 	ft_putendl_fd(tmp, 2);
 	ft_strdel(&tmp);

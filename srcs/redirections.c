@@ -93,22 +93,28 @@ void		ft_create_heredoc(t_term *term)
 {
 	int		i;
 	char	**tabl;
+	char 	*tmp;
 
 	i = -1;
 	tabl = ft_strsplit(term->parselst->heredoc, ';');
 	term->inheredoc = 1;
 	while (tabl && tabl[++i])
 	{
-		term->heredocfd = open(ft_strjoin(ft_strjoin(ft_get_env_by_name(term,
-		"HOME"), "/"), ".21shheredoctmp"), O_WRONLY | O_CREAT | O_APPEND |
-		O_TRUNC, S_IRUSR |
+		tmp = ft_strjoin(ft_get_env_by_name(term, "HOME"), "/");
+		tmp = ft_strjoin_nf(tmp, ".21shheredoctmp", 1);
+		term->heredocfd = open(tmp, O_WRONLY | O_CREAT | O_APPEND | O_TRUNC, S_IRUSR |
 		S_IRGRP | S_IWGRP | S_IWUSR);
+		ft_strdel(&tmp);
 		ft_create_heredoc2(term, tabl[i], term->heredocfd, i);
+		ft_strdel(&tabl[i]);
 	}
+	free(tabl);
 	ft_putchar_fd('\n', 2);
 	close(term->heredocfd);
 	if (!term->parselst->file)
-		term->parselst->file = ft_strjoin(ft_strjoin(ft_get_env_by_name(term,
-		"HOME"), "/"), ".21shheredoctmp");
+	{
+		tmp = ft_strjoin(ft_get_env_by_name(term, "HOME"), "/");
+		term->parselst->file = ft_strjoin_nf(tmp, ".21shheredoctmp", 1);
+	}
 	term->inheredoc = 0;
 }

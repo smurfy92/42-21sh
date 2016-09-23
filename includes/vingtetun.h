@@ -25,6 +25,7 @@
 
 typedef	struct			s_term
 {
+	struct termios		cpy_term;
 	struct s_env		*lst;
 	struct s_history	*history;
 	struct s_window		*window;
@@ -54,7 +55,6 @@ typedef	struct			s_term
 	int					inhistory;
 	int					historycurrent;
 	int					parenthese;
-	struct termios		cpy_term;
 }						t_term;
 
 typedef	struct			s_u
