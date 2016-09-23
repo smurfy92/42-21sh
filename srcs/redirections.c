@@ -19,8 +19,8 @@ void		ft_copy_redirections(t_term *term, t_parse *parse)
 	int		fd;
 	int		fd2;
 
-	tmp = ft_strjoin(ft_strjoin(ft_get_env_by_name(term, "HOME"), "/"),
-	".21shtmp");
+	tmp = ft_strjoin_nf(ft_strjoin_nf(ft_get_env_by_name(term, "HOME"), "/", 1),
+	".21shtmp", 1);
 	fd2 = open(tmp, O_RDONLY);
 	if (parse->sgred)
 		fd = open(parse->sgred, O_WRONLY, S_IRUSR);
@@ -28,6 +28,9 @@ void		ft_copy_redirections(t_term *term, t_parse *parse)
 		fd = open(parse->dbred, O_WRONLY, S_IRUSR);
 	while ((get_next_line(fd2, &line)) > 0)
 		ft_putendl_fd(line, fd);
+	close(fd);
+	close(fd2);
+	ft_strdel(&tmp);
 }
 
 void		ft_write_in_tmp(t_term *term, char *cmd)

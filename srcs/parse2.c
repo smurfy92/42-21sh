@@ -21,6 +21,7 @@ void		ft_addredirectionsuite(t_parse *parse, int end, int start)
 	tmp = ft_strdup(&parse->cmd[end]);
 	parse->cmd[start] = '\0';
 	parse->cmd = ft_strjoin(parse->cmd, tmp);
+	ft_strdel(&tmp);
 }
 
 void		ft_adddoubleredirection(t_term *term, t_parse *parse, int i)
