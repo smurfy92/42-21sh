@@ -36,6 +36,7 @@ void		ft_builtin_fork(t_term *term)
 void		ft_father_process(t_term *term)
 {
 	int		i;
+	t_parse *tmp;
 
 	i = -1;
 	while (term->parselst)
@@ -65,7 +66,8 @@ void		ft_father_process(t_term *term)
 		while (term->cmds && term->cmds[++i])
 			ft_strdel(&term->cmds[i]);
 		(term->cmds) ? free(term->cmds): 0;
-		term->parselst = term->parselst->next;
+		tmp = term->parselst->next;
+		term->parselst = tmp;
 	}
 }
 
@@ -112,12 +114,6 @@ void		ft_process_exec(t_term *term, char *cmdsplit)
 	wait(0);
 }
 
-void		ft_realloc(char **dst, char *src)
-{
-	ft_strdel(dst);
-	*dst = ft_strdup(src);
-}
-
 void		ft_boucle(t_term *term)
 {
 	while (term->separators)
@@ -126,7 +122,7 @@ void		ft_boucle(t_term *term)
 			ft_process(term);
 		term->separators = NULL;
 		if (term->cmdtmp)
-			term->cmdtmp = ft_strjoin_nf(term->cmdtmp, term->cmdactual, 1);
+			term->cmdtmp = ft_strjoin_nf(term->cmdtmp, term->cmdactual, 3);
 		else
 			(term->cmdactual) ? term->cmdtmp = ft_strdup(term->cmdactual) : 0;
 		if (term->cmdtmp)
