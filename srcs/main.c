@@ -35,6 +35,9 @@ void		ft_builtin_fork(t_term *term)
 
 void		ft_father_process(t_term *term)
 {
+	int		i;
+
+	i = -1;
 	while (term->parselst)
 	{
 		(term->parselst->close1) ? close(1) : 0;
@@ -58,6 +61,10 @@ void		ft_father_process(t_term *term)
 			}
 			ft_father_exec(term);
 		}
+		i = -1;
+		while (term->cmds && term->cmds[++i])
+			ft_strdel(&term->cmds[i]);
+		(term->cmds) ? free(term->cmds): 0;
 		term->parselst = term->parselst->next;
 	}
 }
