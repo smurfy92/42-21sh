@@ -80,7 +80,7 @@ void		ft_parse_redirections2(t_term *term, t_parse *parse, int i)
 		term->minus = 1;
 }
 
-t_parse		*ft_parse_redirections(t_term *term, t_parse *parse)
+void	ft_parse_redirections(t_term *term, t_parse *parse)
 {
 	int i;
 
@@ -96,7 +96,6 @@ t_parse		*ft_parse_redirections(t_term *term, t_parse *parse)
 		if (term->minus)
 			i++;
 	}
-	return (parse);
 }
 
 void		ft_create_parse(t_term *term, char *cmd)
@@ -115,7 +114,7 @@ void		ft_create_parse(t_term *term, char *cmd)
 	tmp->file = NULL;
 	tmp->close1 = 0;
 	tmp->close2 = 0;
-	tmp = ft_parse_redirections(term, tmp);
+	ft_parse_redirections(term, tmp);
 	if (!term->parselst)
 		term->parselst = tmp;
 	else

@@ -65,11 +65,13 @@ void		ft_father_process(t_term *term)
 void		ft_process_exec(t_term *term, char *cmdsplit)
 {
 	pid_t father;
+	int		i;
 
 	term->cmds = NULL;
 	term->fail = 0;
 	term->parselst = NULL;
 	term->path = NULL;
+	i = -1;
 	ft_parse(term, cmdsplit);
 	term->parselststart = term->parselst;
 	if (term->fail)
@@ -82,12 +84,23 @@ void		ft_process_exec(t_term *term, char *cmdsplit)
 	if (ft_check_builtin(term) && !term->parselst->next)
 	{
 		ft_create_builtin(term);
+		while (term->cmds[++i])
+			ft_strdel(&(term->cmds[i]));
+		free(term->cmds);
 		return ;
 	}
 	if (ft_check_in_path(term))
 		father = fork();
 	else
+	{
+		while (term->cmds[++i])
+			ft_strdel(&(term->cmds[i]));
+		free(term->cmds);
 		return ;
+	}
+	while (term->cmds[++i])
+		ft_strdel(&(term->cmds[i]));
+	free(term->cmds);
 	(father == 0) ? ft_father_process(term) : 0;
 	wait(0);
 }
@@ -106,10 +119,14 @@ void		ft_boucle(t_term *term)
 			ft_process(term);
 		term->separators = NULL;
 		if (term->cmdtmp)
-			term->cmdtmp = ft_strjoin(term->cmdtmp, term->cmdactual);
+			term->cmdtmp = ft_strjoin_nf(term->cmdtmp, term->cmdactual, 1);
 		else
 			(term->cmdactual) ? term->cmdtmp = ft_strdup(term->cmdactual) : 0;
-		(term->cmdtmp) ? term->cmdactual = ft_strdup(term->cmdtmp) : 0;
+		if (term->cmdtmp)
+		{
+			ft_strdel(&(term->cmdactual));
+			term->cmdactual = ft_strdup(term->cmdtmp);
+		}
 		ft_strdel(&(term->cmdtmp));
 		ft_check_separators(term);
 		if (term->separators)
@@ -146,7 +163,9 @@ int			main(int argc, char **argv, char **env)
 		while (term->cmdsplit && term->cmdsplit[++argc])
 		{
 			ft_process_exec(term, term->cmdsplit[argc]);
+			ft_strdel(&(term->cmdsplit[argc]));
 		}
+		free(term->cmdsplit);
 	}
 	return (0);
 }

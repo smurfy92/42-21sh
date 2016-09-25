@@ -200,6 +200,6 @@ t_env					*ft_add_lst(t_env *tmp, t_env *lst);
 t_env					*ft_create_lst(char *str);
 t_term					*ft_get_term(void);
 t_term					*ft_set_term(t_term *term, char **env, t_env *lst);
-t_parse					*ft_parse_redirections(t_term *term, t_parse *parse);
+void					ft_parse_redirections(t_term *term, t_parse *parse);
 
 #endif
