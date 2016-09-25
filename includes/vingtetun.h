@@ -154,6 +154,7 @@ void					ft_create_parse(t_term *term, char *cmd);
 void					ft_write_in_tmp(t_term *term, char *cmd);
 void					ft_parse(t_term *term, char *cmd);
 void					ft_reset_term(t_term *term);
+void					ft_free_parse(t_term *term);
 void					ft_get_window_sig();
 void					ft_shift_left(t_term *term);
 void					ft_prev_word(t_term *term);

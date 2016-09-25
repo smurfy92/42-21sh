@@ -68,8 +68,8 @@ void		ft_process_exec(t_term *term, char *cmdsplit)
 	int		i;
 
 	term->cmds = NULL;
-	term->fail = 0;
 	term->parselst = NULL;
+	term->fail = 0;
 	term->path = NULL;
 	i = -1;
 	ft_parse(term, cmdsplit);
@@ -142,6 +142,25 @@ void		ft_boucle(t_term *term)
 	ft_strdel(&(term->cmdtmp));
 }
 
+void		ft_free_parse(t_term *term)
+{
+	t_parse 	*parse;
+
+	while (term->parselststart)
+	{
+		ft_strdel(&(term->parselststart->cmd));
+		ft_strdel(&(term->parselststart->dbred));
+		ft_strdel(&(term->parselststart->sgred));
+		ft_strdel(&(term->parselststart->file));
+		parse = term->parselststart->next;
+		if (term->parselststart)
+			free(term->parselststart);
+		term->parselststart = parse;
+	}
+	if (term->parselststart)
+		free(term->parselststart);
+}
+
 int			main(int argc, char **argv, char **env)
 {
 	t_term		*term;
@@ -152,7 +171,8 @@ int			main(int argc, char **argv, char **env)
 	while (42)
 	{
 		argc = -1;
-		ft_get_history(term);
+		if (!term->history)
+			ft_get_history(term);
 		(!term->test) ? ft_reset_term(term) : (term->test = 0);
 		ft_boucle(term);
 		(ft_strlen(term->cmdactual) > 0) ?
@@ -163,6 +183,8 @@ int			main(int argc, char **argv, char **env)
 		while (term->cmdsplit && term->cmdsplit[++argc])
 		{
 			ft_process_exec(term, term->cmdsplit[argc]);
+			if (term->parselst)
+				ft_free_parse(term);
 			ft_strdel(&(term->cmdsplit[argc]));
 		}
 		free(term->cmdsplit);

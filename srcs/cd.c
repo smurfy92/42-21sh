@@ -77,23 +77,11 @@ void		ft_cd(t_term *term)
 
 void		ft_free_struct(t_term *term)
 {
-	t_parse 	*parse;
 	t_env		*lst;
 	t_history	*hist;
 	int 		i;
 
-	while (term->parselststart)
-	{
-		ft_strdel(&(term->parselststart->cmd));
-		ft_strdel(&(term->parselststart->dbred));
-		ft_strdel(&(term->parselststart->sgred));
-		ft_strdel(&(term->parselststart->heredoc));
-		ft_strdel(&(term->parselststart->file));
-		parse = term->parselststart->next;
-		free(term->parselststart);
-		term->parselststart = parse;
-	}
-	free(term->parselststart);
+	ft_free_parse(term);
 	while (term->lst)
 	{
 		ft_strdel(&(term->lst->var));
