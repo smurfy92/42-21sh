@@ -33,11 +33,10 @@ void		ft_copy_redirections(t_term *term, t_parse *parse)
 	ft_strdel(&tmp);
 }
 
-void		ft_write_in_tmp(t_term *term, char *cmd)
+void		ft_write_in_tmp(t_term *term)
 {
 	int		child;
 
-	term->cmds = ft_strsplit(cmd, ' ');
 	if ((!ft_check_builtin(term)) && ft_check_in_path(term))
 	{
 		child = fork();

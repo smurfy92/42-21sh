@@ -110,7 +110,7 @@ void		ft_father_exec(t_term *term)
 {
 	if (term->parselst->sgred || term->parselst->dbred)
 	{
-		ft_write_in_tmp(term, term->parselst->cmd);
+		ft_write_in_tmp(term);
 		ft_copy_redirections(term, term->parselst);
 		if (!term->parselst->next)
 			exit(0);
