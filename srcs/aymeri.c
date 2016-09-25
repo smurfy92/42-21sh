@@ -50,6 +50,8 @@ int			ft_check_in_path(t_term *term)
 
 	i = -1;
 	tabl = ft_strsplit(ft_get_env_by_name(term, "PATH"), ':');
+	if (term->path)
+		ft_strdel(&(term->path));
 	while (tabl && tabl[++i])
 	{
 		tmp = ft_strjoin(tabl[i], "/");
@@ -57,7 +59,6 @@ int			ft_check_in_path(t_term *term)
 		tmp = ft_strjoin_nf(tmp, term->cmds[0], 1);
 		if (access(tmp, X_OK) == 0 && !term->path)
 		{
-			ft_strdel(&(term->path));
 			term->path = ft_strdup(tmp);
 			ft_strdel(&tmp);
 		}

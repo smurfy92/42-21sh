@@ -113,11 +113,16 @@ void		ft_father_exec(t_term *term)
 		ft_write_in_tmp(term);
 		ft_copy_redirections(term, term->parselst);
 		if (!term->parselst->next)
+		{
+			ft_free_struct(term);
 			exit(0);
+		}
 	}
 	else
 	{
 		if (!term->parselst->file)
+		{
 			ft_create_process(term);
+		}
 	}
 }

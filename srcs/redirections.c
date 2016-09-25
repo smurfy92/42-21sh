@@ -19,7 +19,7 @@ void		ft_copy_redirections(t_term *term, t_parse *parse)
 	int		fd;
 	int		fd2;
 
-	tmp = ft_strjoin_nf(ft_strjoin_nf(ft_get_env_by_name(term, "HOME"), "/", 1),
+	tmp = ft_strjoin_nf(ft_strjoin(ft_get_env_by_name(term, "HOME"), "/"),
 	".21shtmp", 1);
 	fd2 = open(tmp, O_RDONLY);
 	if (parse->sgred)

@@ -14,8 +14,9 @@
 
 void		ft_builtin_fork(t_term *term)
 {
-	int tabl[2];
-	int father;
+	int 		tabl[2];
+	int 		father;
+	t_parse		*tmp;
 
 	pipe(tabl);
 	father = fork();
@@ -29,14 +30,20 @@ void		ft_builtin_fork(t_term *term)
 	dup2(tabl[0], STDIN_FILENO);
 	close(tabl[1]);
 	wait(0);
-	term->parselst = term->parselst->next;
+	tmp = term->parselst->next;
+	ft_strdel(&(term->parselst->cmd));
+	ft_strdel(&(term->parselst->dbred));
+	ft_strdel(&(term->parselst->sgred));
+	ft_strdel(&(term->parselst->file));
+	free(term->parselst);
+	term->parselst = tmp;
 	ft_father_process(term);
 }
 
 void		ft_father_process(t_term *term)
 {
 	int		i;
-	t_parse *tmp;
+	//t_parse *tmp;
 
 	i = -1;
 	while (term->parselst)
@@ -46,6 +53,7 @@ void		ft_father_process(t_term *term)
 		term->cmds = ft_strsplit(term->parselst->cmd, ' ');
 		if (ft_check_builtin(term) || ft_check_in_path(term))
 		{
+			ft_putendl(term->path);
 			ft_refresh_env(term);
 			if (ft_check_builtin(term))
 				ft_builtin_fork(term);
@@ -66,8 +74,8 @@ void		ft_father_process(t_term *term)
 		while (term->cmds && term->cmds[++i])
 			ft_strdel(&term->cmds[i]);
 		(term->cmds) ? free(term->cmds): 0;
-		tmp = term->parselst->next;
-		term->parselst = tmp;
+		term->parselst = term->parselst->next;
+		// term->parselst = tmp;
 	}
 }
 
@@ -156,12 +164,10 @@ void		ft_free_parse(t_term *term)
 		ft_strdel(&(term->parselststart->sgred));
 		ft_strdel(&(term->parselststart->file));
 		parse = term->parselststart->next;
-		if (term->parselststart)
-			free(term->parselststart);
+		free(term->parselststart);
 		term->parselststart = parse;
 	}
-	if (term->parselststart)
-		free(term->parselststart);
+	free(term->parselststart);
 }
 
 int			main(int argc, char **argv, char **env)
@@ -174,8 +180,7 @@ int			main(int argc, char **argv, char **env)
 	while (42)
 	{
 		argc = -1;
-		if (!term->history)
-			ft_get_history(term);
+		(!term->history) ? ft_get_history(term) : 0;
 		(!term->test) ? ft_reset_term(term) : (term->test = 0);
 		ft_boucle(term);
 		(ft_strlen(term->cmdactual) > 0) ?
