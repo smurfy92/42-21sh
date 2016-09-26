@@ -15,13 +15,21 @@
 void		ft_del_first_in_cmd(t_term *term, char c)
 {
 	int		i;
+	char	*tmp;
 
 	i = -1;
 	while (term->cmdactual && term->cmdactual[++i])
 	{
 		if (term->cmdactual[i] == c)
 		{
-			term->cmdactual[i] = ' ';
+			if (term->cmdactual[i + 1])
+			{
+				tmp = ft_strdup(&term->cmdactual[i + 1]);
+				term->cmdactual[i] = '\0';
+				term->cmdactual = ft_strjoin_nf(term->cmdactual , tmp, 3);
+			}
+			else
+				term->cmdactual[i] = '\0';
 			return ;
 		}
 	}
@@ -51,8 +59,6 @@ void		ft_del_first_in_separator(t_term *term, char c)
 			ft_check_last_in_cmd(term, c);
 			if (!term->separators[i + 1])
 			{
-				ft_del_first_in_cmd(term, c);
-				ft_del_last_in_cmd(term, c);
 				if (i == 0)
 					term->separators = NULL;
 				else
@@ -67,7 +73,7 @@ void		ft_del_first_in_separator(t_term *term, char c)
 	}
 }
 
-void		ft_add_separator(t_term *term, char c)
+int			ft_add_separator(t_term *term, char c)
 {
 	char *str;
 
@@ -88,8 +94,11 @@ void		ft_add_separator(t_term *term, char c)
 	{
 		(!term->separators) ? (term->separators = ft_strdup(str)) :
 		(term->separators = ft_strjoin_nf(term->separators, str, 1));
+		ft_strdel(&str);
+		return (0);
 	}
 	ft_strdel(&str);
+	return (1);
 }
 
 void		ft_check_separators(t_term *term)
@@ -100,6 +109,6 @@ void		ft_check_separators(t_term *term)
 	while (term->cmdactual && term->cmdactual[++i])
 	{
 		if (ft_is_separator(term->cmdactual[i]))
-			ft_add_separator(term, term->cmdactual[i]);
+			(ft_add_separator(term, term->cmdactual[i])) ? (i -= 2) : 0;
 	}
 }
