@@ -59,8 +59,6 @@ void		ft_history_prev(t_term *term)
 	term->inhistory = 1;
 	term->cursorpos = ft_strlen(term->history->var);
 	term->cmdlength = ft_strlen(term->history->var);
-	if (term->cmdactual)
-		ft_strdel(&(term->cmdactual));
 	term->cmdactual = ft_strdup(term->history->var);
 	ft_putstr_fd(term->history->var, 2);
 }
@@ -76,8 +74,6 @@ void		ft_history_next(t_term *term)
 		term->history = term->history->next;
 		term->cursorpos = ft_strlen(term->history->var);
 		term->cmdlength = ft_strlen(term->history->var);
-		if (term->cmdactual)
-			ft_strdel(&(term->cmdactual));
 		term->cmdactual = ft_strdup(term->history->var);
 		ft_putstr_fd(term->history->var, 2);
 	}

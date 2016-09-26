@@ -124,15 +124,16 @@ void		ft_boucle(t_term *term)
 			(term->cmdactual) ? term->cmdtmp = ft_strdup(term->cmdactual) : 0;
 		if (term->cmdtmp)
 		{
-			ft_strdel(&(term->cmdactual));
+			(term->cmdactual) ? ft_strdel(&(term->cmdactual)) : 0;
 			term->cmdactual = ft_strdup(term->cmdtmp);
 		}
 		ft_strdel(&(term->cmdtmp));
 		ft_check_separators(term);
 		if (term->separators)
 		{
-			term->cmdactual = ft_strjoin(term->cmdactual, "\n");
+			term->cmdactual = ft_strjoin_nf(term->cmdactual, "\n", 1);
 			term->cmdtmp = ft_strdup(term->cmdactual);
+			ft_strdel(&(term->cmdactual));
 			ft_go_end(term);
 			ft_reset_term(term);
 			ft_putstr_fd("\n> ", 2);

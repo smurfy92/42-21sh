@@ -108,5 +108,6 @@ void		ft_clean_line(t_term *term)
 		tputs(tgetstr("cd", NULL), 0, ft_outchar);
 	}
 	term->cmdlength = 0;
-	term->cmdactual = NULL;
+	if (term->cmdactual)
+		ft_strdel(&(term->cmdactual));
 }
