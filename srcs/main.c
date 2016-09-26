@@ -120,7 +120,7 @@ void		ft_boucle(t_term *term)
 		term->separators = NULL;
 		if (term->cmdtmp)
 		{
-			(term->cmdactual) ? (term->cmdtmp = ft_strjoin_nf(term->cmdtmp, term->cmdactual, 3)) : 0;
+			(term->cmdactual) ? (term->cmdtmp = ft_strjoin_nf(term->cmdtmp, term->cmdactual, 1	)) : 0;
 		}
 		else
 			(term->cmdactual) ? term->cmdtmp = ft_strdup(term->cmdactual) : 0;
@@ -142,10 +142,7 @@ void		ft_boucle(t_term *term)
 		}
 	}
 	if (term->cmdtmp)
-	{
-		ft_strdel(&(term->cmdactual));
 		term->cmdactual = ft_strdup(term->cmdtmp);
-	}
 	ft_strdel(&(term->cmdtmp));
 }
 

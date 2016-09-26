@@ -68,7 +68,7 @@ void		ft_del_last_in_cmd(t_term *term, char c)
 	int		i;
 
 	i = ft_strlen(term->cmdactual);
-	while (term->cmdactual && term->cmdactual[--i])
+	while (i > 1 && term->cmdactual && term->cmdactual[--i])
 	{
 		if (term->cmdactual[i] == c)
 		{
