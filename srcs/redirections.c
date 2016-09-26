@@ -92,7 +92,7 @@ void		ft_create_heredoc(t_term *term)
 {
 	int		i;
 	char	**tabl;
-	char 	*tmp;
+	char	*tmp;
 
 	i = -1;
 	tabl = ft_strsplit(term->parselst->heredoc, ';');
@@ -101,8 +101,8 @@ void		ft_create_heredoc(t_term *term)
 	{
 		tmp = ft_strjoin(ft_get_env_by_name(term, "HOME"), "/");
 		tmp = ft_strjoin_nf(tmp, ".21shheredoctmp", 1);
-		term->heredocfd = open(tmp, O_WRONLY | O_CREAT | O_APPEND | O_TRUNC, S_IRUSR |
-		S_IRGRP | S_IWGRP | S_IWUSR);
+		term->heredocfd = open(tmp, O_WRONLY | O_CREAT | O_APPEND | O_TRUNC,
+		S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
 		ft_strdel(&tmp);
 		ft_create_heredoc2(term, tabl[i], term->heredocfd, i);
 		ft_strdel(&tabl[i]);

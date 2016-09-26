@@ -80,7 +80,7 @@ void		ft_parse_redirections2(t_term *term, t_parse *parse, int i)
 		term->minus = 1;
 }
 
-void	ft_parse_redirections(t_term *term, t_parse *parse)
+void		ft_parse_redirections(t_term *term, t_parse *parse)
 {
 	int i;
 

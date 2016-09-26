@@ -36,11 +36,11 @@ void		ft_backspace(t_term *term)
 {
 	char *tmp;
 
-	tmp = &term->cmdactual[term->cursorpos];
+	tmp = ft_strdup(&term->cmdactual[term->cursorpos]);
 	ft_left_arrow(term);
 	term->cmdlength--;
 	term->cmdactual[term->cursorpos] = '\0';
-	term->cmdactual = ft_strjoin(term->cmdactual, tmp);
+	term->cmdactual = ft_strjoin_nf(term->cmdactual, tmp, 3);
 	tputs(tgetstr("dc", NULL), 0, ft_outchar);
 	tputs(tgetstr("cd", NULL), 0, ft_outchar);
 	tputs(tgetstr("sc", NULL), 0, ft_outchar);

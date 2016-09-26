@@ -125,6 +125,7 @@ int						ft_check_builtin(t_term *term);
 int						ft_is_printable(char *order);
 int						ft_is_space(char c);
 int						ft_count_pipes(char *cmd);
+void					ft_free_cmds(t_term *term);
 void					ft_free_struct(t_term *term);
 void					ft_check_parse(t_term *term);
 void					ft_go_down(t_term *term);

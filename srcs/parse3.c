@@ -58,8 +58,8 @@ void		ft_parse(t_term *term, char *cmd)
 int			ft_check_builtin(t_term *term)
 {
 	char	**tabl;
-	int 	i;
-	int 	y;
+	int		i;
+	int		y;
 
 	i = 0;
 	y = -1;

@@ -14,8 +14,8 @@
 
 void		ft_builtin_fork(t_term *term)
 {
-	int 		tabl[2];
-	int 		father;
+	int			tabl[2];
+	int			father;
 	t_parse		*tmp;
 
 	pipe(tabl);
@@ -43,7 +43,6 @@ void		ft_builtin_fork(t_term *term)
 void		ft_father_process(t_term *term)
 {
 	int		i;
-	//t_parse *tmp;
 
 	i = -1;
 	while (term->parselst)
@@ -53,7 +52,6 @@ void		ft_father_process(t_term *term)
 		term->cmds = ft_strsplit(term->parselst->cmd, ' ');
 		if (ft_check_builtin(term) || ft_check_in_path(term))
 		{
-			ft_putendl(term->path);
 			ft_refresh_env(term);
 			if (ft_check_builtin(term))
 				ft_builtin_fork(term);
@@ -71,17 +69,14 @@ void		ft_father_process(t_term *term)
 			ft_father_exec(term);
 		}
 		i = -1;
-		while (term->cmds && term->cmds[++i])
-			ft_strdel(&term->cmds[i]);
-		(term->cmds) ? free(term->cmds): 0;
+		ft_free_cmds(term);
 		term->parselst = term->parselst->next;
-		// term->parselst = tmp;
 	}
 }
 
 void		ft_process_exec(t_term *term, char *cmdsplit)
 {
-	pid_t father;
+	pid_t	father;
 	int		i;
 
 	term->cmds = NULL;
@@ -101,23 +96,17 @@ void		ft_process_exec(t_term *term, char *cmdsplit)
 	if (ft_check_builtin(term) && !term->parselst->next)
 	{
 		ft_create_builtin(term);
-		while (term->cmds[++i])
-			ft_strdel(&(term->cmds[i]));
-		free(term->cmds);
+		ft_free_cmds(term);
 		return ;
 	}
 	if (ft_check_in_path(term))
 		father = fork();
 	else
 	{
-		while (term->cmds[++i])
-			ft_strdel(&(term->cmds[i]));
-		free(term->cmds);
+		ft_free_cmds(term);
 		return ;
 	}
-	while (term->cmds[++i])
-		ft_strdel(&(term->cmds[i]));
-	free(term->cmds);
+	ft_free_cmds(term);
 	(father == 0) ? ft_father_process(term) : 0;
 	wait(0);
 }
@@ -149,25 +138,12 @@ void		ft_boucle(t_term *term)
 			ft_putstr_fd("\n> ", 2);
 		}
 	}
-	(term->cmdtmp) ? term->cmdactual = ft_strdup(term->cmdtmp) : 0;
-	ft_strdel(&(term->cmdtmp));
-}
-
-void		ft_free_parse(t_term *term)
-{
-	t_parse 	*parse;
-
-	while (term->parselststart)
+	if (term->cmdtmp)
 	{
-		ft_strdel(&(term->parselststart->cmd));
-		ft_strdel(&(term->parselststart->dbred));
-		ft_strdel(&(term->parselststart->sgred));
-		ft_strdel(&(term->parselststart->file));
-		parse = term->parselststart->next;
-		free(term->parselststart);
-		term->parselststart = parse;
+		ft_strdel(&(term->cmdactual));
+		term->cmdactual = ft_strdup(term->cmdtmp);
 	}
-	free(term->parselststart);
+	ft_strdel(&(term->cmdtmp));
 }
 
 int			main(int argc, char **argv, char **env)
@@ -191,9 +167,9 @@ int			main(int argc, char **argv, char **env)
 		while (term->cmdsplit && term->cmdsplit[++argc])
 		{
 			ft_process_exec(term, term->cmdsplit[argc]);
-			if (term->parselst)
-				ft_free_parse(term);
+			(term->parselst) ? ft_free_parse(term) : 0;
 			ft_strdel(&(term->cmdsplit[argc]));
+			(term->path) ? ft_strdel(&(term->path)) : 0;
 		}
 		free(term->cmdsplit);
 	}
