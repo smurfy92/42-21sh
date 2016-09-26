@@ -54,7 +54,6 @@ void		ft_reset_term(t_term *term)
 	free(tmp);
 	close(fd);
 	init_shell();
-	term->separators = "";
 	term->cursorpos = 0;
 	term->cmdlength = 0;
 	ft_strdel(&(term->path));

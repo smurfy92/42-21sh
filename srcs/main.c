@@ -113,15 +113,13 @@ void		ft_process_exec(t_term *term, char *cmdsplit)
 
 void		ft_boucle(t_term *term)
 {
-	while (term->separators)
+	while (42)
 	{
 		while ((read(0, term->buf, BUFFSIZE)) && term->buf[0] != 10)
 			ft_process(term);
 		term->separators = NULL;
 		if (term->cmdtmp)
-		{
 			(term->cmdactual) ? (term->cmdtmp = ft_strjoin_nf(term->cmdtmp, term->cmdactual, 1	)) : 0;
-		}
 		else
 			(term->cmdactual) ? term->cmdtmp = ft_strdup(term->cmdactual) : 0;
 		if (term->cmdtmp)
@@ -140,6 +138,8 @@ void		ft_boucle(t_term *term)
 			ft_reset_term(term);
 			ft_putstr_fd("\n> ", 2);
 		}
+		if (!term->separators)
+			break;
 	}
 	if (term->cmdtmp)
 		term->cmdactual = ft_strdup(term->cmdtmp);

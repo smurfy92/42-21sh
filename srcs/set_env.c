@@ -71,6 +71,7 @@ t_term		*ft_set_term(t_term *term, char **env, t_env *lst)
 	term->historycurrent = 0;
 	term->i = 0;
 	term->parenthese = 0;
+	term->separators = NULL;
 	term->parselst = NULL;
 	term->history = NULL;
 	term->historylen = 0;

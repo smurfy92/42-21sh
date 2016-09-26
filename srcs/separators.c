@@ -60,12 +60,12 @@ void		ft_del_first_in_separator(t_term *term, char c)
 			if (!term->separators[i + 1])
 			{
 				if (i == 0)
-					term->separators = NULL;
+					ft_strdel(&(term->separators));
 				else
 					term->separators[i] = '\0';
 			}
 			else if (i == 0)
-				term->separators = NULL;
+				ft_strdel(&(term->separators));
 			else
 				ft_del_first_in_separator2(term, i);
 			return ;

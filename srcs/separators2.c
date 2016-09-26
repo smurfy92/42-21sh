@@ -36,27 +36,27 @@ int			ft_has_separator(t_term *term, char c)
 
 void		ft_check_last_in_cmd(t_term *term, char c)
 {
-	if (c == '{')
+	if (term->separators[0] == c && c == '{')
 	{
 		ft_del_first_in_cmd(term, '}');
 		ft_del_last_in_cmd(term, '{');
 	}
-	if (c == '[')
+	if (term->separators[0] == c && c == '[')
 	{
 		ft_del_first_in_cmd(term, ']');
 		ft_del_last_in_cmd(term, '[');
 	}
-	if (c == '(')
+	if (term->separators[0] == c && c == '(')
 	{
 		ft_del_first_in_cmd(term, ')');
 		ft_del_last_in_cmd(term, '(');
 	}
-	if (c == 39)
+	if (term->separators[0] == c && c == 39)
 	{
 		ft_del_first_in_cmd(term, 39);
 		ft_del_first_in_cmd(term, 39);
 	}
-	if (c == '"')
+	if (term->separators[0] == c && c == '"')
 	{
 		ft_del_first_in_cmd(term, '"');
 		ft_del_first_in_cmd(term, '"');
