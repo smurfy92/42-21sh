@@ -57,10 +57,13 @@ void		ft_history_prev(t_term *term)
 	if (term->history->prev && term->inhistory)
 		term->history = term->history->prev;
 	term->inhistory = 1;
-	term->cursorpos = ft_strlen(term->history->var);
-	term->cmdlength = ft_strlen(term->history->var);
-	term->cmdactual = ft_strdup(term->history->var);
-	ft_putstr_fd(term->history->var, 2);
+	if (term->history->var)
+	{
+		term->cursorpos = ft_strlen(term->history->var);
+		term->cmdlength = ft_strlen(term->history->var);
+		term->cmdactual = ft_strdup(term->history->var);
+		ft_putstr_fd(term->history->var, 2);
+	}
 }
 
 void		ft_history_next(t_term *term)

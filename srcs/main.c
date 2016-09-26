@@ -119,7 +119,9 @@ void		ft_boucle(t_term *term)
 			ft_process(term);
 		term->separators = NULL;
 		if (term->cmdtmp)
-			term->cmdtmp = ft_strjoin_nf(term->cmdtmp, term->cmdactual, 3);
+		{
+			(term->cmdactual) ? (term->cmdtmp = ft_strjoin_nf(term->cmdtmp, term->cmdactual, 3)) : 0;
+		}
 		else
 			(term->cmdactual) ? term->cmdtmp = ft_strdup(term->cmdactual) : 0;
 		if (term->cmdtmp)

@@ -75,17 +75,21 @@ void		ft_add_separator(t_term *term, char c)
 	str[0] = c;
 	str[1] = '\0';
 	if (ft_has_separator(term, '(') && c == ')')
-		return (ft_del_first_in_separator(term, '('));
-	if (ft_has_separator(term, '[') && c == ']')
-		return (ft_del_first_in_separator(term, '['));
-	if (ft_has_separator(term, '{') && c == '}')
-		return (ft_del_first_in_separator(term, '{'));
-	if (ft_has_separator(term, 39) && c == 39)
-		return (ft_del_first_in_separator(term, 39));
-	if (ft_has_separator(term, '"') && c == '"')
-		return (ft_del_first_in_separator(term, '"'));
-	(!term->separators) ? (term->separators = ft_strdup(str)) :
-	(term->separators = ft_strjoin(term->separators, str));
+		ft_del_first_in_separator(term, '(');
+	else if (ft_has_separator(term, '[') && c == ']')
+		ft_del_first_in_separator(term, '[');
+	else if (ft_has_separator(term, '{') && c == '}')
+		ft_del_first_in_separator(term, '{');
+	else if (ft_has_separator(term, 39) && c == 39)
+		ft_del_first_in_separator(term, 39);
+	else if (ft_has_separator(term, '"') && c == '"')
+		ft_del_first_in_separator(term, '"');
+	else
+	{
+		(!term->separators) ? (term->separators = ft_strdup(str)) :
+		(term->separators = ft_strjoin_nf(term->separators, str, 1));
+	}
+	ft_strdel(&str);
 }
 
 void		ft_check_separators(t_term *term)
