@@ -113,10 +113,17 @@ void		ft_process_exec(t_term *term, char *cmdsplit)
 
 void		ft_boucle(t_term *term)
 {
+	int		ret;
+
 	while (42)
 	{
-		while ((read(0, term->buf, BUFFSIZE)) && term->buf[0] != 10)
+		while ((ret = (read(0, term->buf, BUFFSIZE))) && term->buf[0] != 10)
 			ft_process(term);
+		if (ret == 0)
+		{
+			ft_putendl("need to read file");
+			exit(0);
+		}
 		term->separators = NULL;
 		if (term->cmdtmp)
 			(term->cmdactual) ? (term->cmdtmp = ft_strjoin_nf(term->cmdtmp, term->cmdactual, 1	)) : 0;
