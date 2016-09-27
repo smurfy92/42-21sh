@@ -52,8 +52,8 @@ void		ft_process_setenv(t_term *term, char *s1, char *s2)
 	else
 	{
 		lst = (t_env*)malloc(sizeof(t_env));
-		lst->var = s1;
-		lst->val = s2;
+		lst->var = ft_strdup(s1);
+		lst->val = ft_strdup(s2);
 		lst->next = NULL;
 		term->lst = ft_add_lst(lst, term->lst);
 	}
