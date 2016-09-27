@@ -47,8 +47,6 @@ void		ft_free_struct2(t_term *term)
 	while (term->cmdsplit[++i])
 		ft_strdel(&(term->cmdsplit[i]));
 	ft_free_cmds(term);
-	free(term->history);
-	free(term->lst);
 	free(term->window);
 	ft_strdel(&(term->path));
 	ft_strdel(&(term->buf));

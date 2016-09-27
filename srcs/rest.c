@@ -71,8 +71,7 @@ int			init_shell(void)
 	}
 	if (tcgetattr(0, &term) == -1)
 	{
-		ft_putendl_fd("jush: tcgetattr failed", 2);
-		exit(-1);
+		return (-1);
 	}
 	t->cpy_term = term;
 	term.c_lflag = term.c_lflag & (~ICANON & ~ECHO);

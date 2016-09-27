@@ -41,7 +41,7 @@ void		ft_replace_vars(t_term *term, t_parse *parse, int i)
 		term->minus = 1;
 	else
 	{
-		if (!parse->cmd[i + 1])
+		if (!parse->cmd[start + 1])
 		{
 			parse->cmd[start - 1] = '\0';
 			parse->cmd = ft_strjoin(parse->cmd, ft_get_val(term, tmp));
