@@ -59,11 +59,16 @@ void		ft_boucle(t_term *term)
 			ft_process_exec(term, term->intro);
 			exit(0);
 		}
+		ft_strdel(&(term->intro));
 		ft_separators(term);
 		if (!term->separators)
 			break ;
 	}
-	(term->cmdtmp) ? term->cmdactual = ft_strdup(term->cmdtmp) : 0;
+	if (term->cmdtmp)
+	{
+		(term->cmdactual) ? ft_strdel(&(term->cmdactual)) : 0;
+		term->cmdactual = ft_strdup(term->cmdtmp);
+	}
 	ft_strdel(&(term->cmdtmp));
 }
 

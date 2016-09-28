@@ -57,7 +57,7 @@ void		ft_reset_term(t_term *term)
 	term->cursorpos = 0;
 	term->cmdlength = 0;
 	ft_strdel(&(term->path));
-	term->cmdactual = NULL;
+	(term->cmdactual) ? ft_strdel((&term->cmdactual)) : 0;
 	ft_bzero(term->cmdactual, ft_strlen(term->cmdactual));
 	ft_bzero(term->buf, ft_strlen(term->buf));
 	ft_get_window(term);
