@@ -100,9 +100,8 @@ void		ft_clean_line(t_term *term)
 		return ;
 	while (term->cmdlength-- > 0)
 	{
+		ft_backspace(term);
 		ft_left_arrow(term);
-		tputs(tgetstr("dc", NULL), 0, ft_outchar);
-		tputs(tgetstr("cd", NULL), 0, ft_outchar);
 	}
 	term->cmdlength = 0;
 	if (term->cmdactual)

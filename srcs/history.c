@@ -17,6 +17,17 @@ int			ft_outchar(int c)
 	return (write(2, &c, 1));
 }
 
+char 		*ft_trim_backslash(char *cmd)
+{
+	int i;
+
+	i = -1;
+	while (cmd && cmd[++i])
+		if (cmd[i] == '\n')
+			cmd[i] = ' ';
+	return (cmd);
+}
+
 void		ft_add_history(t_term *term, char *cmd)
 {
 	int			fd;
@@ -25,10 +36,10 @@ void		ft_add_history(t_term *term, char *cmd)
 
 	fd = open("/tmp/.21sh_history", O_WRONLY | O_APPEND | O_CREAT,
 	S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
-	ft_putendl_fd(cmd, fd);
+	ft_putendl_fd(ft_trim_backslash(cmd), fd);
 	tmp2 = term->history;
 	tmp = (t_history*)malloc(sizeof(t_history));
-	tmp->var = ft_strdup(cmd);
+	tmp->var = ft_strdup(ft_trim_backslash(cmd));
 	tmp->next = NULL;
 	close(fd);
 	if (!term->history)

@@ -48,6 +48,15 @@ void		ft_backspace(t_term *term)
 	tputs(tgetstr("rc", NULL), 0, ft_outchar);
 }
 
+int			ft_get_first(t_term *term)
+{
+	int i;
+
+	i = term->cursorpos;
+	while (term->cmdactual[--i] && term->cmdactual[i] != '\n');
+	return (i);
+}
+
 void		ft_left_arrow(t_term *term)
 {
 	int i;
