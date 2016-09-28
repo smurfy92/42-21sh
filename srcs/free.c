@@ -32,7 +32,7 @@ void		ft_free_parse(t_term *term)
 		ft_strdel(&(term->parselststart->dbred));
 		ft_strdel(&(term->parselststart->sgred));
 		ft_strdel(&(term->parselststart->file));
-		ft_strdel(&(term->parselststart->heredoc));
+		(term->parselststart->heredoc) ? ft_strdel(&(term->parselststart->heredoc)) : 0;
 		parse = term->parselststart->next;
 		free(term->parselststart);
 		term->parselststart = parse;

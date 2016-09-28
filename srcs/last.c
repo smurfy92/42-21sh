@@ -47,7 +47,6 @@ void		ft_ctrl_c(int sig)
 	sig = 0;
 	reset_shell();
 	term = ft_get_term();
-	ft_putchar_fd('\n', 2);
 	term->test = 1;
 	if (term->inheredoc)
 	{
@@ -56,6 +55,7 @@ void		ft_ctrl_c(int sig)
 		term->fail = 1;
 		term->test = 0;
 	}
+	ioctl(0, TIOCSTI, "\n");
 	ft_reset_term(term);
 }
 

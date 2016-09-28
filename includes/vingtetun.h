@@ -126,6 +126,7 @@ int						ft_check_builtin(t_term *term);
 int						ft_is_printable(char *order);
 int						ft_is_space(char c);
 int						ft_count_pipes(char *cmd);
+void					ft_boucle(t_term *term);
 void					ft_free_cmds(t_term *term);
 void					ft_path_error(t_term *term);
 void					ft_process_exec(t_term *term, char *cmdsplit);
