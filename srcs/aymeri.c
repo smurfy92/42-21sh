@@ -67,10 +67,7 @@ int			ft_check_in_path(t_term *term)
 	free(tabl);
 	if (ft_check_in_path2(term))
 		return (1);
-	tmp = ft_strjoin("jush: command not found: ", term->parselst->cmd);
-	ft_putendl_fd(tmp, 2);
-	ft_strdel(&tmp);
-	term->exec = 0;
+	ft_path_error(term);
 	return (0);
 }
 

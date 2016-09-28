@@ -28,7 +28,6 @@ void		ft_adddoubleredirection(t_term *term, t_parse *parse, int i)
 {
 	int		start;
 	int		end;
-	char	*tmp;
 
 	if (!parse->cmd[i])
 	{
@@ -44,10 +43,7 @@ void		ft_adddoubleredirection(t_term *term, t_parse *parse, int i)
 		end++;
 	if (end == i && (term->fail = 1))
 	{
-		tmp = ft_strjoin_nf(ft_strjoin("jush : parse error near `",
-		&parse->cmd[end - 1]), "'", 1);
-		ft_putendl_fd(tmp, 2);
-		ft_strdel(&tmp);
+		ft_redirection_error(parse, end);
 		return ;
 	}
 	parse->dbred = ft_strsub(&parse->cmd[i], 0, end - i);
@@ -59,7 +55,6 @@ void		ft_addredirection(t_term *term, t_parse *parse, int i)
 {
 	int		start;
 	int		end;
-	char	*tmp;
 
 	if (!parse->cmd[i])
 	{
@@ -75,10 +70,7 @@ void		ft_addredirection(t_term *term, t_parse *parse, int i)
 		end++;
 	if (end == i && (term->fail = 1))
 	{
-		tmp = ft_strjoin_nf(ft_strjoin("jush : parse error near `",
-		&parse->cmd[end - 1]), "'", 1);
-		ft_putendl_fd(tmp, 2);
-		ft_strdel(&tmp);
+		ft_redirection_error(parse, end);
 		return ;
 	}
 	parse->sgred = ft_strsub(&parse->cmd[i], 0, end - i);
@@ -123,9 +115,7 @@ void		ft_addheredoc(t_term *term, t_parse *parse, int i)
 		ft_strdel(&tmp);
 	}
 	else
-	{
-		tmp = ft_strjoin_nf(";", tmp, 2);
-		parse->heredoc = ft_strjoin_nf(parse->heredoc, tmp, 3);
-	}
+		parse->heredoc = ft_strjoin_nf(parse->heredoc,
+		ft_strjoin_nf(";", tmp, 2), 3);
 	ft_addheredoc2(parse, end, start);
 }

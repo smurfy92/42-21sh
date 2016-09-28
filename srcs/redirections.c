@@ -62,6 +62,7 @@ void		ft_create_redirections(t_parse *parse)
 
 void		ft_create_heredoc2(t_term *term, char *str, int fd, int i)
 {
+	term->inheredoc = 1;
 	term->cmdlength = ft_strlen(term->cmdactual) - 12;
 	ft_go_end(term);
 	(i == 0) ? ft_putstr_fd("heredoc-> ", 2) : ft_putstr_fd("\nheredoc-> ", 2);
@@ -96,7 +97,6 @@ void		ft_create_heredoc(t_term *term)
 
 	i = -1;
 	tabl = ft_strsplit(term->parselst->heredoc, ';');
-	term->inheredoc = 1;
 	while (tabl && tabl[++i])
 	{
 		tmp = ft_strjoin(ft_get_env_by_name(term, "HOME"), "/");

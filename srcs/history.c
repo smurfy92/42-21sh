@@ -28,7 +28,7 @@ void		ft_add_history(t_term *term, char *cmd)
 	ft_putendl_fd(cmd, fd);
 	tmp2 = term->history;
 	tmp = (t_history*)malloc(sizeof(t_history));
-	tmp->var = cmd;
+	tmp->var = ft_strdup(cmd);
 	tmp->next = NULL;
 	close(fd);
 	if (!term->history)

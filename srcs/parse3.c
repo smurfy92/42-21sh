@@ -12,13 +12,19 @@
 
 #include "../includes/vingtetun.h"
 
-int			ft_end_of_red(char c)
+void		ft_parse2(t_term *term)
 {
-	if (c == '\t' || c == ' ' || c == '\v' || c == '\f' || c == '\r'
-	|| c == '\n' || c == '>' || c == '<' || c == '|')
-		return (1);
-	else
-		return (0);
+	t_parse		*tmp;
+	int			i;
+
+	tmp = term->parselst;
+	while (tmp)
+	{
+		i = ft_strlen(tmp->cmd);
+		while (i > 0 && tmp->cmd && tmp->cmd[--i] == ' ')
+			tmp->cmd[i] = '\0';
+		tmp = tmp->next;
+	}
 }
 
 void		ft_parse(t_term *term, char *cmd)
@@ -26,7 +32,6 @@ void		ft_parse(t_term *term, char *cmd)
 	char		**tabl;
 	int			i;
 	int			y;
-	t_parse		*tmp;
 
 	i = -1;
 	tabl = ft_strsplit(cmd, '|');
@@ -45,14 +50,7 @@ void		ft_parse(t_term *term, char *cmd)
 	}
 	term->cmdlength = 0;
 	cmd = NULL;
-	tmp = term->parselst;
-	while (tmp)
-	{
-		i = ft_strlen(tmp->cmd);
-		while (tmp->cmd && tmp->cmd[--i] == ' ')
-			tmp->cmd[i] = '\0';
-		tmp = tmp->next;
-	}
+	ft_parse2(term);
 }
 
 int			ft_check_builtin(t_term *term)
