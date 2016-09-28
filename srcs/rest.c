@@ -70,9 +70,7 @@ int			init_shell(void)
 		exit(-1);
 	}
 	if (tcgetattr(0, &term) == -1)
-	{
 		return (-1);
-	}
 	t->cpy_term = term;
 	term.c_lflag = term.c_lflag & (~ICANON & ~ECHO);
 	term.c_cc[VMIN] = 1;

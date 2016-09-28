@@ -26,7 +26,7 @@ void		ft_del_first_in_cmd(t_term *term, char c)
 			{
 				tmp = ft_strdup(&term->cmdactual[i + 1]);
 				term->cmdactual[i] = '\0';
-				term->cmdactual = ft_strjoin_nf(term->cmdactual , tmp, 3);
+				term->cmdactual = ft_strjoin_nf(term->cmdactual, tmp, 3);
 			}
 			else
 				term->cmdactual[i] = '\0';

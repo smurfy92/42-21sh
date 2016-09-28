@@ -1,4 +1,4 @@
-	/* ************************************************************************** */
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
@@ -118,15 +118,24 @@ void		ft_boucle(t_term *term)
 	while (42)
 	{
 		while ((ret = (read(0, term->buf, BUFFSIZE))) && term->buf[0] != 10)
+		{
+			if (!term->intro)
+				term->intro = ft_strdup(term->buf);
+			else
+				term->intro = ft_strjoin_nf(term->intro, term->buf, 1);
 			ft_process(term);
+		}
 		if (ret == 0)
 		{
-			ft_putendl("need to read file");
+			term->intro[ft_strlen(term->intro) - 1] = '\0';
+			ft_putchar_fd('\n', 2);
+			ft_process_exec(term, term->intro);
 			exit(0);
 		}
 		term->separators = NULL;
 		if (term->cmdtmp)
-			(term->cmdactual) ? (term->cmdtmp = ft_strjoin_nf(term->cmdtmp, term->cmdactual, 1	)) : 0;
+			(term->cmdactual) ? (term->cmdtmp = ft_strjoin_nf(term->cmdtmp,
+			term->cmdactual, 1)) : 0;
 		else
 			(term->cmdactual) ? term->cmdtmp = ft_strdup(term->cmdactual) : 0;
 		if (term->cmdtmp)
@@ -146,7 +155,7 @@ void		ft_boucle(t_term *term)
 			ft_putstr_fd("\n> ", 2);
 		}
 		if (!term->separators)
-			break;
+			break ;
 	}
 	if (term->cmdtmp)
 		term->cmdactual = ft_strdup(term->cmdtmp);

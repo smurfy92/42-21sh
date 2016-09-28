@@ -33,6 +33,7 @@ typedef	struct			s_term
 	struct s_parse		*parselststart;
 	pid_t				father;
 	char				*separators;
+	char				*intro;
 	char				*path;
 	char				*u;
 	char				**env;
