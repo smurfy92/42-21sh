@@ -21,7 +21,7 @@ void		ft_separators(t_term *term)
 	else
 		(term->cmdactual) ? term->cmdtmp = ft_strdup(term->cmdactual) : 0;
 	(term->cmdactual) ? ft_strdel(&(term->cmdactual)) : 0;
-	term->cmdactual = ft_strdup(term->cmdtmp);
+	(term->cmdtmp) ? term->cmdactual = ft_strdup(term->cmdtmp) : 0;
 	ft_check_separators(term);
 	if (term->separators)
 	{

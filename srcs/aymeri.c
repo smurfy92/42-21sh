@@ -22,7 +22,6 @@ void		ft_create_process(t_term *term)
 		ft_father(term, tabl);
 	dup2(tabl[0], STDIN_FILENO);
 	close(tabl[1]);
-	wait(0);
 }
 
 int			ft_check_in_path2(t_term *term)
