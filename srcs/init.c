@@ -61,7 +61,7 @@ void		ft_reset_term(t_term *term)
 	ft_bzero(term->cmdactual, ft_strlen(term->cmdactual));
 	ft_bzero(term->buf, ft_strlen(term->buf));
 	ft_get_window(term);
-	if (term->inheredoc || term->cmdtmp)
+	if (term->inheredoc || term->cmdtmp || term->inexec)
 		return ;
 	if (term->exec)
 		write(2, "\033[92mjush-> \033[0m", 17);

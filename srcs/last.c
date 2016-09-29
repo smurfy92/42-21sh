@@ -43,14 +43,13 @@ void		ft_addfile(t_term *term, t_parse *parse, int i)
 void		ft_ctrl_c(int sig)
 {
 	t_term			*term;
-	int				order[2];
+	char			order[2];
 
 	sig = 0;
-	reset_shell();
 	term = ft_get_term();
+	term->test = 1;
 	order[0] = 3;
 	order[1] = 0;
-	term->test = 1;
 	if (term->inheredoc)
 	{
 		term->inheredoc = 0;
@@ -58,6 +57,8 @@ void		ft_ctrl_c(int sig)
 		term->fail = 1;
 		term->test = 0;
 	}
+	if (!term->inexec)
+		ft_putchar_fd('\n', 2);
 	ioctl(0, TIOCSTI, "\n");
 	ft_reset_term(term);
 }
