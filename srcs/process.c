@@ -116,7 +116,9 @@ void		ft_process_exec(t_term *term, char *cmdsplit)
 		return ;
 	if (!ft_process_exec2(term))
 		return ;
+	term->inexec = 1;
 	ft_free_cmds(term);
 	(term->father == 0) ? ft_father_process(term) : 0;
 	wait(0);
+	term->inexec = 0;
 }

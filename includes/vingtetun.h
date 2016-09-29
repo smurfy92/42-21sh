@@ -44,6 +44,7 @@ typedef	struct			s_term
 	char				**cmds;
 	char				**cmdsplit;
 	int					inheredoc;
+	int					inexec;
 	int					heredocfd;
 	int					i;
 	int					test;
