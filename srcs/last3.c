@@ -40,3 +40,14 @@ void		ft_path_error(t_term *term)
 	ft_strdel(&tmp);
 	term->exec = 0;
 }
+
+char		*ft_trim_backslash(char *cmd)
+{
+	int i;
+
+	i = -1;
+	while (cmd && cmd[++i])
+		if (cmd[i] == '\n')
+			cmd[i] = ' ';
+	return (cmd);
+}

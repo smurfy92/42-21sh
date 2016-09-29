@@ -38,6 +38,14 @@ void		ft_separators(t_term *term)
 	}
 }
 
+void		ft_exec_once(t_term *term)
+{
+	term->intro[ft_strlen(term->intro) - 1] = '\0';
+	ft_putchar_fd('\n', 2);
+	ft_process_exec(term, term->intro);
+	exit(0);
+}
+
 void		ft_boucle(t_term *term)
 {
 	int		ret;
@@ -52,13 +60,7 @@ void		ft_boucle(t_term *term)
 				term->intro = ft_strjoin_nf(term->intro, term->buf, 1);
 			ft_process(term);
 		}
-		if (ret == 0)
-		{
-			term->intro[ft_strlen(term->intro) - 1] = '\0';
-			ft_putchar_fd('\n', 2);
-			ft_process_exec(term, term->intro);
-			exit(0);
-		}
+		(ret == 0) ? ft_exec_once(term) : 0;
 		ft_strdel(&(term->intro));
 		ft_separators(term);
 		if (!term->separators)

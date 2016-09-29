@@ -43,10 +43,13 @@ void		ft_addfile(t_term *term, t_parse *parse, int i)
 void		ft_ctrl_c(int sig)
 {
 	t_term			*term;
+	int				order[2];
 
 	sig = 0;
 	reset_shell();
 	term = ft_get_term();
+	order[0] = 3;
+	order[1] = 0;
 	term->test = 1;
 	if (term->inheredoc)
 	{

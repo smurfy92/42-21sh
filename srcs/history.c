@@ -17,17 +17,6 @@ int			ft_outchar(int c)
 	return (write(2, &c, 1));
 }
 
-char 		*ft_trim_backslash(char *cmd)
-{
-	int i;
-
-	i = -1;
-	while (cmd && cmd[++i])
-		if (cmd[i] == '\n')
-			cmd[i] = ' ';
-	return (cmd);
-}
-
 void		ft_add_history(t_term *term, char *cmd)
 {
 	int			fd;
