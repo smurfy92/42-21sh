@@ -51,7 +51,7 @@ void		ft_get_cmd(t_term *term, char *str)
 		term->cmdactual = ft_strjoin_nf(term->cmdactual, str, 1);
 	term->cursorpos += ft_strlen(str);
 	term->cmdlength = ft_strlen(term->cmdactual);
-	(term->inhistory) ? (term->history->var = term->cmdactual) : 0;
+	(term->inhistory) ? (term->history->var = ft_strdup(term->cmdactual)) : 0;
 	ft_putstr_fd(str, 2);
 }
 

@@ -75,8 +75,7 @@ void		ft_free_struct(t_term *term)
 		term->history = term->history->prev;
 	while (term->history)
 	{
-		if (term->history->var)
-			ft_strdel(&(term->history->var));
+		ft_strdel(&(term->history->var));
 		term->history->prev = NULL;
 		hist = term->history->next;
 		free(term->history);
