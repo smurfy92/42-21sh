@@ -33,9 +33,16 @@ void		ft_redirection_error(t_parse *parse, int end)
 
 void		ft_path_error(t_term *term)
 {
-	char *tmp;
+	char	*tmp;
+	char	**tabl;
+	int		i;
 
-	tmp = ft_strjoin("jush: command not found: ", term->parselst->cmd);
+	i = -1;
+	tabl = ft_strsplit(term->parselst->cmd, ' ');
+	tmp = ft_strjoin("jush: command not found: ", tabl[0]);
+	while (tabl[++i])
+		ft_strdel(&tabl[i]);
+	free(tabl);
 	ft_putendl_fd(tmp, 2);
 	ft_strdel(&tmp);
 	term->exec = 0;
