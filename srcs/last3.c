@@ -51,10 +51,12 @@ void		ft_path_error(t_term *term)
 char		*ft_trim_backslash(char *cmd)
 {
 	int i;
+	char *tmp;
 
+	tmp = ft_strdup(cmd);
 	i = -1;
-	while (cmd && cmd[++i])
-		if (cmd[i] == '\n')
-			cmd[i] = ' ';
-	return (cmd);
+	while (tmp && tmp[++i])
+		if (tmp[i] == '\n')
+			tmp[i] = ' ';
+	return (tmp);
 }
