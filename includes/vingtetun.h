@@ -47,6 +47,7 @@ typedef	struct			s_term
 	int					inexec;
 	int					heredocfd;
 	int					i;
+	int					pipe[2];
 	int					test;
 	int					minus;
 	int					fail;
@@ -96,6 +97,9 @@ typedef	struct			s_parse
 	int					fd;
 	int					close1;
 	int					close2;
+	int					outtoerr;
+	int					errtoout;
+	int					closepipe;
 	int					operato;
 	struct s_parse		*next;
 }						t_parse;
@@ -138,7 +142,7 @@ void					ft_check_parse(t_term *term);
 void					ft_go_down(t_term *term);
 void					ft_ctrl_d(t_term *term);
 void					ft_check_close1(t_parse *parse, int i);
-void					ft_father(t_term *term, int *tabl);
+void					ft_father(t_term *term);
 void					ft_cd_error(char *cmd);
 void					ft_handle_signal(void);
 void					ft_check_u(t_term *term, int i);

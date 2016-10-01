@@ -27,14 +27,14 @@ void		ft_check_close1(t_parse *parse, int i)
 	parse->close1 = 1;
 }
 
-void		ft_father(t_term *term, int *tabl)
+void		ft_father(t_term *term)
 {
 	char	*tmp;
 	int		y;
 
 	tmp = NULL;
-	dup2(tabl[1], STDOUT_FILENO);
-	close(tabl[0]);
+	dup2(term->pipe[1], STDOUT_FILENO);
+	close(term->pipe[0]);
 	(y = -1) ? ft_check_cmds(term) : 0;
 	(term->i) ? ft_env_i(term) : 0;
 	while (term->cmds[++y])

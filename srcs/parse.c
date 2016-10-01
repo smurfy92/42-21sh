@@ -114,6 +114,7 @@ void		ft_create_parse(t_term *term, char *cmd)
 	tmp->file = NULL;
 	tmp->close1 = 0;
 	tmp->close2 = 0;
+	tmp->closepipe = 0;
 	ft_parse_redirections(term, tmp);
 	if (!term->parselst)
 		term->parselst = tmp;

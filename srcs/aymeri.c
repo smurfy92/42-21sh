@@ -14,14 +14,12 @@
 
 void		ft_create_process(t_term *term)
 {
-	int		tabl[2];
-
-	pipe(tabl);
+	pipe(term->pipe);
 	term->father = fork();
 	if (term->father == 0)
-		ft_father(term, tabl);
-	dup2(tabl[0], STDIN_FILENO);
-	close(tabl[1]);
+		ft_father(term);
+	dup2(term->pipe[0], STDIN_FILENO);
+	close(term->pipe[1]);
 }
 
 int			ft_check_in_path2(t_term *term)

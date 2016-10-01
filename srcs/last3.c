@@ -50,8 +50,8 @@ void		ft_path_error(t_term *term)
 
 char		*ft_trim_backslash(char *cmd)
 {
-	int i;
-	char *tmp;
+	int		i;
+	char	*tmp;
 
 	tmp = ft_strdup(cmd);
 	i = -1;

@@ -21,7 +21,6 @@ void		ft_add_history(t_term *term, char *cmd)
 {
 	int			fd;
 	t_history	*tmp;
-	t_history	*tmp2;
 	char		*string;
 
 	fd = open("/tmp/.21sh_history", O_WRONLY | O_APPEND | O_CREAT,
@@ -29,7 +28,6 @@ void		ft_add_history(t_term *term, char *cmd)
 	string = ft_trim_backslash(cmd);
 	ft_putendl_fd(string, fd);
 	ft_strdel(&string);
-	tmp2 = term->history;
 	tmp = (t_history*)malloc(sizeof(t_history));
 	tmp->var = ft_strdup(ft_trim_backslash(cmd));
 	tmp->next = NULL;

@@ -115,12 +115,12 @@ void		ft_father_exec(t_term *term)
 			ft_free_struct(term);
 			exit(0);
 		}
+		else
+			ft_create_process(term);
 	}
 	else
 	{
 		if (!term->parselst->file)
-		{
 			ft_create_process(term);
-		}
 	}
 }
